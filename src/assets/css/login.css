@@ -1,0 +1,119 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+.login-page {
+    display: flex;
+    height: 100vh;
+    background-color: #3b5998; /* Azul do lado direito */
+    flex-direction: row; /* Default para telas maiores */
+}
+
+.login-logo {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white; /* Fundo branco para o logo */
+}
+
+.login-logo img {
+    width: 90%; /* Ajusta automaticamente o tamanho */
+    max-width: 500px;
+    height: auto;
+    border: 2px solid #ccc;
+    border-radius: 20%;
+}
+
+.login-form-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    padding: 20px; /* Para evitar que o conteúdo encoste nas bordas */
+}
+
+.login-form-container h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    width: 80%;
+    max-width: 300px;
+}
+
+label {
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+input {
+    width: 100%; /* Garante que o input seja responsivo */
+    padding: 10px;
+    margin-bottom: 20px;
+    border: none;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+button {
+    width: 107%; /* Garante que o botão seja responsivo */
+    padding: 10px;
+    background-color: #5b8df6;
+    color: white;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #467de3;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .login-page {
+        flex-direction: column; /* Empilha logo e formulário */
+    }
+
+    .login-logo img {
+        width: 70%; /* Ajusta o tamanho da logo */
+        max-width: 300px;
+    }
+
+    .login-form-container h1 {
+        font-size: 1.8rem; /* Ajusta o tamanho do título */
+    }
+
+    form {
+        width: 100%; /* Ocupa ma    is espaço em telas menores */
+        max-width: 350px;
+    }
+}
+
+@media (max-width: 480px) {
+    .login-logo img {
+        width: 60%; /* Ajusta o tamanho da logo para dispositivos pequenos */
+        max-width: 200px;
+    }
+
+    .login-form-container h1 {
+        font-size: 1.5rem; /* Ajusta o título */
+    }
+
+    input {
+        padding: 8px; /* Reduz o padding para inputs */
+    }
+
+    button {
+        padding: 8px; /* Reduz o padding do botão */
+        font-size: 0.9rem; /* Ajusta o tamanho da fonte do botão */
+    }
+}
