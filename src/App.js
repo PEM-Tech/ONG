@@ -1,21 +1,29 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Login from './pages/login';
-import Home from './pages/home';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import Login from "./pages/login";
+import Home from "./pages/home";
+import ProtectedLayout from "./components/ProtectedLayout";
 
 function App() {
-    // Simular se o usuário está autenticado
-    const isAuthenticated = false; // Altere para `true` quando o usuário estiver autenticado
+    const isAuthenticated = true; // Alterar para false se necessário
 
     return (
         <Router>
             <Routes>
-                {/* Redirecionar "/" para "/login" se não estiver autenticado */}
-                <Route path="/" element={isAuthenticated ? <Home /> : <Navigate to="/login" />} />
-                {/* Página de Login */}
                 <Route path="/login" element={<Login />} />
-                {/* Página Home */}
-                <Route path="/home" element={isAuthenticated ? <Home /> : <Navigate to="/login" />} />
+                <Route
+                    path="/home"
+                    element={
+                        isAuthenticated ? (
+                            <ProtectedLayout>
+                                <Home />
+                            </ProtectedLayout>
+                        ) : (
+                            <Navigate to="/login" />
+                        )
+                    }
+                />
+                <Route path="*" element={<Navigate to="/login" />} />
             </Routes>
         </Router>
     );

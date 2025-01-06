@@ -62,7 +62,7 @@ input {
     margin-top: 10px;
 }
 
-button {
+.login-btn {
     width: 107%; /* Garante que o botão seja responsivo */
     padding: 10px;
     background-color: #5b8df6;

@@ -25,7 +25,7 @@ function Login() {
                         Senha
                         <input type="password" placeholder="Insira sua senha..." required />
                     </label>
-                    <button type="submit">Entrar</button>
+                    <button type="submit" className='login-btn'>Entrar</button>
                 </form>
             </div>
         </div>

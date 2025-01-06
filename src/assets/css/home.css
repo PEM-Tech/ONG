@@ -1,20 +1,11 @@
 .home {
     display: flex;
     height: 100vh;
+    background-color: #f0f0f0;
 }
 
 .content {
     flex: 1;
     padding: 20px;
-    background-color: #f0f0f0;
-}
-
-.content h1 {
-    font-size: 2rem;
-    color: #333;
-}
-
-.content p {
-    font-size: 1rem;
-    color: #666;
+    background-color: #ffffff;
 }

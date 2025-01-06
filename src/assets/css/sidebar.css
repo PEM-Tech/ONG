@@ -1,98 +1,43 @@
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    display: flex;
-    height: 100vh;
-}
-
-.sidebar {
-    width: 250px;
-    height: 100%;
-    background-color: #3b5998;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    transition: width 0.3s;
-}
-
-.sidebar.collapsed {
-    width: 80px;
-}
-
-.sidebar-header {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    padding: 10px;
-    background-color: #2c4277;
-}
-
-.collapse-btn {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 1.2rem;
-    cursor: pointer;
-}
-
-.sidebar-content {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px 10px;
-}
-
-.profile {
-    display: flex;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.profile-img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin-right: 10px;
-}
-
-.profile p {
-    margin: 0;
-}
-
-.menu {
+/* Estilo para a lista de itens */
+.sidebar .menu {
     list-style: none;
     padding: 0;
     margin: 0;
     width: 100%;
 }
-
-.menu li {
-    display: flex;
-    align-items: center;
+.collapse-btn{
+    width: 107%; /* Garante que o botão seja responsivo */
     padding: 10px;
+    background-color: #5b8df6;
+    color: white;
+    font-size: 1rem;
+    border: none;
     cursor: pointer;
-    transition: background-color 0.3s;
 }
 
-.menu li:hover {
+/* Estilo para os itens individuais */
+.sidebar .menu li {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px; /* Aumenta o espaço interno */
+    font-size: 1.2rem; /* Aumenta o tamanho do texto */
+    cursor: pointer;
+    transition: background-color 0.3s, padding 0.3s;
+}
+
+/* Cor de fundo ao passar o mouse */
+.sidebar .menu li:hover {
     background-color: #2c4277;
 }
 
-.menu li .icon {
+/* Estilo para ícones (se existirem) */
+.sidebar .menu li .icon {
     margin-right: 10px;
-    font-size: 1.2rem;
+    font-size: 1.5rem; /* Aumenta o tamanho dos ícones */
 }
 
-.sidebar.collapsed .menu li .icon {
-    margin-right: 0;
-}
-
-.sidebar.collapsed .profile-img {
-    margin-right: 0;
-}
-
-.sidebar.collapsed .profile p,
-.sidebar.collapsed .menu li span {
-    display: none;
+/* Estilo para texto dentro dos itens */
+.sidebar .menu li span {
+    flex: 1;
+    font-size: 1.2rem; /* Aumenta o texto */
 }
