@@ -1,43 +1,105 @@
-/* Estilo para a lista de itens */
-.sidebar .menu {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    width: 100%;
+/* Estilo geral da sidebar */
+.sidebar {
+    width: 250px; /* Largura padrão */
+    transition: width 0.3s ease; /* Animação suave ao colapsar */
 }
-.collapse-btn{
-    width: 107%; /* Garante que o botão seja responsivo */
+
+.sidebar.collapsed {
+    width: 80px; /* Largura reduzida quando colapsada */
+}
+
+/* Botão de colapso */
+.collapse-btn {
+    width: 100%; /* Ajuste para largura completa do container */
     padding: 10px;
     background-color: #5b8df6;
     color: white;
     font-size: 1rem;
     border: none;
     cursor: pointer;
+    text-align: center;
+    transition: background-color 0.3s ease;
+}
+
+.collapse-btn:hover {
+    background-color: #2c4277; /* Cor de fundo ao passar o mouse */
+}
+
+/* Estilo da lista de itens */
+.sidebar .menu {
+    list-style: none; /* Remove os marcadores */
+    padding: 0;
+    margin: 0;
+    width: 100%;
 }
 
 /* Estilo para os itens individuais */
 .sidebar .menu li {
     display: flex;
     align-items: center;
-    padding: 15px 20px; /* Aumenta o espaço interno */
-    font-size: 1.2rem; /* Aumenta o tamanho do texto */
+    padding: 15px 20px; /* Espaçamento interno */
+    font-size: 1.2rem; /* Tamanho do texto */
     cursor: pointer;
     transition: background-color 0.3s, padding 0.3s;
 }
 
-/* Cor de fundo ao passar o mouse */
 .sidebar .menu li:hover {
-    background-color: #2c4277;
+    background-color: #5b8df6; /* Cor ao passar o mouse */
 }
 
-/* Estilo para ícones (se existirem) */
+/* Estilo para os ícones dentro dos itens */
 .sidebar .menu li .icon {
-    margin-right: 10px;
-    font-size: 1.5rem; /* Aumenta o tamanho dos ícones */
+    margin-right: 10px; /* Espaço entre o ícone e o texto */
+    font-size: 1.5rem; /* Tamanho do ícone */
+    transition: margin-right 0.3s ease;
 }
 
-/* Estilo para texto dentro dos itens */
+/* Ajusta o espaçamento dos ícones quando a sidebar está colapsada */
+.sidebar.collapsed .menu li .icon {
+    margin-right: 0;
+}
+
+/* Estilo para o texto dos itens */
 .sidebar .menu li span {
     flex: 1;
-    font-size: 1.2rem; /* Aumenta o texto */
+    font-size: 1.2rem; /* Tamanho do texto */
+    white-space: nowrap; /* Evita quebra de linha */
+    overflow: hidden; /* Oculta texto em excesso */
+    transition: opacity 0.3s ease;
+}
+
+/* Oculta o texto quando a sidebar está colapsada */
+.sidebar.collapsed .menu li span {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Estilo da imagem do perfil */
+.profile-img {
+    width: 100px; /* Largura padrão */
+    height: auto; /* Mantém a proporção */
+    border-radius: 30%; /* Faz a imagem ficar redonda */
+    transition: width 0.3s ease; /* Animação suave ao colapsar */
+}
+
+/* Reduz a largura da imagem quando a sidebar está colapsada */
+.collapsed-img {
+    width: 50px;
+}
+
+/* Estilo do texto do perfil */
+.profile {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin: 20px 0; /* Espaçamento em torno do perfil */
+    transition: margin 0.3s ease;
+}
+
+.sidebar.collapsed .profile {
+    margin: 10px 0; /* Ajusta o espaçamento quando colapsada */
+}
+
+.sidebar.collapsed .profile p {
+    display: none; /* Esconde o texto do administrador */
 }

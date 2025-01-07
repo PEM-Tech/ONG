@@ -1,0 +1,111 @@
+/* Container principal */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Impede scroll do body */
+}
+
+
+.pacientes-container {
+    padding: 20px;
+    text-align: center;
+    overflow-y: auto !important; /* Permite scroll vertical */
+    height: 100vh; /* Garante que o container ocupa toda a altura da tela */
+    box-sizing: border-box; /* Inclui padding no cálculo de altura */
+}
+
+
+/* Título */
+.title {
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Grid de cards */
+.cards {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+/* Estilo para cada card */
+.card {
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 250px;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+    cursor: pointer;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Ícones dentro dos cards */
+.card .icon {
+    font-size: 3rem;
+    margin-bottom: 10px;
+    color: #5b8df6;
+}
+
+/* Títulos dos cards */
+.card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* Descrição dos cards */
+.card p {
+    font-size: 1rem;
+    color: #666;
+}
+
+/* Responsividade */
+@media (max-width: 768px) { /* Tablets */
+    .cards {
+        gap: 15px;
+    }
+    .card {
+        width: 200px;
+        padding: 15px;
+    }
+    .card .icon {
+        font-size: 2.5rem;
+    }
+    .card h2 {
+        font-size: 1.3rem;
+    }
+    .card p {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) { /* Telefones */
+    .cards {
+        flex-direction: column; /* Exibe os cards em coluna */
+        align-items: center;
+        gap: 10px;
+    }
+    .card {
+        width: 90%; /* Ocupa quase toda a largura da tela */
+        padding: 10px;
+    }
+    .card .icon {
+        font-size: 2rem;
+    }
+    .card h2 {
+        font-size: 1.2rem;
+    }
+    .card p {
+        font-size: 0.8rem;
+    }
+}
