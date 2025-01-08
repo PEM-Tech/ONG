@@ -4,22 +4,27 @@ import "../../assets/css/voluntarios.css"; // Estilo do componente
 function Voluntarios() {
     const handleListar = () => {
         console.log("Listar Voluntarios");
-        // Lógica para listar Voluntarios (exemplo: redirecionar para outra página ou carregar dados)
+        // Lógica para listar Voluntários (exemplo: redirecionar para outra página ou carregar dados)
     };
 
     const handleCadastrar = () => {
         console.log("Cadastrar Voluntarios");
-        // Lógica para cadastrar um paciente
+        // Lógica para cadastrar um voluntário
     };
 
     const handleAlterar = () => {
         console.log("Alterar Voluntarios");
-        // Lógica para alterar um paciente
+        // Lógica para alterar um voluntário
     };
 
     const handleExcluir = () => {
         console.log("Excluir Voluntarios");
-        // Lógica para excluir um paciente
+        // Lógica para excluir um voluntário
+    };
+
+    const handleMarcarPresenca = () => {
+        console.log("Marcar Presença");
+        // Lógica para marcar presença de voluntários
     };
 
     return (
@@ -45,6 +50,11 @@ function Voluntarios() {
                     <i className="icon">❌</i>
                     <h2>Excluir</h2>
                     <p>Remova Voluntários do sistema.</p>
+                </div>
+                <div className="card" onClick={handleMarcarPresenca}>
+                    <i className="icon">✅</i>
+                    <h2>Marcar Presença</h2>
+                    <p>Registre a presença dos Voluntários.</p>
                 </div>
             </div>
         </div>

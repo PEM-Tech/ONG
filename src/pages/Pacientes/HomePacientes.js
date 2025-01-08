@@ -22,6 +22,16 @@ function Pacientes() {
         // Lógica para excluir um paciente
     };
 
+    const handleMarcarConsulta = () => {
+        console.log("Marcar consulta");
+        // Lógica para marcar uma consulta
+    };
+
+    const handleRegistrarPresenca = () => {
+        console.log("Registrar presença");
+        // Lógica para registrar presença de pacientes
+    };
+
     return (
         <div className="pacientes-container">
             <h1 className="title">Gerenciamento de Pacientes</h1>
@@ -45,6 +55,16 @@ function Pacientes() {
                     <i className="icon">❌</i>
                     <h2>Excluir</h2>
                     <p>Remova pacientes do sistema.</p>
+                </div>
+                <div className="card" onClick={handleMarcarConsulta}>
+                    <i className="icon">🗓️</i>
+                    <h2>Marcar Consulta</h2>
+                    <p>Agende uma consulta para o paciente.</p>
+                </div>
+                <div className="card" onClick={handleRegistrarPresenca}>
+                    <i className="icon">✅</i>
+                    <h2>Registrar Presença</h2>
+                    <p>Registre a presença do paciente.</p>
                 </div>
             </div>
         </div>
