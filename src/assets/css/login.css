@@ -79,6 +79,10 @@ button:hover {
 
 /* Responsividade */
 @media (max-width: 768px) {
+    .login-form-container {
+        justify-content: flex-start; /* Alinha o formulário mais para cima */
+        margin-top: -20px; /* Move o formulário para cima */
+    }
     .login-page {
         flex-direction: column; /* Empilha logo e formulário */
     }
@@ -93,12 +97,27 @@ button:hover {
     }
 
     form {
-        width: 100%; /* Ocupa ma    is espaço em telas menores */
-        max-width: 350px;
+        width: 90%; /* Ocupa mais espaço em telas menores */
+        max-width: 400px;
+    }
+
+    input {
+        width: 100%; /* Ajusta a largura dos inputs */
+        padding: 12px; /* Padding confortável para toques */
+        font-size: 1rem; /* Tamanho de fonte maior para telefones */
+    }
+
+    button {
+        width: 100%; /* Botão ocupa toda a largura disponível */
+        padding: 12px; /* Ajuste para melhor usabilidade */
+        font-size: 1rem; /* Tamanho de fonte adequado */
     }
 }
 
 @media (max-width: 480px) {
+    .login-form-container {
+        margin-top: -20px; /* Ajuste maior para telas muito pequenas */
+    }
     .login-logo img {
         width: 60%; /* Ajusta o tamanho da logo para dispositivos pequenos */
         max-width: 200px;
@@ -109,11 +128,12 @@ button:hover {
     }
 
     input {
-        padding: 8px; /* Reduz o padding para inputs */
+        padding: 10px; /* Reduz o padding para inputs */
+        font-size: 0.9rem; /* Tamanho de fonte ajustado */
     }
 
     button {
-        padding: 8px; /* Reduz o padding do botão */
+        padding: 10px; /* Reduz o padding do botão */
         font-size: 0.9rem; /* Ajusta o tamanho da fonte do botão */
     }
 }

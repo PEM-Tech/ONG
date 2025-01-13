@@ -1,6 +1,6 @@
 import React from 'react';
 import '../assets/css/login.css';
-import logo from '../assets/logo.png'; // Insira o caminho correto para sua logo
+import logo from '../assets/logo.jpeg'; // Insira o caminho correto para sua logo
 
 function Login() {
     const handleLogin = (e) => {

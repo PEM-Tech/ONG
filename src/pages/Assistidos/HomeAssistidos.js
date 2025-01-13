@@ -34,27 +34,27 @@ function Pacientes() {
 
     return (
         <div className="pacientes-container">
-            <h1 className="title">Gerenciamento de Pacientes</h1>
+            <h1 className="title">Gerenciamento de Asssistidos</h1>
             <div className="cards">
                 <div className="card" onClick={handleListar}>
                     <i className="icon">📄</i>
                     <h2>Listar</h2>
-                    <p>Visualize todos os pacientes cadastrados.</p>
+                    <p>Visualize todos os assistidos cadastrados.</p>
                 </div>
                 <div className="card" onClick={handleCadastrar}>
                     <i className="icon">➕</i>
                     <h2>Cadastrar</h2>
-                    <p>Adicione um novo paciente ao sistema.</p>
+                    <p>Adicione um novo assistidos ao sistema.</p>
                 </div>
                 <div className="card" onClick={handleAlterar}>
                     <i className="icon">✏️</i>
                     <h2>Alterar</h2>
-                    <p>Atualize as informações de um paciente.</p>
+                    <p>Atualize as informações de um assistido.</p>
                 </div>
                 <div className="card" onClick={handleExcluir}>
                     <i className="icon">❌</i>
                     <h2>Excluir</h2>
-                    <p>Remova pacientes do sistema.</p>
+                    <p>Remova assistidos do sistema.</p>
                 </div>
                 <div className="card" onClick={handleMarcarConsulta}>
                     <i className="icon">🗓️</i>
@@ -64,7 +64,7 @@ function Pacientes() {
                 <div className="card" onClick={handleRegistrarPresenca}>
                     <i className="icon">✅</i>
                     <h2>Registrar Presença</h2>
-                    <p>Registre a presença do paciente.</p>
+                    <p>Registre a presença do Assistido.</p>
                 </div>
             </div>
         </div>

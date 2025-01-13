@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import Login from "./pages/login";
 import Home from "./pages/home";
 import ProtectedLayout from "./components/ProtectedLayout";
-import HomePacientes from "./pages/Pacientes/HomePacientes";
+import HomePacientes from "./pages/Assistidos/HomeAssistidos";
 import HomeVoluntarios from "./pages/Voluntarios/HomeVoluntarios";
 import HomeConfig from "./pages/Configurações/HomeConfig"; // Importação do HomeConfig
 

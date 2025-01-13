@@ -56,7 +56,7 @@ function Sidebar() {
                     </li>
                     <li onClick={goToPacientes} style={{ cursor: "pointer" }}>
                         <i className="icon">👥</i>
-                        {!isCollapsed && <span>Pacientes</span>}
+                        {!isCollapsed && <span>Assistidos</span>}
                     </li>
                     <li onClick={goToVoluntarios}>
                         <i className="icon">🙋‍♂️</i>
