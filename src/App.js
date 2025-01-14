@@ -6,6 +6,7 @@ import ProtectedLayout from "./components/ProtectedLayout";
 import HomePacientes from "./pages/Assistidos/HomeAssistidos";
 import HomeVoluntarios from "./pages/Voluntarios/HomeVoluntarios";
 import HomeConfig from "./pages/Configurações/HomeConfig"; // Importação do HomeConfig
+import HomeUsuarios from "./pages/Usuarios/HomeUsuarios"
 
 function App() {
     const isAuthenticated = true; // Alterar para false se necessário
@@ -56,6 +57,18 @@ function App() {
                         isAuthenticated ? (
                             <ProtectedLayout>
                                 <HomeConfig />
+                            </ProtectedLayout>
+                        ) : (
+                            <Navigate to="/login" />
+                        )
+                    }
+                />
+                  <Route
+                    path="/home-usuarios"
+                    element={
+                        isAuthenticated ? (
+                            <ProtectedLayout>
+                                <HomeUsuarios />
                             </ProtectedLayout>
                         ) : (
                             <Navigate to="/login" />

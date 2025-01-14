@@ -1,7 +1,11 @@
 import React from "react";
 import "../../assets/css/HomeConfig.css"; // Estilo do componente
+import { useNavigate } from "react-router-dom";
 
 function HomeConfiguracoes() {
+
+    const navigate = useNavigate();
+
     const handleGerenciarCategorias = () => {
         console.log("Gerenciar Categorias dos Voluntários");
         // Lógica para gerenciar categorias
@@ -9,7 +13,7 @@ function HomeConfiguracoes() {
 
     const handleManipularUsuarios = () => {
         console.log("Manipular Usuários");
-        // Lógica para manipular usuários
+         navigate("/home-usuarios")
     };
 
     return (

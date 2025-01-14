@@ -10,7 +10,7 @@ function Sidebar() {
 
     const toggleSidebar = () => {
         setIsCollapsed(!isCollapsed);
-    };
+    }; 
 
     const toggleDropdown = () => {
         setIsDropdownVisible(!isDropdownVisible);

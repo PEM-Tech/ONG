@@ -7,15 +7,15 @@ html, body {
 }
 
 .pacientes-container {
-    padding: 20px;
+    padding: 40px 20px; /* 40px no topo/baixo e 20px nas laterais */
+    margin: 20px auto; /* Adiciona espaçamento externo e centraliza o conteúdo */
     text-align: center;
-    min-height: 100%; /* Permite que o container cresça */
+    min-height: 100%;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Centraliza os itens horizontalmente */
+    align-items: center;
 }
-
 /* Título */
 .title {
     font-size: 2rem;
@@ -26,26 +26,26 @@ html, body {
 /* Grid de cards */
 .cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Gera colunas flexíveis */
-    grid-auto-rows: 1fr; /* Faz com que todas as linhas tenham a mesma altura */
-    gap: 20px; /* Espaçamento entre os cards */
-    width: 100%; /* Faz o grid ocupar toda a largura disponível */
-    max-width: 1200px; /* Limita a largura máxima do grid */
-    align-items: stretch; /* Estica os itens para que tenham a mesma altura */
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    grid-auto-rows: 1fr;
+    gap: 30px; /* Espaçamento entre os cards */
+    width: 100%;
+    max-width: 1200px; /* Limita a largura máxima para criar espaço nas laterais */
+    padding: 0 20px; /* Adiciona padding nas laterais do grid */
+    align-items: stretch;
 }
-
 /* Estilo para cada card */
 .card {
     background-color: #ffffff;
     border: 1px solid #ddd;
     border-radius: 8px;
-    padding: 20px;
+    padding: 30px; /* Aumentado para mais espaço interno */
     text-align: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     cursor: pointer;
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Garante que o conteúdo seja distribuído igualmente */
+    justify-content: space-between;
 }
 
 
