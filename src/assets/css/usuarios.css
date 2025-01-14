@@ -1,56 +1,70 @@
-.usuarios-container {
+.tabela-container {
     padding: 20px;
-    text-align: center;
-    overflow-y: auto;
-    height: 100vh;
-    box-sizing: border-box;
+    font-family: Arial, sans-serif;
 }
 
-.title {
-    font-size: 2rem;
+h1 {
     margin-bottom: 20px;
-    color: #333;
 }
 
-.cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    padding: 0 10px;
-    justify-items: center;
+.filtros {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: center;
 }
 
-.card {
-    background-color: #ffffff;
+.filtros input {
+    padding: 10px;
     border: 1px solid #ddd;
-    border-radius: 8px;
+    border-radius: 5px;
+    flex: 1;
+}
+
+.filtros select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 12px;
+}
+
+table {
     width: 100%;
-    max-width: 300px;
-    padding: 20px;
-    text-align: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+thead {
+    background-color: #f4f4f4;
+}
+
+thead th {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ddd;
+}
+
+tbody td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+button {
+    padding: 5px 10px;
+    margin-right: 5px;
+    border: none;
+    border-radius: 5px;
     cursor: pointer;
-    transition: transform 0.3s, box-shadow 0.3s;
 }
 
-.card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-}
-
-.icon {
-    font-size: 3rem;
-    margin-bottom: 10px;
-    color: #5b8df6;
-}
-
-.card h2 {
-    font-size: 1.5rem;
-    margin-bottom: 10px;
-    color: #333;
-}
-
-.card p {
-    font-size: 1rem;
-    color: #666;
+button:hover {
+    background-color: #ddd;
 }
