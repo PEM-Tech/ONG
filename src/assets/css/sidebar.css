@@ -103,3 +103,118 @@
 .sidebar.collapsed .profile p {
     display: none; /* Esconde o texto do administrador */
 }
+
+/* RESPONSIVIDADE PARA TELEFONE */
+@media (max-width: 768px) {
+    /* Esconde a sidebar principal em telas pequenas */
+    .sidebar {
+        display: none;
+    }
+
+    /* Botão flutuante para abrir o menu */
+    .floating-btn {
+        display: block;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #5b8df6;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        font-size: 2rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        z-index: 1000;
+    }
+
+    /* Dropdown de opções */
+    .dropdown-menu {
+        display: none; /* Inicialmente escondido */
+        position: absolute;
+        bottom: 90px; /* Abaixo do botão flutuante */
+        right: 20px;
+        background-color: #ffffff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        z-index: 1001;
+        overflow: hidden;
+    }
+
+    .dropdown-menu.active {
+        display: block; /* Mostra o menu */
+    }
+
+    /* Estilo para os itens do dropdown */
+    .dropdown-menu li {
+        padding: 10px 20px;
+        font-size: 1rem;
+        color: #333;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .dropdown-menu li:hover {
+        background-color: #f0f0f0;
+    }
+}
+/* Botão flutuante */
+.floating-btn {
+    display: none; /* Escondido por padrão */
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: #5b8df6;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    font-size: 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    z-index: 1000;
+}
+
+/* Dropdown no mobile */
+.dropdown-menu {
+    display: none; /* Escondido por padrão */
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1001;
+    overflow: hidden;
+}
+
+.dropdown-menu li {
+    padding: 10px 20px;
+    font-size: 1rem;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.dropdown-menu li:hover {
+    background-color: #f0f0f0;
+}
+
+/* Mostra o botão flutuante e esconde a sidebar em telas pequenas */
+@media (max-width: 768px) {
+    .sidebar {
+        display: none;
+    }
+
+    .floating-btn {
+        display: block; /* Mostra o botão flutuante */
+    }
+
+    .dropdown-menu {
+        display: block; /* Mostra o dropdown quando ativo */
+    }
+}

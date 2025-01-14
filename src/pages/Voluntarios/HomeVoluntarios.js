@@ -51,7 +51,7 @@ function Voluntarios() {
                     <h2>Excluir</h2>
                     <p>Remova Voluntários do sistema.</p>
                 </div>
-                <div className="card" onClick={handleMarcarPresenca}>
+                <div className="card c1" onClick={handleMarcarPresenca}>
                     <i className="icon">✅</i>
                     <h2>Marcar Presença</h2>
                     <p>Registre a presença dos Voluntários.</p>

@@ -3,18 +3,18 @@ html, body {
     height: 100%;
     margin: 0;
     padding: 0;
-    overflow: hidden; /* Impede scroll do body */
+    overflow: auto; /* Permite scroll no body */
 }
-
 
 .pacientes-container {
     padding: 20px;
     text-align: center;
-    overflow-y: auto !important; /* Permite scroll vertical */
-    height: 100vh; /* Garante que o container ocupa toda a altura da tela */
-    box-sizing: border-box; /* Inclui padding no cálculo de altura */
+    min-height: 100%; /* Permite que o container cresça */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Centraliza os itens horizontalmente */
 }
-
 
 /* Título */
 .title {
@@ -25,10 +25,13 @@ html, body {
 
 /* Grid de cards */
 .cards {
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
-    gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Gera colunas flexíveis */
+    grid-auto-rows: 1fr; /* Faz com que todas as linhas tenham a mesma altura */
+    gap: 20px; /* Espaçamento entre os cards */
+    width: 100%; /* Faz o grid ocupar toda a largura disponível */
+    max-width: 1200px; /* Limita a largura máxima do grid */
+    align-items: stretch; /* Estica os itens para que tenham a mesma altura */
 }
 
 /* Estilo para cada card */
@@ -36,13 +39,15 @@ html, body {
     background-color: #ffffff;
     border: 1px solid #ddd;
     border-radius: 8px;
-    width: 250px;
     padding: 20px;
     text-align: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
     cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Garante que o conteúdo seja distribuído igualmente */
 }
+
 
 .card:hover {
     transform: translateY(-10px);
@@ -69,13 +74,13 @@ html, body {
     color: #666;
 }
 
-/* Responsividade */
+/* Melhorias para telas menores */
 @media (max-width: 768px) { /* Tablets */
     .cards {
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Reduz a largura mínima dos cards */
         gap: 15px;
     }
     .card {
-        width: 200px;
         padding: 15px;
     }
     .card .icon {
@@ -91,12 +96,13 @@ html, body {
 
 @media (max-width: 480px) { /* Telefones */
     .cards {
-        flex-direction: column; /* Exibe os cards em coluna */
-        align-items: center;
-        gap: 10px;
+        grid-template-columns: 1fr; /* Um card por linha */
+        gap: 10px; /* Reduz espaçamento entre os cards */
+    }
+    .c1{
+        margin-bottom: 70px;
     }
     .card {
-        width: 90%; /* Ocupa quase toda a largura da tela */
         padding: 10px;
     }
     .card .icon {
@@ -109,3 +115,4 @@ html, body {
         font-size: 0.8rem;
     }
 }
+

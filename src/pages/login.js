@@ -18,8 +18,8 @@ function Login() {
                 <h1>ONG Superação</h1>
                 <form onSubmit={handleLogin}>
                     <label>
-                        Usuário
-                        <input type="text" placeholder="Insira seu usuário..." required />
+                        Email
+                        <input type="text" placeholder="Insira seu email..." required />
                     </label>
                     <label>
                         Senha

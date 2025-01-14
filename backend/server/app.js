@@ -3,6 +3,8 @@ const path = require('path');
 const cors = require('cors');
 require('dotenv').config(); // Carrega as variáveis do .env
 const connection = require('../config/database');
+const fs = require('fs');
+const usuarioRoutes = require('../routes/usuarioRoutes'); // Importa as rotas de usuários
 
 const app = express();
 
@@ -10,26 +12,14 @@ const app = express();
 app.use(express.json());
 
 // Configuração do CORS
-const corsOrigins = process.env.CORS_ORIGINS.split(','); // Divide as origens configuradas no .env
+const corsOrigins = process.env.CORS_ORIGINS 
+  ? process.env.CORS_ORIGINS.split(',')
+  : ['*']; // Aceita qualquer origem, caso não esteja configurado no .env
 app.use(cors({
   origin: corsOrigins,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization'],
 }));
-
-// Middleware para servir arquivos estáticos
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
-
-// Rotas
-
-
-
-
-// Iniciar o servidor
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
-});
 
 // Logger básico de requisições
 app.use((req, res, next) => {
@@ -37,10 +27,20 @@ app.use((req, res, next) => {
   next();
 });
 
+// Cria a pasta 'uploads' se não existir
+const uploadsDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+}
 
-            
-         
-    
-    
-  
+// Middleware para servir arquivos estáticos
+app.use('/uploads', express.static(uploadsDir));
 
+// Rotas
+app.use('/usuarios', usuarioRoutes); // Adiciona as rotas de usuários
+
+// Iniciar o servidor
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
+});

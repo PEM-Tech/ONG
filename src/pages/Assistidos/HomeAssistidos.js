@@ -61,7 +61,7 @@ function Pacientes() {
                     <h2>Marcar Consulta</h2>
                     <p>Agende uma consulta para o paciente.</p>
                 </div>
-                <div className="card" onClick={handleRegistrarPresenca}>
+                <div className="card c1" onClick={handleRegistrarPresenca}>
                     <i className="icon">✅</i>
                     <h2>Registrar Presença</h2>
                     <p>Registre a presença do Assistido.</p>
