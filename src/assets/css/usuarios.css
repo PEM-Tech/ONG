@@ -1,17 +1,23 @@
+/* Container principal */
 .tabela-container {
     padding: 20px;
     font-family: Arial, sans-serif;
 }
 
+/* Título */
 h1 {
     margin-bottom: 20px;
+    font-size: 1.5rem; /* Ajuste de tamanho */
+    text-align: center; /* Centralizar em telas menores */
 }
 
+/* Filtros */
 .filtros {
     display: flex;
     gap: 10px;
     margin-bottom: 20px;
     align-items: center;
+    flex-wrap: wrap; /* Permite quebra em telas menores */
 }
 
 .filtros input {
@@ -19,15 +25,38 @@ h1 {
     border: 1px solid #ddd;
     border-radius: 5px;
     flex: 1;
+    min-width: 200px; /* Largura mínima para evitar colapsar */
 }
 
 .filtros select {
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
-    margin-bottom: 12px;
+    min-width: 150px; /* Largura mínima */
 }
 
+.botao-adicionar {
+    padding: 10px 15px;
+    background-color: #007bff; /* Cor azul para destaque */
+    color: #fff; /* Texto branco */
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    margin-bottom: 14px;
+}
+
+.botao-adicionar:hover {
+    background-color: #0056b3; /* Tom mais escuro para hover */
+}
+
+.botao-adicionar:active {
+    background-color: #003f8a; /* Tom ainda mais escuro para clique */
+    transform: scale(0.98); /* Efeito de clique */
+}
+
+/* Tabela */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -42,11 +71,13 @@ thead th {
     padding: 10px;
     text-align: left;
     border: 1px solid #ddd;
+    font-size: 0.9rem; /* Ajuste para telas menores */
 }
 
 tbody td {
     padding: 10px;
     border: 1px solid #ddd;
+    font-size: 0.85rem; /* Ajuste para telas menores */
 }
 
 tbody tr:nth-child(even) {
@@ -57,6 +88,7 @@ tbody tr:hover {
     background-color: #f1f1f1;
 }
 
+/* Botões */
 button {
     padding: 5px 10px;
     margin-right: 5px;
@@ -67,4 +99,70 @@ button {
 
 button:hover {
     background-color: #ddd;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    /* Ajustar o título */
+    h1 {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+    }
+
+    /* Ajustar filtros */
+    .filtros {
+        flex-direction: column; /* Empilhar os filtros */
+        gap: 15px;
+    }
+
+    .filtros input,
+    .filtros select,
+    .botao-adicionar {
+        width: 100%; /* Largura total */
+    }
+
+    /* Tabela */
+    thead {
+        display: none; /* Ocultar cabeçalho da tabela */
+    }
+
+    table {
+        border: 0;
+    }
+
+    tbody tr {
+        display: block; /* Exibir cada linha como bloco */
+        margin-bottom: 10px;
+    }
+
+    tbody td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        font-size: 0.9rem;
+        border: 0;
+        border-bottom: 1px solid #ddd;
+    }
+
+    tbody td:before {
+        content: attr(data-label); /* Adiciona rótulo antes do conteúdo */
+        font-weight: bold;
+        text-transform: capitalize;
+        color: #333;
+    }
+}
+
+@media (max-width: 480px) {
+    .filtros {
+        gap: 10px;
+    }
+
+    tbody td {
+        font-size: 0.8rem;
+    }
+
+    .botao-adicionar {
+        font-size: 0.9rem;
+    }
 }

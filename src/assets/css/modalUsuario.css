@@ -1,0 +1,125 @@
+/* Overlay do modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Modal */
+.modal {
+    background: #fff;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    font-family: Arial, sans-serif;
+    position: relative;
+}
+
+/* Título */
+.modal h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center;
+}
+
+/* Formulário */
+.form-modal {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Duas colunas */
+    gap: 15px;
+}
+
+label {
+    font-weight: bold;
+    font-size: 0.9rem;
+    color: #555;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Inputs e selects específicos do modal */
+.modal-input,
+.modal-select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 0.9rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.modal-input:focus,
+.modal-select:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+/* Botões */
+.botoes {
+    grid-column: span 2; /* Os botões ocupam toda a largura */
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.botao-salvar {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+.botao-salvar:hover {
+    background-color: #0056b3;
+}
+
+.botao-cancelar {
+    background-color: #dc3545;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.3s ease;
+}
+
+.botao-cancelar:hover {
+    background-color: #c82333;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .modal {
+        width: 100%;
+        margin: 10px;
+    }
+
+    .form-modal {
+        grid-template-columns: 1fr; /* Uma coluna em telas menores */
+    }
+
+    .botoes {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .botao-salvar,
+    .botao-cancelar {
+        width: 100%;
+    }
+}

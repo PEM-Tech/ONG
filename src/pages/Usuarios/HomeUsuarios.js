@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import usuarioService from "../../services/usuarioService"; // Service para comunicação com o backend
+import ModalCadastroUsuario from "./CadastroUsuarios"; // Import do modal
 import "../../assets/css/usuarios.css"; // Estilo da tabela
 
 function TabelaUsuarios() {
@@ -7,6 +8,7 @@ function TabelaUsuarios() {
     const [search, setSearch] = useState("");
     const [ordenar, setOrdenar] = useState("nome"); // Campo de ordenação
     const [exibir, setExibir] = useState(10); // Número de linhas exibidas por vez
+    const [isModalOpen, setIsModalOpen] = useState(false); // Estado do modal
 
     useEffect(() => {
         // Busca os usuários no backend
@@ -33,6 +35,13 @@ function TabelaUsuarios() {
         })
         .slice(0, exibir);
 
+    // Função para adicionar um novo usuário (simulação de envio ao backend)
+    const handleAddUsuario = (formData) => {
+        console.log("Novo usuário cadastrado:", formData);
+        setUsuarios((prev) => [...prev, { id: usuarios.length + 1, ...formData }]);
+        setIsModalOpen(false); // Fecha o modal
+    };
+
     return (
         <div className="tabela-container">
             <h1>Gerenciamento de Usuários</h1>
@@ -58,6 +67,12 @@ function TabelaUsuarios() {
                     <option value={10}>Exibir 10</option>
                     <option value={20}>Exibir 20</option>
                 </select>
+                <button
+                    className="botao-adicionar"
+                    onClick={() => setIsModalOpen(true)} // Abre o modal
+                >
+                    Adicionar Usuário
+                </button>
             </div>
             <table>
                 <thead>
@@ -68,7 +83,6 @@ function TabelaUsuarios() {
                         <th>Permissão</th>
                         <th>Desabilitado</th>
                         <th>Ações</th>
-                        
                     </tr>
                 </thead>
                 <tbody>
@@ -77,7 +91,8 @@ function TabelaUsuarios() {
                             <td>{usuario.nome}</td>
                             <td>{usuario.email}</td>
                             <td>{usuario.telefone || "Não informado"}</td>
-                            <td>{usuario.funcao}</td>
+                            <td>{usuario.permissao}</td>
+                            <td>{usuario.desabilitado}</td>
                             <td>
                                 <button onClick={() => console.log("Editar", usuario.id)}>✏️</button>
                                 <button onClick={() => console.log("Excluir", usuario.id)}>❌</button>
@@ -86,6 +101,13 @@ function TabelaUsuarios() {
                     ))}
                 </tbody>
             </table>
+
+            {/* Modal de Cadastro */}
+            <ModalCadastroUsuario
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)} // Fecha o modal
+                onSubmit={handleAddUsuario} // Envia os dados para adicionar o usuário
+            />
         </div>
     );
 }

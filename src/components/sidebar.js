@@ -53,7 +53,7 @@ function Sidebar() {
                             alt=""
                             className={`profile-img ${isCollapsed ? "collapsed-img" : ""}`}
                         />
-                        {!isCollapsed && <p>Administrador</p>}
+                        {/* {!isCollapsed && <p>Administrador</p>} */}
                     </div>
                     <ul className="menu">
                         <li onClick={goToHome}>
