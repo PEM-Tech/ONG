@@ -8,8 +8,10 @@ function ModalCadastroUsuario({ isOpen, onClose, onSubmit }) {
         senha: "",
         desabilitado: "não",
         permissao: "",
-        anexo_id: "",
+        anexo: null, // Dados do anexo enviado
     });
+
+    const [file, setFile] = useState(null); // Armazena o arquivo selecionado
 
     useEffect(() => {
         if (!isOpen) {
@@ -19,8 +21,9 @@ function ModalCadastroUsuario({ isOpen, onClose, onSubmit }) {
                 senha: "",
                 desabilitado: "não",
                 permissao: "",
-                anexo_id: "",
+                anexo: null,
             });
+            setFile(null); // Limpa o arquivo selecionado
         }
     }, [isOpen]);
 
@@ -29,16 +32,45 @@ function ModalCadastroUsuario({ isOpen, onClose, onSubmit }) {
         setFormData({ ...formData, [name]: value });
     };
 
-    const handleSubmit = (e) => {
+    const handleFileChange = (e) => {
+        setFile(e.target.files[0]); // Armazena o arquivo selecionado
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (!formData.nome || !formData.email || !formData.senha || !formData.permissao) {
             alert("Por favor, preencha todos os campos obrigatórios.");
             return;
         }
 
+        let anexoInfo = null;
+
+        if (file) {
+            const formDataFile = new FormData();
+            formDataFile.append("file", file);
+
+            try {
+                const response = await fetch("http://localhost:5000/api/upload", {
+                    method: "POST",
+                    body: formDataFile,
+                });
+
+                if (response.ok) {
+                    anexoInfo = await response.json();
+                } else {
+                    alert("Erro ao enviar o arquivo.");
+                    return;
+                }
+            } catch (error) {
+                console.error("Erro ao enviar o arquivo:", error);
+                alert("Erro ao enviar o arquivo.");
+                return;
+            }
+        }
+
         const finalFormData = {
             ...formData,
-            anexo_id: formData.anexo_id ? Number(formData.anexo_id) : null,
+            anexo: anexoInfo, // Inclui os dados do anexo no formulário
         };
 
         onSubmit(finalFormData); // Envia os dados para o componente pai
@@ -110,13 +142,12 @@ function ModalCadastroUsuario({ isOpen, onClose, onSubmit }) {
                         />
                     </label>
                     <label>
-                        Anexo ID (Opcional):
+                        Anexo (Opcional):
                         <input
                             className="modal-input"
-                            type="number"
-                            name="anexo_id"
-                            value={formData.anexo_id}
-                            onChange={handleChange}
+                            type="file"
+                            name="anexo"
+                            onChange={handleFileChange}
                         />
                     </label>
                     <div className="botoes">

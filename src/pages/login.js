@@ -17,11 +17,11 @@ function Login() {
             <div className="login-form-container">
                 <h1>ONG Superação</h1>
                 <form onSubmit={handleLogin}>
-                    <label>
+                    <label className='labelUser'>
                         Email
                         <input type="text" placeholder="Insira seu email..." required />
                     </label>
-                    <label>
+                    <label className='labelPass'>
                         Senha
                         <input type="password" placeholder="Insira sua senha..." required />
                     </label>

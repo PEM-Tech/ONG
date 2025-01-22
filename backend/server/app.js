@@ -44,3 +44,32 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
+
+
+
+// Configuração do multer para salvar na pasta "uploads"
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+      cb(null, path.join(__dirname, "uploads")); // Pasta onde os arquivos serão salvos
+  },
+  filename: (req, file, cb) => {
+      const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+      cb(null, uniqueSuffix + path.extname(file.originalname)); // Garante nomes únicos
+  },
+});
+
+const upload = multer({ storage });
+
+// Rota de upload
+app.post("/api/upload", upload.single("file"), (req, res) => {
+  if (!req.file) {
+      return res.status(400).json({ error: "Nenhum arquivo enviado." });
+  }
+
+  // Retorna informações do arquivo
+  res.json({
+      caminho: `../uploads/${req.file.filename}`, // Caminho do arquivo
+      tamanho: req.file.size, // Tamanho do arquivo
+      nome: req.file.originalname, // Nome original do arquivo
+  });
+});

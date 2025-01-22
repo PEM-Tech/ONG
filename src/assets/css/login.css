@@ -47,12 +47,16 @@ form {
     width: 80%;
     max-width: 300px;
 }
-
-label {
+.labelUser{
     font-size: 1rem;
     margin-bottom: 10px;
+    color:white;
 }
-
+.labelPass{
+    font-size: 1rem;
+    margin-bottom: 10px;
+    color:white;
+}
 input {
     width: 100%; /* Garante que o input seja responsivo */
     padding: 10px;
