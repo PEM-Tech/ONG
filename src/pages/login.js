@@ -16,7 +16,7 @@ function Login() {
             </div>
             <div className="login-form-container">
                 <h1>ONG Superação</h1>
-                <form onSubmit={handleLogin}>
+                <form className="login-form" onSubmit={handleLogin}>
                     <label className='labelUser'>
                         Email
                         <input type="text" placeholder="Insira seu email..." required />

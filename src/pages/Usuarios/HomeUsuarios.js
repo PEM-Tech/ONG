@@ -35,12 +35,10 @@ function TabelaUsuarios() {
         })
         .slice(0, exibir);
 
-    // Função para adicionar um novo usuário (simulação de envio ao backend)
-    const handleAddUsuario = (formData) => {
-        console.log("Novo usuário cadastrado:", formData);
-        setUsuarios((prev) => [...prev, { id: usuarios.length + 1, ...formData }]);
-        setIsModalOpen(false); // Fecha o modal
-    };
+        const handleAddUsuario = (novoUsuario) => {
+            setUsuarios((prev) => [...prev, novoUsuario]);
+            setIsModalOpen(false); // Fecha o modal
+        };
 
     return (
         <div className="tabela-container">

@@ -41,7 +41,7 @@ body {
     margin-bottom: 20px;
 }
 
-form {
+.login-form {
     display: flex;
     flex-direction: column;
     width: 80%;
