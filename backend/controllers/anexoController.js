@@ -1,6 +1,6 @@
 const path = require("path");
 const multer = require("multer");
-const { salvarAnexo } = require("../models/Anexo");
+const  Anexo  = require("../models/anexoModel.js");
 
 // Configuração do multer para salvar arquivos
 const storage = multer.diskStorage({
@@ -26,7 +26,7 @@ const criarAnexo = async (req, res) => {
         const caminho = `uploads/${filename}`;
 
         // Salvar informações no banco de dados
-        const anexo = await salvarAnexo({
+        const anexo = await Anexo({
             nome: originalname,
             caminho,
             tamanho: size,

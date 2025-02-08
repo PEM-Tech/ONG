@@ -1,84 +1,84 @@
-import React from "react";
+import React, { useContext } from "react";
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { AuthProvider, AuthContext } from "./context/AuthContext";
 import Login from "./pages/login";
 import Home from "./pages/home";
 import ProtectedLayout from "./components/ProtectedLayout";
-import HomePacientes from "./pages/Assistidos/HomeAssistidos";
+import ListarAssistidos from "./pages/Assistidos/ListarAssistidos"; // Atualize o caminho conforme sua estrutura
+import CadastroAssistidos from "./pages/Assistidos/CadastroAssistidos";
 import HomeVoluntarios from "./pages/Voluntarios/HomeVoluntarios";
-import HomeConfig from "./pages/Configurações/HomeConfig"; // Importação do HomeConfig
-import HomeUsuarios from "./pages/Usuarios/HomeUsuarios"
+import HomeConfig from "./pages/Configurações/HomeConfig";
+import HomeUsuarios from "./pages/Usuarios/HomeUsuarios";
 
-function App() {
-    const isAuthenticated = true; // Alterar para false se necessário
-
-    return (
-        <Router>
-            <Routes>
-                <Route path="/login" element={<Login />} />
-                <Route
-                    path="/home"
-                    element={
-                        isAuthenticated ? (
-                            <ProtectedLayout>
-                                <Home />
-                            </ProtectedLayout>
-                        ) : (
-                            <Navigate to="/login" />
-                        )
-                    }
-                />
-                <Route
-                    path="/home-pacientes"
-                    element={
-                        isAuthenticated ? (
-                            <ProtectedLayout>
-                                <HomePacientes />
-                            </ProtectedLayout>
-                        ) : (
-                            <Navigate to="/login" />
-                        )
-                    }
-                />
-                <Route
-                    path="/home-voluntarios"
-                    element={
-                        isAuthenticated ? (
-                            <ProtectedLayout>
-                                <HomeVoluntarios />
-                            </ProtectedLayout>
-                        ) : (
-                            <Navigate to="/login" />
-                        )
-                    }
-                />
-                <Route
-                    path="/home-config"
-                    element={
-                        isAuthenticated ? (
-                            <ProtectedLayout>
-                                <HomeConfig />
-                            </ProtectedLayout>
-                        ) : (
-                            <Navigate to="/login" />
-                        )
-                    }
-                />
-                  <Route
-                    path="/home-usuarios"
-                    element={
-                        isAuthenticated ? (
-                            <ProtectedLayout>
-                                <HomeUsuarios />
-                            </ProtectedLayout>
-                        ) : (
-                            <Navigate to="/login" />
-                        )
-                    }
-                />
-                <Route path="*" element={<Navigate to="/login" />} />
-            </Routes>
-        </Router>
-    );
+// Função para proteger rotas privadas
+function ProtectedRoute({ children }) {
+  const { user } = useContext(AuthContext);
+  console.log ("tojen no encontrado.",AuthContext )
+  return user ? children : <Navigate to="/login" />;
 }
 
-export default App;
+function App() {
+  return (
+    <Router>
+      <AuthProvider>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+
+          <Route path="/home" element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <Home />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          } />
+
+          {/* Rota para Listar Assistidos */}
+          <Route path="/assistidos" element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <ListarAssistidos/>
+              </ProtectedLayout>
+            </ProtectedRoute>
+          } />
+
+          <Route path="/cadastrar-assistido" element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <CadastroAssistidos />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          } />
+
+          <Route path="/home-voluntarios" element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <HomeVoluntarios />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          } />
+
+          <Route path="/home-config" element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <HomeConfig />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          } />
+
+          <Route path="/home-usuarios" element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <HomeUsuarios />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          }/>
+
+          <Route path="*" element={<Navigate to="/login" />} />
+        </Routes>
+      </AuthProvider>
+    </Router>
+  );
+}
+
+export default App;localStorage.getItem("authToken")
+

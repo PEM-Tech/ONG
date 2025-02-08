@@ -1,83 +1,130 @@
 import axios from "axios";
 
-// URL base do backend, configure de acordo com o ambiente
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://localhost:5000";
+const API_URL = "http://localhost:5000/usuarios"; // URL base do backend
 
 const usuarioService = {
-  /**
-   * Busca todos os usuários
-   * @returns {Promise} Lista de usuários
-   */
-  getAllUsuarios: async () => {
-    try {
-      const response = await axios.get(`${API_BASE_URL}/usuarios/buscar`);
-      return response.data;
-    } catch (error) {
-      console.error("Erro ao buscar os usuários:", error);
-      throw error;
-    }
-  },
+    // 🆕 Buscar usuário autenticado pelo token
+    getUsuarioByToken: async () => {
+        const token = localStorage.getItem("token"); // Obtém o token salvo
+        if (!token) {
+            console.warn("⚠️ Nenhum token encontrado no localStorage.");
+            return null;
+        }
 
-  /**
-   * Busca um usuário pelo ID
-   * @param {number} id - ID do usuário
-   * @returns {Promise} Dados do usuário
-   */
-  getUsuarioById: async (id) => {
-    try {
-      const response = await axios.get(`${API_BASE_URL}/usuarios/buscar/${id}`);
-      return response.data;
-    } catch (error) {
-      console.error(`Erro ao buscar o usuário com ID ${id}:`, error);
-      throw error;
-    }
-  },
+        try {
+            const response = await axios.get(`${API_URL}/me`, {
+                headers: { Authorization: `Bearer ${token}` },
+                withCredentials: true, // Garante que os cookies sejam enviados corretamente
+            });
+            return response.data.usuario; // Retorna os dados do usuário autenticado
+        } catch (error) {
+            console.error("❌ Erro ao buscar usuário autenticado:", error);
+            return null;
+        }
+    },
 
-  /**
-   * Cria um novo usuário
-   * @param {Object} usuarioData - Dados do novo usuário
-   * @returns {Promise} Usuário criado
-   */
-  createUsuario: async (usuarioData) => {
-    try {
-      const response = await axios.post(`${API_BASE_URL}/usuarios/criar`, usuarioData);
-      return response.data;
-    } catch (error) {
-      console.error("Erro ao criar o usuário:", error);
-      throw error;
-    }
-  },
+    // Buscar todos os usuários
+    getAllUsuarios: async () => {
+        const token = localStorage.getItem("token");
+        try {
+            const response = await axios.get(`${API_URL}/buscar`, {
+                headers: { Authorization: `Bearer ${token}` },
+                withCredentials: true,
+            });
+            return response.data;
+        } catch (error) {
+            console.error("❌ Erro ao buscar usuários:", error);
+            throw error;
+        }
+    },
 
-  /**
-   * Atualiza os dados de um usuário pelo ID
-   * @param {number} id - ID do usuário
-   * @param {Object} usuarioData - Novos dados do usuário
-   * @returns {Promise} Usuário atualizado
-   */
-  updateUsuario: async (id, usuarioData) => {
-    try {
-      const response = await axios.put(`${API_BASE_URL}/usuarios/atualizar/${id}`, usuarioData);
-      return response.data;
-    } catch (error) {
-      console.error(`Erro ao atualizar o usuário com ID ${id}:`, error);
-      throw error;
-    }
-  },
+    // Buscar um usuário pelo ID
+    getUsuarioById: async (id) => {
+        const token = localStorage.getItem("token");
+        try {
+            const response = await axios.get(`${API_URL}/buscar/${id}`, {
+                headers: { Authorization: `Bearer ${token}` },
+                withCredentials: true,
+            });
+            return response.data;
+        } catch (error) {
+            console.error("❌ Erro ao buscar usuário:", error);
+            throw error;
+        }
+    },
 
-  /**
-   * Remove um usuário pelo ID
-   * @param {number} id - ID do usuário
-   * @returns {Promise} Confirmação da exclusão
-   */
-  deleteUsuario: async (id) => {
-    try {
-      const response = await axios.delete(`${API_BASE_URL}/usuarios/deletar/${id}`);
-      return response.data;
-    } catch (error) {
-      console.error(`Erro ao excluir o usuário com ID ${id}:`, error);
-      throw error;
-    }
-  },
+    // Criar um novo usuário
+    criarUsuario: async (usuarioData) => {
+        const token = localStorage.getItem("token");
+        try {
+            const response = await axios.post(`${API_URL}/criar`, usuarioData, {
+                headers: { Authorization: `Bearer ${token}` },
+                withCredentials: true,
+            });
+            return response.data;
+        } catch (error) {
+            console.error("❌ Erro ao criar usuário:", error);
+            throw error;
+        }
+    },
+
+    // Atualizar um usuário existente
+    atualizarUsuario: async (id, usuarioData) => {
+        const token = localStorage.getItem("token");
+        try {
+            const response = await axios.put(`${API_URL}/atualizar/${id}`, usuarioData, {
+                headers: { Authorization: `Bearer ${token}` },
+                withCredentials: true,
+            });
+            return response.data;
+        } catch (error) {
+            console.error("❌ Erro ao atualizar usuário:", error);
+            throw error;
+        }
+    },
+
+    // Excluir um usuário pelo ID
+    deletarUsuario: async (id) => {
+        const token = localStorage.getItem("token");
+        try {
+            const response = await axios.delete(`${API_URL}/deletar/${id}`, {
+                headers: { Authorization: `Bearer ${token}` },
+                withCredentials: true,
+            });
+            return response.data;
+        } catch (error) {
+            console.error("❌ Erro ao excluir usuário:", error);
+            throw error;
+        }
+    },
+
+    // Login do usuário
+    login: async (dados) => {
+        try {
+            console.log("📤 Enviando requisição de login:", dados);
+            const response = await axios.post(`${API_URL}/login`, dados, { withCredentials: true });
+            console.log("✅ Resposta recebida do backend:", response.data);
+
+            if (response.data.token) {
+                localStorage.setItem("token", response.data.token); // Salva o token no localStorage
+            }
+
+            return response.data;
+        } catch (error) {
+            console.error("❌ Erro ao tentar fazer login:", error);
+            throw error;
+        }
+    },
+
+    // Logout do usuário
+    logout: async () => {
+        try {
+            await axios.post(`${API_URL}/logout`, {}, { withCredentials: true });
+            localStorage.removeItem("token"); // Remove o token do localStorage
+        } catch (error) {
+            console.error("❌ Erro ao fazer logout:", error);
+        }
+    },
 };
 
 export default usuarioService;

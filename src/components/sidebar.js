@@ -1,24 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import "../assets/css/sidebar.css";
 import logo from "../assets/logo.jpeg";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext"; // Importa o contexto de autenticação
 
 function Sidebar() {
     const [isCollapsed, setIsCollapsed] = useState(false);
     const [isDropdownVisible, setIsDropdownVisible] = useState(false); // Controle do dropdown no mobile
     const navigate = useNavigate();
+    const { logout } = useContext(AuthContext); // Obtém a função de logout do contexto
 
     const toggleSidebar = () => {
         setIsCollapsed(!isCollapsed);
-    }; 
+    };
 
     const toggleDropdown = () => {
         setIsDropdownVisible(!isDropdownVisible);
     };
 
     const handleLogout = () => {
-        localStorage.removeItem("authToken");
-        navigate("/login");
+        logout(); // Chama a função de logout do AuthContext
     };
 
     const goToHome = () => {

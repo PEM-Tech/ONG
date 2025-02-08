@@ -1,0 +1,198 @@
+/* Reset básico e fontes */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html,
+  body {
+    height: 100%;
+    overflow-y: auto;
+  }
+  
+  body {
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    background-color: #f5f5f5;
+    line-height: 1.6;
+    color: #333;
+  }
+  
+  /* Container principal */
+  .cadastro-container {
+    max-width: 800px;
+    margin: 40px auto;
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    /* Permite que o container não ultrapasse a altura da viewport */
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+  }
+  
+  /* Título da página */
+  .cadastro-container h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 2em;
+    color: #007bff;
+  }
+  
+  /* Estilo para os fieldsets (seções) */
+  fieldset {
+    border: none;
+    margin-bottom: 30px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-left: 5px solid #007bff;
+    border-radius: 5px;
+  }
+  
+  fieldset + fieldset {
+    margin-top: 20px;
+  }
+  
+  /* Legend das seções */
+  legend {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  /* Grupos de campos */
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .form-group label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1em;
+    transition: border-color 0.3s;
+  }
+  
+  .form-group input:focus,
+  .form-group select:focus,
+  .form-group textarea:focus {
+    border-color: #007bff;
+    outline: none;
+  }
+  
+  /* Mensagens de erro e sucesso */
+  .error {
+    color: #e74c3c;
+    font-size: 0.9em;
+    margin-top: 5px;
+  }
+  
+  .success {
+    color: #27ae60;
+    font-size: 1em;
+    margin: 10px 0;
+    text-align: center;
+  }
+  
+  /* Botões de navegação e ação */
+  .buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+  
+  .buttons button {
+    flex: 1;
+    padding: 12px;
+    font-size: 1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+  }
+  
+  /* Botão Próximo e Voltar */
+  button.next,
+  button.prev {
+    background-color: #007bff;
+    color: #fff;
+  }
+  
+  button.next:hover,
+  button.prev:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+  }
+  
+  /* Botão de Limpar/Reset */
+  button.reset {
+    background-color: #f39c12;
+    color: #fff;
+  }
+  
+  button.reset:hover {
+    background-color: #e67e22;
+    transform: translateY(-2px);
+  }
+  
+  /* Botão de Cancelar */
+  button.cancel {
+    background-color: #e74c3c;
+    color: #fff;
+  }
+  
+  button.cancel:hover {
+    background-color: #c0392b;
+    transform: translateY(-2px);
+  }
+  
+  /* Botão de Cadastrar (final) */
+  button.submit {
+    background-color: #27ae60;
+    color: #fff;
+  }
+  
+  button.submit:hover {
+    background-color: #1e8449;
+    transform: translateY(-2px);
+  }
+  
+  /* Estilo para esconder e mostrar etapas se usar navegação por etapas */
+  .form-step {
+    display: none;
+  }
+  
+  .form-step.active {
+    display: block;
+  }
+  
+  /* Responsividade */
+  @media (max-width: 600px) {
+    .cadastro-container {
+      padding: 15px 20px;
+      max-height: calc(100vh - 20px);
+    }
+    fieldset {
+      padding: 15px;
+    }
+    .buttons {
+      flex-direction: column;
+    }
+    .buttons button {
+      margin-bottom: 10px;
+    }
+  }
+  

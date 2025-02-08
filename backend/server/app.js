@@ -1,11 +1,14 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-require("dotenv").config(); // Carrega as variáveis do .env
+const cookieParser = require("cookie-parser"); // 🔹 Importa o cookie-parser
+require("dotenv").config();
 const connection = require("../config/database");
 const fs = require("fs");
-const usuarioRoutes = require("../routes/usuarioRoutes"); // Importa as rotas de usuários
-const anexoRoutes = require("../routes/anexoRoutes"); // Importa as rotas de anexos
+const usuarioRoutes = require("../routes/usuarioRoutes");
+const anexoRoutes = require("../routes/anexoRoutes");
+const path = require("path");
+const assistidosRoutes = require("../routes/assistidos.routes");
 
 const app = express();
 
@@ -13,37 +16,39 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+// 🔹 Adiciona o middleware para processar cookies
+app.use(cookieParser()); // 🔹 Adiciona suporte a cookies
+
 // Configuração do CORS
-const corsOrigins = process.env.CORS_ORIGINS 
-  ? process.env.CORS_ORIGINS.split(",")
-  : ["*"]; // Aceita qualquer origem, caso não esteja configurado no .env
 app.use(cors({
-  origin: corsOrigins,
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+    origin: "http://localhost:3000",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true, // 🔹 Permite envio de cookies
 }));
 
 // Logger básico de requisições
 app.use((req, res, next) => {
-  console.log(`[${req.method}] ${req.url}`);
-  next();
+    console.log(`[${req.method}] ${req.url}`);
+    next();
 });
 
 // Cria a pasta 'uploads' se não existir
 const uploadsDir = path.join(__dirname, "uploads");
 if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
+    fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
 // Middleware para servir arquivos estáticos
 app.use("/uploads", express.static(uploadsDir));
 
 // Rotas
-app.use("/usuarios", usuarioRoutes); // Adiciona as rotas de usuários
-app.use("/anexos", anexoRoutes); // Adiciona as rotas de anexos
+app.use("/usuarios", usuarioRoutes);
+app.use("/anexos", anexoRoutes);
+app.use("/api/assistidos", assistidosRoutes); 
 
 // Iniciar o servidor
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
+    console.log(`Servidor rodando na porta ${PORT}`);
 });

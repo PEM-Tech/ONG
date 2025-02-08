@@ -2,8 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../../assets/css/modalUsuario.css"; // Estilo do modal
 import usuarioService from "../../services/usuarioService";
 
-
-function ModalCadastroUsuario({ isOpen, onClose, onSubmit }) {
+function ModalCadastroUsuario({ isOpen, onClose, onSubmit, usuarioEditado }) {
     const [formData, setFormData] = useState({
         nome: "",
         email: "",
@@ -16,10 +15,20 @@ function ModalCadastroUsuario({ isOpen, onClose, onSubmit }) {
     const [errorMessage, setErrorMessage] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [passwordMatch, setPasswordMatch] = useState(null); // null = não checado, true = igual, false = diferente
+    const [passwordMatch, setPasswordMatch] = useState(null);
 
+    // Se o modal for aberto para edição, preenche os campos com os dados do usuário
     useEffect(() => {
-        if (!isOpen) {
+        if (usuarioEditado) {
+            setFormData({
+                nome: usuarioEditado.nome,
+                email: usuarioEditado.email,
+                senha: "", // Não preencher por segurança
+                confirmarSenha: "",
+                desabilitado: usuarioEditado.desabilitado ? "sim" : "não",
+                permissao: usuarioEditado.permissao,
+            });
+        } else {
             setFormData({
                 nome: "",
                 email: "",
@@ -28,62 +37,46 @@ function ModalCadastroUsuario({ isOpen, onClose, onSubmit }) {
                 desabilitado: "não",
                 permissao: "1",
             });
-            setErrorMessage(""); // Limpa mensagem de erro ao fechar o modal
-            setPasswordMatch(null);
         }
-    }, [isOpen]);
+        setErrorMessage("");
+        setPasswordMatch(null);
+    }, [usuarioEditado, isOpen]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
 
-        // Verifica se as senhas coincidem enquanto o usuário digita
         if (name === "senha" || name === "confirmarSenha") {
             const { senha, confirmarSenha } = { ...formData, [name]: value };
-            if (senha && confirmarSenha) {
-                setPasswordMatch(senha === confirmarSenha);
-            } else {
-                setPasswordMatch(null);
-            }
+            setPasswordMatch(senha && confirmarSenha ? senha === confirmarSenha : null);
         }
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-    
-        // Verifica se os campos obrigatórios estão preenchidos
-        if (!formData.nome || !formData.email || !formData.senha || !formData.confirmarSenha || !formData.permissao) {
+
+        if (!formData.nome || !formData.email || !formData.permissao) {
             setErrorMessage("Por favor, preencha todos os campos obrigatórios.");
             return;
         }
-    
-        // Verifica se as senhas coincidem
-        if (formData.senha !== formData.confirmarSenha) {
+
+        if (formData.senha && formData.senha !== formData.confirmarSenha) {
             setErrorMessage("As senhas não coincidem.");
             return;
         }
-    
+
         try {
-            setErrorMessage(""); // Limpa mensagens de erro
-            const novoUsuario = {
-                nome: formData.nome,
-                email: formData.email,
-                senha: formData.senha,
-                desabilitado: formData.desabilitado === "sim",
-                permissao: formData.permissao,
-            };
-    
-            // Chama o serviço para criar o usuário
-            await usuarioService.createUsuario(novoUsuario);
-    
-            onSubmit(novoUsuario); // Opcional: notifica o componente pai
-            onClose(); // Fecha o modal
+            setErrorMessage("");
+
+          
+
+            onSubmit({ ...usuarioEditado, ...formData });
+            onClose();
         } catch (error) {
-            console.error("Erro ao criar usuário:", error);
-            setErrorMessage("Erro ao criar o usuário. Tente novamente.");
+            console.error("Erro ao salvar usuário:", error);
+            setErrorMessage("Erro ao salvar usuário.");
         }
     };
-    
 
     const toggleShowPassword = () => setShowPassword(!showPassword);
     const toggleShowConfirmPassword = () => setShowConfirmPassword(!showConfirmPassword);
@@ -93,7 +86,7 @@ function ModalCadastroUsuario({ isOpen, onClose, onSubmit }) {
     return (
         <div className="modal-overlay">
             <div className="modal">
-                <h2>Cadastrar Novo Usuário</h2>
+                <h2>{usuarioEditado ? "Editar Usuário" : "Cadastrar Novo Usuário"}</h2>
                 <form onSubmit={handleSubmit} className="form-modal">
                     <label>
                         Nome:
@@ -126,7 +119,6 @@ function ModalCadastroUsuario({ isOpen, onClose, onSubmit }) {
                                 name="senha"
                                 value={formData.senha}
                                 onChange={handleChange}
-                                required
                             />
                             <span onClick={toggleShowPassword}>
                                 {showPassword ? "👁️" : "👁️‍🗨️"}
@@ -142,7 +134,6 @@ function ModalCadastroUsuario({ isOpen, onClose, onSubmit }) {
                                 name="confirmarSenha"
                                 value={formData.confirmarSenha}
                                 onChange={handleChange}
-                                required
                             />
                             <span onClick={toggleShowConfirmPassword}>
                                 {showConfirmPassword ? "👁️" : "👁️‍🗨️"}
@@ -194,7 +185,7 @@ function ModalCadastroUsuario({ isOpen, onClose, onSubmit }) {
                     </label>
                     <div className="botoes">
                         <button type="submit" className="botao-salvar">
-                            Salvar
+                            {usuarioEditado ? "Atualizar" : "Salvar"}
                         </button>
                         <button
                             type="button"
