@@ -13,7 +13,7 @@ import HomeUsuarios from "./pages/Usuarios/HomeUsuarios";
 // Função para proteger rotas privadas
 function ProtectedRoute({ children }) {
   const { user } = useContext(AuthContext);
-  console.log ("tojen no encontrado.",AuthContext )
+  console.log ("token não encontrado.",AuthContext )
   return user ? children : <Navigate to="/login" />;
 }
 

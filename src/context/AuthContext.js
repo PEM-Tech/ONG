@@ -39,20 +39,25 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (dados) => {
     try {
-      console.log("📤 Tentando fazer login com:", dados);
-      const response = await usuarioService.login(dados);
-      
-      if (response.token) {
-        localStorage.setItem("authToken", response.token); // Salva o token no localStorage
-        localStorage.setItem("usuario", JSON.stringify(response.usuario)); // Salva os dados do usuário
-        setUser(response.usuario);
-        setToken(response.token);
-        navigate("/home"); // Redireciona após login bem-sucedido
-      }
+        console.log("📤 Tentando fazer login com:", dados);
+        const response = await usuarioService.login(dados);
+
+        if (response.token) {
+            console.log("🔑 Token recebido:", response.token);
+            localStorage.setItem("authToken", response.token);
+            localStorage.setItem("usuario", JSON.stringify(response.usuario));
+            setUser(response.usuario);
+            setToken(response.token);
+            console.log("✅ Login bem-sucedido. Redirecionando...");
+            navigate("/home");
+        } else {
+            console.warn("⚠ Nenhum token recebido do servidor.");
+        }
     } catch (error) {
-      console.error("❌ Erro ao fazer login:", error);
+        console.error("❌ Erro ao fazer login:", error);
     }
-  };
+};
+
 
   const logout = () => {
     localStorage.removeItem("authToken");
