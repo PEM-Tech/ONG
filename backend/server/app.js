@@ -14,7 +14,7 @@ const app = express();
 
 // Middleware para parsear JSON
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // 🔹 Adiciona o middleware para processar cookies
 app.use(cookieParser()); // 🔹 Adiciona suporte a cookies
@@ -45,7 +45,8 @@ app.use("/uploads", express.static(uploadsDir));
 // Rotas
 app.use("/usuarios", usuarioRoutes);
 app.use("/anexos", anexoRoutes);
-app.use("/api/assistidos", assistidosRoutes); 
+ 
+app.use('/api/assistidos', assistidosRoutes);
 
 // Iniciar o servidor
 const PORT = process.env.PORT || 5000;

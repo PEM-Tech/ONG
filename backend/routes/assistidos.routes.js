@@ -49,5 +49,6 @@ router.post(
   validations,
   assistidosController.createAssistido
 );
+router.get("/", verificarToken, assistidosController.listAssistidos);
 
 module.exports = router;

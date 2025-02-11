@@ -1,130 +1,106 @@
-import axios from "axios";
-
-const API_URL = "http://localhost:5000/usuarios"; // URL base do backend
+// usuarioService.js
+import api from "../interceptador/api"; // ajuste o caminho conforme a estrutura do projeto
 
 const usuarioService = {
-    // 🆕 Buscar usuário autenticado pelo token
-    getUsuarioByToken: async () => {
-        const token = localStorage.getItem("token"); // Obtém o token salvo
-        if (!token) {
-            console.warn("⚠️ Nenhum token encontrado no localStorage.");
-            return null;
-        }
+  // Buscar usuário autenticado pelo token
+  getUsuarioByToken: async () => {
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      console.warn("⚠ Tentativa de buscar usuário sem token.");
+      return null;
+    }
+  
+    try {
+      console.log("📡 Enviando token para validação no backend:", token);
+      const response = await api.get("/me"); // O interceptor já adiciona o token
+  
+      // Verifica se a resposta contém a propriedade "usuario"
+      if (response.data && response.data.usuario) {
+        console.log("✅ Usuário validado:", response.data.usuario);
+        return response.data.usuario;
+      } else {
+        console.warn("⚠ Resposta inesperada da API:", response.data);
+        return null;
+      }
+    } catch (error) {
+      console.error("❌ Erro ao obter usuário:", error.response ? error.response.data : error.message);
+      return null;
+    }
+  },
+  
+  // Buscar todos os usuários
+  getAllUsuarios: async () => {
+    try {
+      const response = await api.get("/buscar", { withCredentials: true });
+      return response.data;
+    } catch (error) {
+      console.error("❌ Erro ao buscar usuários:", error);
+      throw error;
+    }
+  },
 
-        try {
-            const response = await axios.get(`${API_URL}/me`, {
-                headers: { Authorization: `Bearer ${token}` },
-                withCredentials: true, // Garante que os cookies sejam enviados corretamente
-            });
-            return response.data.usuario; // Retorna os dados do usuário autenticado
-        } catch (error) {
-            console.error("❌ Erro ao buscar usuário autenticado:", error);
-            return null;
-        }
-    },
+  // Buscar um usuário pelo ID
+  getUsuarioById: async (id) => {
+    try {
+      const response = await api.get(`/buscar/${id}`, { withCredentials: true });
+      return response.data;
+    } catch (error) {
+      console.error("❌ Erro ao buscar usuário:", error);
+      throw error;
+    }
+  },
 
-    // Buscar todos os usuários
-    getAllUsuarios: async () => {
-        const token = localStorage.getItem("token");
-        try {
-            const response = await axios.get(`${API_URL}/buscar`, {
-                headers: { Authorization: `Bearer ${token}` },
-                withCredentials: true,
-            });
-            return response.data;
-        } catch (error) {
-            console.error("❌ Erro ao buscar usuários:", error);
-            throw error;
-        }
-    },
+  // Criar um novo usuário
+  criarUsuario: async (usuarioData) => {
+    try {
+      const response = await api.post("/criar", usuarioData, { withCredentials: true });
+      return response.data;
+    } catch (error) {
+      console.error("❌ Erro ao criar usuário:", error);
+      throw error;
+    }
+  },
 
-    // Buscar um usuário pelo ID
-    getUsuarioById: async (id) => {
-        const token = localStorage.getItem("token");
-        try {
-            const response = await axios.get(`${API_URL}/buscar/${id}`, {
-                headers: { Authorization: `Bearer ${token}` },
-                withCredentials: true,
-            });
-            return response.data;
-        } catch (error) {
-            console.error("❌ Erro ao buscar usuário:", error);
-            throw error;
-        }
-    },
+  // Atualizar um usuário existente
+  atualizarUsuario: async (id, usuarioData) => {
+    try {
+      const response = await api.put(`/atualizar/${id}`, usuarioData, { withCredentials: true });
+      return response.data;
+    } catch (error) {
+      console.error("❌ Erro ao atualizar usuário:", error);
+      throw error;
+    }
+  },
 
-    // Criar um novo usuário
-    criarUsuario: async (usuarioData) => {
-        const token = localStorage.getItem("token");
-        try {
-            const response = await axios.post(`${API_URL}/criar`, usuarioData, {
-                headers: { Authorization: `Bearer ${token}` },
-                withCredentials: true,
-            });
-            return response.data;
-        } catch (error) {
-            console.error("❌ Erro ao criar usuário:", error);
-            throw error;
-        }
-    },
+  // Excluir um usuário pelo ID
+  deletarUsuario: async (id) => {
+    try {
+      const response = await api.delete(`/deletar/${id}`, { withCredentials: true });
+      return response.data;
+    } catch (error) {
+      console.error("❌ Erro ao excluir usuário:", error);
+      throw error;
+    }
+  },
 
-    // Atualizar um usuário existente
-    atualizarUsuario: async (id, usuarioData) => {
-        const token = localStorage.getItem("token");
-        try {
-            const response = await axios.put(`${API_URL}/atualizar/${id}`, usuarioData, {
-                headers: { Authorization: `Bearer ${token}` },
-                withCredentials: true,
-            });
-            return response.data;
-        } catch (error) {
-            console.error("❌ Erro ao atualizar usuário:", error);
-            throw error;
-        }
-    },
+  // Login do usuário
+  login: async (dados) => {
+    const response = await api.post("/login", dados);
+    // Aqui, no login, o AuthContext (ou outro local) deve salvar o token retornado em localStorage como "authToken"
+    return response.data;
+  },
 
-    // Excluir um usuário pelo ID
-    deletarUsuario: async (id) => {
-        const token = localStorage.getItem("token");
-        try {
-            const response = await axios.delete(`${API_URL}/deletar/${id}`, {
-                headers: { Authorization: `Bearer ${token}` },
-                withCredentials: true,
-            });
-            return response.data;
-        } catch (error) {
-            console.error("❌ Erro ao excluir usuário:", error);
-            throw error;
-        }
-    },
-
-    // Login do usuário
-    login: async (dados) => {
-        try {
-            console.log("📤 Enviando requisição de login:", dados);
-            const response = await axios.post(`${API_URL}/login`, dados, { withCredentials: true });
-            console.log("✅ Resposta recebida do backend:", response.data);
-
-            if (response.data.token) {
-                localStorage.setItem("token", response.data.token); // Salva o token no localStorage
-            }
-
-            return response.data;
-        } catch (error) {
-            console.error("❌ Erro ao tentar fazer login:", error);
-            throw error;
-        }
-    },
-
-    // Logout do usuário
-    logout: async () => {
-        try {
-            await axios.post(`${API_URL}/logout`, {}, { withCredentials: true });
-            localStorage.removeItem("token"); // Remove o token do localStorage
-        } catch (error) {
-            console.error("❌ Erro ao fazer logout:", error);
-        }
-    },
+  // Logout do usuário
+  logout: async () => {
+    try {
+      await api.post("/logout", {}, { withCredentials: true });
+      // Remove o token e os dados do usuário utilizando a chave correta
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("usuario");
+    } catch (error) {
+      console.error("❌ Erro ao fazer logout:", error);
+    }
+  },
 };
 
 export default usuarioService;

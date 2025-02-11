@@ -1,12 +1,12 @@
 import React, { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom"; // Importar para redirecionar
+import { useNavigate } from "react-router-dom"; // 🔹 Importar para redirecionar
 import { AuthContext } from "../context/AuthContext";
 import { mostrarErro, mostrarSucesso } from "../components/SweetAlert";
 import "../assets/css/login.css";
 
 function Login() {
     const { login } = useContext(AuthContext);
-    const navigate = useNavigate(); //  Criar navegação
+    const navigate = useNavigate(); // 🔹 Criar navegação
     const [formData, setFormData] = useState({ email: "", senha: "" });
 
     const handleChange = (e) => {
@@ -19,7 +19,7 @@ function Login() {
         try {
             await login(formData);
             mostrarSucesso("Login realizado!", "Bem-vindo ao sistema!");
-            navigate("/home"); //  Redireciona para Home após login
+            navigate("/home"); // 🔹 Redireciona para Home após login
         } catch (error) {
             mostrarErro("Erro no login", "Verifique suas credenciais.");
         }

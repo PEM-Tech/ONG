@@ -27,9 +27,9 @@ function Sidebar() {
     };
 
     const goToPacientes = () => {
-        navigate("/home-pacientes");
-    };
-
+        console.log("indo pra o home de assistidos")
+        navigate("/homeassistidos");
+     };
     const goToVoluntarios = () => {
         navigate("/home-voluntarios");
     };

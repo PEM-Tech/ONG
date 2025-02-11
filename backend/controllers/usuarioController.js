@@ -130,7 +130,7 @@ class UsuarioController {
     
                 // 🔹 Salvar o token no banco de dados
                 connection.query("UPDATE usuarios SET token = ? WHERE id = ?", [token, usuario.id]);
-    
+                console.log("🔑 Token gerado:", token);
                 res.json({ message: "Login bem-sucedido!", usuario, token });
             });
     
@@ -158,8 +158,8 @@ class UsuarioController {
                 }
     
                 if (results.length === 0) {
-                    console.log("⚠️ Usuário não encontrado.");
-                    return res.status(404).json({ error: "Usuário não encontrado" });
+                    console.log("⚠️ Usuário não encontrado.", token);
+                    return res.status(404).json({ error: "Usuário não encontrado ", token});
                 }
     
                 console.log("✅ Sessão restaurada:", results[0]);

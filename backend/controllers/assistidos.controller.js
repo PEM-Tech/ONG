@@ -1,4 +1,4 @@
-// backend/controllers/assistidos.controller.js
+
 const { validationResult } = require("express-validator");
 const connection = require("../config/database");
 
@@ -131,5 +131,17 @@ exports.createAssistido = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Erro ao cadastrar assistido. Tente novamente mais tarde." });
+  }
+};
+
+// Função para listar os assistidos
+exports.listAssistidos = async (req, res) => {
+  try {
+    // Seleciona todos os registros da tabela "assistidos"
+    const [rows] = await connection.promise().query("SELECT * FROM assistidos");
+    res.status(200).json(rows);
+  } catch (error) {
+    console.error("Erro ao listar assistidos:", error);
+    res.status(500).json({ error: "Erro ao buscar assistidos." });
   }
 };

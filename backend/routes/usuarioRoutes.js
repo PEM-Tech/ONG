@@ -7,13 +7,14 @@ const router = express.Router();
 router.post("/login", UsuarioController.loginUsuario); // Login não precisa de autenticação
 
 // 🔹 Nova rota para restaurar a sessão do usuário com base no token
-router.get("/me", verificarToken, UsuarioController.getUsuarioLogado);
+router.get("/me", UsuarioController.getUsuarioByToken);
 
 // 🛡 Rotas protegidas pelo token
-router.get("/buscar", verificarToken, UsuarioController.getAllUsuarios);
-router.get("/buscar/:id", verificarToken, UsuarioController.getUsuarioById);
-router.post("/criar", verificarToken, UsuarioController.createUsuario);
-router.put("/atualizar/:id", verificarToken, UsuarioController.updateUsuario);
-router.delete("/deletar/:id", verificarToken, UsuarioController.deleteUsuario);
+router.get('/usuario/by-token', UsuarioController.getUsuarioByToken);
+router.get("/buscar", UsuarioController.getAllUsuarios);
+router.get("/buscar/:id", UsuarioController.getUsuarioById);
+router.post("/criar", UsuarioController.createUsuario);
+router.put("/atualizar/:id", UsuarioController.updateUsuario);
+router.delete("/deletar/:id", UsuarioController.deleteUsuario);
 
 module.exports = router;

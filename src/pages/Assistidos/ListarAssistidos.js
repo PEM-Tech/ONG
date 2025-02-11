@@ -11,52 +11,69 @@ function ListAssistidos() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  //Buscar os assistidos na API (ajuste a URL conforme sua rota backend)
+  // Buscar os assistidos na API com o token no header
   useEffect(() => {
-    fetch("http://localhost:5000/api/assistidos")
-      .then((res) => res.json())
+    const token = localStorage.getItem("authToken");
+    if (!token || token === "null") {
+      console.error("Token ausente ou inválido");
+      setError("Usuário não autenticado.");
+      setLoading(false);
+      return;
+    }
+    // Realiza a requisição somente se o token for válido
+    fetch("http://localhost:5000/api/assistidos", {
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      }
+    })
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`Erro HTTP: ${res.status}`);
+        }
+        return res.json();
+      })
       .then((data) => {
         setAssistidos(data);
         setLoading(false);
       })
       .catch((err) => {
-        /**
-         * Exibe um alerta de erro.
-         * @param {string} titulo - Título da mensagem
-         * @param {string} mensagem - Texto da mensagem
-         */
-         const mostrarErro = (titulo, mensagem) => {
-            Swal.fire({
-                title: titulo,
-                text: mensagem,
-                icon: "error",
-                confirmButtonText: "OK",
-            });
-        };
         console.error("Erro ao buscar assistidos:", err);
-        mostrarErro();
         setError("Erro ao carregar assistidos.");
         setLoading(false);
       });
   }, []);
+  
 
-  //Navega para a página de edição (ou para a visualização detalhada)
+  // Navega para a página de visualização/edição completa do assistido
   const handleView = (id) => {
-    navigate(`/assistido/${id}`); // Rota para visualização/edição completa do assistido
+    navigate(`/assistido/${id}`);
   };
 
-  // Botão de editar (caso queira separar da visualização)
+  // Botão de editar (evita que o clique na linha também acione a visualização)
   const handleEdit = (e, id) => {
-    e.stopPropagation(); // Evita que o clique no botão acione a visualização da linha
+    e.stopPropagation();
     navigate(`/editar-assistido/${id}`);
   };
 
-  // Botão de excluir
+  // Botão de excluir, incluindo o token no header
   const handleDelete = (e, id) => {
     e.stopPropagation();
     if (window.confirm("Deseja realmente excluir este assistido?")) {
-      fetch(`http://localhost:5000/api/assistidos/${id}`, { method: "DELETE" })
-        .then((res) => res.json())
+      const token = localStorage.getItem("token");
+      fetch(`http://localhost:5000/api/assistidos/${id}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`  // Incluindo o token
+        }
+      })
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error(`Erro HTTP: ${res.status}`);
+          }
+          return res.json();
+        })
         .then(() => {
           setAssistidos(assistidos.filter((item) => item.id !== id));
         })
@@ -72,8 +89,7 @@ function ListAssistidos() {
 
   return (
     <div className="list-assistidos-container">
-      {/* Sidebar reaproveitado */}
-      <Sidebar />
+  
 
       <div className="main-content">
         <h1>Lista de Assistidos</h1>
@@ -125,12 +141,11 @@ function ListAssistidos() {
           </tbody>
         </table>
 
-        {/* Exemplo de botões adicionais ou filtros */}
+        {/* Botão para cadastrar novo assistido */}
         <div className="list-controls">
           <button onClick={() => navigate("/cadastrar-assistido")}>
             Cadastrar Novo Assistido
           </button>
-          {/* Aqui você pode adicionar controles de busca, filtros ou paginação */}
         </div>
       </div>
     </div>

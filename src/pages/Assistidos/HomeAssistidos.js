@@ -7,7 +7,7 @@ function Pacientes() {
 
     const handleListar = () => {
         console.log("Listar assistidos");
-        // Lógica para listar assistidos
+        navigate("/listarassistido");
     };
 
     const handleCadastrar = () => {

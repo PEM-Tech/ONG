@@ -6,6 +6,8 @@ import Home from "./pages/home";
 import ProtectedLayout from "./components/ProtectedLayout";
 import ListarAssistidos from "./pages/Assistidos/ListarAssistidos"; // Atualize o caminho conforme sua estrutura
 import CadastroAssistidos from "./pages/Assistidos/CadastroAssistidos";
+import Pacientes from "./pages/Assistidos/HomeAssistidos";
+
 import HomeVoluntarios from "./pages/Voluntarios/HomeVoluntarios";
 import HomeConfig from "./pages/Configurações/HomeConfig";
 import HomeUsuarios from "./pages/Usuarios/HomeUsuarios";
@@ -13,7 +15,7 @@ import HomeUsuarios from "./pages/Usuarios/HomeUsuarios";
 // Função para proteger rotas privadas
 function ProtectedRoute({ children }) {
   const { user } = useContext(AuthContext);
-  console.log ("token não encontrado.",AuthContext )
+
   return user ? children : <Navigate to="/login" />;
 }
 
@@ -32,14 +34,7 @@ function App() {
             </ProtectedRoute>
           } />
 
-          {/* Rota para Listar Assistidos */}
-          <Route path="/assistidos" element={
-            <ProtectedRoute>
-              <ProtectedLayout>
-                <ListarAssistidos/>
-              </ProtectedLayout>
-            </ProtectedRoute>
-          } />
+         
 
           <Route path="/cadastrar-assistido" element={
             <ProtectedRoute>
@@ -69,6 +64,20 @@ function App() {
             <ProtectedRoute>
               <ProtectedLayout>
                 <HomeUsuarios />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          }/>
+              <Route path="/homeassistidos" element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <Pacientes />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          }/>
+              <Route path="/listarassistido" element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <ListarAssistidos />
               </ProtectedLayout>
             </ProtectedRoute>
           }/>
