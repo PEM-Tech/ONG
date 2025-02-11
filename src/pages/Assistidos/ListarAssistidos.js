@@ -53,7 +53,9 @@ function ListAssistidos() {
   // Botão de editar (evita que o clique na linha também acione a visualização)
   const handleEdit = (e, id) => {
     e.stopPropagation();
-    navigate(`/editar-assistido/${id}`);
+    const token = localStorage.getItem("authToken");
+   
+    navigate(`/editarassistido/${id}`);
   };
 
   // Botão de excluir, incluindo o token no header

@@ -18,8 +18,15 @@ function Login() {
 
         try {
             await login(formData);
-            mostrarSucesso("Login realizado!", "Bem-vindo ao sistema!");
-            navigate("/home"); // 🔹 Redireciona para Home após login
+
+            // Verifica se o usuário está definido antes de navegar
+            const user = JSON.parse(localStorage.getItem("user"));
+            if (user) {
+                mostrarSucesso("Login realizado!", `Bem-vindo, ${user.nome}!`);
+                setTimeout(() => navigate("/home"), 500); // Aguarda estado antes de redirecionar
+            } else {
+                mostrarErro("Erro no login", "Usuário não encontrado.");
+            }
         } catch (error) {
             mostrarErro("Erro no login", "Verifique suas credenciais.");
         }

@@ -7,7 +7,7 @@ import ProtectedLayout from "./components/ProtectedLayout";
 import ListarAssistidos from "./pages/Assistidos/ListarAssistidos"; // Atualize o caminho conforme sua estrutura
 import CadastroAssistidos from "./pages/Assistidos/CadastroAssistidos";
 import Pacientes from "./pages/Assistidos/HomeAssistidos";
-
+import EditarAssistido from "./pages/Assistidos/EditarAssistidos"
 import HomeVoluntarios from "./pages/Voluntarios/HomeVoluntarios";
 import HomeConfig from "./pages/Configurações/HomeConfig";
 import HomeUsuarios from "./pages/Usuarios/HomeUsuarios";
@@ -78,6 +78,13 @@ function App() {
             <ProtectedRoute>
               <ProtectedLayout>
                 <ListarAssistidos />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          }/>
+           <Route path="/editarassistido/:id" element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <EditarAssistido />
               </ProtectedLayout>
             </ProtectedRoute>
           }/>

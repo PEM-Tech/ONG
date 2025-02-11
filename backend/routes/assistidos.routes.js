@@ -37,18 +37,26 @@ const validations = [
   // Outras validações...
 ];
 
-// Aplica o middleware de autenticação na rota
-router.post(
-  "/",
-  verificarToken, // Middleware de autenticação
+
+// Rota para listar assistidos (GET)
+router.get("/", verificarToken, assistidosController.listAssistidos);
+
+// **Rota para buscar um assistido específico (GET)**
+router.get("/:id", verificarToken, assistidosController.getAssistido);
+
+// **Rota para atualizar um assistido (PUT)**
+router.put(
+  "/:id",
+  verificarToken,
   upload.fields([
     { name: "anexo_id", maxCount: 1 },
     { name: "anexo2_id", maxCount: 1 },
     { name: "anexo3_id", maxCount: 1 }
   ]),
   validations,
-  assistidosController.createAssistido
+  assistidosController.updateAssistido
 );
 router.get("/", verificarToken, assistidosController.listAssistidos);
+
 
 module.exports = router;
