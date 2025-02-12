@@ -20,12 +20,12 @@ function Login() {
             await login(formData);
 
             // Verifica se o usuário está definido antes de navegar
-            const user = JSON.parse(localStorage.getItem("user"));
+            const user = JSON.parse(localStorage.getItem("usuario"));
             if (user) {
                 mostrarSucesso("Login realizado!", `Bem-vindo, ${user.nome}!`);
                 setTimeout(() => navigate("/home"), 500); // Aguarda estado antes de redirecionar
             } else {
-                mostrarErro("Erro no login", "Usuário não encontrado.");
+                mostrarErro("Erro no login", "erro ta aqui no login quando ele tenta puxar o const user");
             }
         } catch (error) {
             mostrarErro("Erro no login", "Verifique suas credenciais.");

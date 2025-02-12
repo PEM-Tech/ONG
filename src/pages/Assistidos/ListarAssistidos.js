@@ -47,7 +47,8 @@ function ListAssistidos() {
 
   // Navega para a página de visualização/edição completa do assistido
   const handleView = (id) => {
-    navigate(`/assistido/${id}`);
+    
+    navigate(`/editarassistido/${id}`);
   };
 
   // Botão de editar (evita que o clique na linha também acione a visualização)

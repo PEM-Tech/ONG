@@ -1,0 +1,13 @@
+{
+  "paginas": [
+    { "nome": "atualizar_produto.php", "funcoes": ["Estoque", "Administrador"] },
+    { "nome": "cadastro.php", "funcoes": ["Administrador"] },
+    { "nome": "cadastro_estoque.php", "funcoes": ["Estoque", "Administrador"] },
+    { "nome": "consulta_deposito.php", "funcoes": ["Venda", "Estoque", "Administrador"] },
+    { "nome": "emissao_notas.php", "funcoes": ["Venda", "Administrador"] },
+    { "nome": "estoqueedit.php", "funcoes": ["Administrador"] },
+    { "nome": "funcaoedit.php", "funcoes": ["Administrador"] },
+    { "nome": "homeadm.php", "funcoes": ["Administrador"] },
+    { "nome": "homeadmEV.php", "funcoes": ["Administrador"] }
+  ]
+}

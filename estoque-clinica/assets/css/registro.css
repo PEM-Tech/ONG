@@ -1,0 +1,10 @@
+.register {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.register .form-row {
+  width: 100%;
+  max-width: 400px; /* Ajuste o valor conforme necessário */
+}

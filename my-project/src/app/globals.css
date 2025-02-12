@@ -1,0 +1,32 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #f0e9e9;
+    --foreground: #000000;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+.rbc-event {
+  border: none !important; /* Remove qualquer borda do evento */
+}
+
+.rbc-row-segment {
+  border-bottom: none !important; /* Remove a linha entre os segmentos */
+}
+
+.rbc-month-view {
+  border-spacing: 0 !important; /* Remove espaçamentos visíveis */
+}
