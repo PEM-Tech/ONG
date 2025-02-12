@@ -37,14 +37,13 @@ const validations = [
   // Outras validações...
 ];
 
-
 // Rota para listar assistidos (GET)
 router.get("/", verificarToken, assistidosController.listAssistidos);
 
-// **Rota para buscar um assistido específico (GET)**
+// Rota para buscar um assistido específico (GET)
 router.get("/:id", verificarToken, assistidosController.getAssistido);
 
-// **Rota para atualizar um assistido (PUT)**
+// Rota para atualizar um assistido (PUT)
 router.put(
   "/:id",
   verificarToken,
@@ -56,7 +55,8 @@ router.put(
   validations,
   assistidosController.updateAssistido
 );
-router.get("/", verificarToken, assistidosController.listAssistidos);
 
+// **Rota para excluir um assistido (DELETE)**
+router.delete("/:id", verificarToken, assistidosController.deleteAssistido);
 
 module.exports = router;

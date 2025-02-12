@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import Sidebar from "../../components/sidebar"; // Componente do sidebar já existente
 import { FaEdit, FaTrashAlt, FaEye } from "react-icons/fa"; // Exemplo de ícones
 import "../../assets/css/listarAssistidos.css";
-import Swal from "sweetalert2";
+import { confirmarAcao, mostrarErro, mostrarSucesso } from "../../components/SweetAlert";
+
 
 function ListAssistidos() {
   const navigate = useNavigate();
@@ -60,32 +61,38 @@ function ListAssistidos() {
   };
 
   // Botão de excluir, incluindo o token no header
-  const handleDelete = (e, id) => {
+  const handleDelete = async (e, id) => {
     e.stopPropagation();
-    if (window.confirm("Deseja realmente excluir este assistido?")) {
-      const token = localStorage.getItem("token");
-      fetch(`http://localhost:5000/api/assistidos/${id}`, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`  // Incluindo o token
-        }
-      })
-        .then((res) => {
-          if (!res.ok) {
-            throw new Error(`Erro HTTP: ${res.status}`);
+  
+    // Usa a função de confirmação do SweetAlert
+    const confirmado = await confirmarAcao(
+      "Confirmar Exclusão",
+      "Deseja realmente excluir este assistido?"
+    );
+    
+    if (confirmado) {
+      const token = localStorage.getItem("authToken");
+      try {
+        const response = await fetch(`http://localhost:5000/api/assistidos/${id}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`
           }
-          return res.json();
-        })
-        .then(() => {
-          setAssistidos(assistidos.filter((item) => item.id !== id));
-        })
-        .catch((err) => {
-          console.error("Erro ao excluir assistido:", err);
-          alert("Erro ao excluir. Tente novamente.");
         });
+        if (!response.ok) {
+          throw new Error(`Erro HTTP: ${response.status}`);
+        }
+        // Se a exclusão foi realizada com sucesso, atualize a lista
+        setAssistidos(assistidos.filter((item) => item.id !== id));
+        mostrarSucesso("Exclusão", "Assistido excluído com sucesso!");
+      } catch (err) {
+        console.error("Erro ao excluir assistido:", err);
+        mostrarErro("Erro", "Erro ao excluir. Tente novamente.");
+      }
     }
   };
+  
 
   if (loading) return <div className="loading">Carregando assistidos...</div>;
   if (error) return <div className="error">{error}</div>;
@@ -128,16 +135,7 @@ function ListAssistidos() {
                   >
                     <FaTrashAlt />
                   </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleView(item.id);
-                    }}
-                    title="Visualizar"
-                    className="action-btn view"
-                  >
-                    <FaEye />
-                  </button>
+              
                 </td>
               </tr>
             ))}

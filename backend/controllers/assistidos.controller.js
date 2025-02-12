@@ -220,3 +220,80 @@ exports.getAssistido = async (req, res) => {
     res.status(500).json({ error: "Erro ao buscar assistido" });
   }
 };
+exports.updateAssistido = async (req, res) => {
+  try {
+    const id = req.params.id;
+    // Extraia os dados do formulário
+    // Se estiver enviando com FormData, os dados estarão em req.body (como strings) e os arquivos em req.files
+    const { nome, cpf, celular, cep, numero, bairro, cidade, estado, nascimento, genero, email, de_menor, parentesco, cesta_basica, data_assistente_social, anamnese } = req.body;
+    
+    // Aqui você pode processar os arquivos, se necessário (usando algo similar à função inserirAnexo)
+    let anexo_id = null, anexo2_id = null, anexo3_id = null;
+    const files = req.files;
+    if (files?.anexo_id && files.anexo_id.length > 0) {
+      anexo_id = await inserirAnexo(files.anexo_id[0]);
+    }
+    if (files?.anexo2_id && files.anexo2_id.length > 0) {
+      anexo2_id = await inserirAnexo(files.anexo2_id[0]);
+    }
+    if (files?.anexo3_id && files.anexo3_id.length > 0) {
+      anexo3_id = await inserirAnexo(files.anexo3_id[0]);
+    }
+    
+    // Query para atualizar o registro
+    const query = `
+      UPDATE assistidos SET 
+        nome = ?,
+        cpf = ?,
+        celular = ?,
+        cep = ?,
+        numero = ?,
+        bairro = ?,
+        cidade = ?,
+        estado = ?,
+        nascimento = ?,
+        genero = ?,
+        email = ?,
+        de_menor = ?,
+        Parentesto = ?,
+        cesta_basica = ?,
+        data_assistente_social = ?,
+        anamnese = ?,
+        anexo_id = COALESCE(?, anexo_id),
+        anexo2_id = COALESCE(?, anexo2_id),
+        anexo3_id = COALESCE(?, anexo3_id)
+      WHERE id = ?
+    `;
+    const values = [
+      nome, cpf, celular, cep, numero, bairro, cidade, estado, nascimento, genero, email,
+      de_menor, parentesco, cesta_basica, data_assistente_social, anamnese,
+      anexo_id, anexo2_id, anexo3_id, id
+    ];
+    await connection.promise().execute(query, values);
+    res.status(200).json({ message: "Assistido atualizado com sucesso!" });
+  } catch (error) {
+    console.error("Erro ao atualizar assistido:", error);
+    res.status(500).json({ error: "Erro ao atualizar assistido. Tente novamente mais tarde." });
+  }
+};
+
+exports.deleteAssistido = async (req, res) => {
+  try {
+    const id = req.params.id;
+
+    // Primeiro, verifique se o assistido existe
+    const [rows] = await connection.promise().query("SELECT * FROM assistidos WHERE id = ?", [id]);
+    if (rows.length === 0) {
+      return res.status(404).json({ error: "Assistido não encontrado" });
+    }
+
+    // Se existir, execute a exclusão
+    await connection.promise().query("DELETE FROM assistidos WHERE id = ?", [id]);
+
+    // Retorne uma mensagem de sucesso
+    res.status(200).json({ message: "Assistido excluído com sucesso!" });
+  } catch (error) {
+    console.error("Erro ao excluir assistido:", error);
+    res.status(500).json({ error: "Erro ao excluir assistido. Tente novamente mais tarde." });
+  }
+};
