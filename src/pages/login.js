@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom"; // 🔹 Importar para redirecionar
+import { useNavigate } from "react-router-dom"; // 🔹 Para redirecionamento
 import { AuthContext } from "../context/AuthContext";
 import { mostrarErro, mostrarSucesso } from "../components/SweetAlert";
 import "../assets/css/login.css";
@@ -17,15 +17,13 @@ function Login() {
         e.preventDefault();
 
         try {
-            await login(formData);
+            const user = await login(formData); // 🔹 Agora o login retorna o usuário
 
-            // Verifica se o usuário está definido antes de navegar
-            const user = JSON.parse(localStorage.getItem("usuario"));
             if (user) {
                 mostrarSucesso("Login realizado!", `Bem-vindo, ${user.nome}!`);
-                setTimeout(() => navigate("/home"), 500); // Aguarda estado antes de redirecionar
+                setTimeout(() => navigate("/home"), 500);
             } else {
-                mostrarErro("Erro no login", "erro ta aqui no login quando ele tenta puxar o const user");
+                mostrarErro("Erro no login", "Usuário inválido ou não encontrado.");
             }
         } catch (error) {
             mostrarErro("Erro no login", "Verifique suas credenciais.");
