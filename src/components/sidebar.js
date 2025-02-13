@@ -33,6 +33,9 @@ function Sidebar() {
     const goToVoluntarios = () => {
         navigate("/home-voluntarios");
     };
+    const goToEstoque = () => {
+        
+    };
 
     const goToConfig = () => {
         navigate("/home-config");
@@ -68,6 +71,10 @@ function Sidebar() {
                         <li onClick={goToVoluntarios}>
                             <i className="icon">🙋‍♂️</i>
                             {!isCollapsed && <span>Voluntários</span>}
+                        </li>
+                        <li onClick={goToEstoque}>
+                            <i className="icon">📦</i>
+                            {!isCollapsed && <span>Estoque</span>}
                         </li>
                         <li onClick={goToConfig}>
                             <i className="icon">⚙️</i>

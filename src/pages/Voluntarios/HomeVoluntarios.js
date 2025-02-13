@@ -7,21 +7,6 @@ function Voluntarios() {
         // Lógica para listar Voluntários (exemplo: redirecionar para outra página ou carregar dados)
     };
 
-    const handleCadastrar = () => {
-        console.log("Cadastrar Voluntarios");
-        // Lógica para cadastrar um voluntário
-    };
-
-    const handleAlterar = () => {
-        console.log("Alterar Voluntarios");
-        // Lógica para alterar um voluntário
-    };
-
-    const handleExcluir = () => {
-        console.log("Excluir Voluntarios");
-        // Lógica para excluir um voluntário
-    };
-
     const handleMarcarPresenca = () => {
         console.log("Marcar Presença");
         // Lógica para marcar presença de voluntários
@@ -33,23 +18,8 @@ function Voluntarios() {
             <div className="cards">
                 <div className="card" onClick={handleListar}>
                     <i className="icon">📄</i>
-                    <h2>Listar</h2>
-                    <p>Visualize todos os Voluntários cadastrados.</p>
-                </div>
-                <div className="card" onClick={handleCadastrar}>
-                    <i className="icon">➕</i>
-                    <h2>Cadastrar</h2>
-                    <p>Adicione um novo Voluntário ao sistema.</p>
-                </div>
-                <div className="card" onClick={handleAlterar}>
-                    <i className="icon">✏️</i>
-                    <h2>Alterar</h2>
-                    <p>Atualize as informações de um Voluntário.</p>
-                </div>
-                <div className="card" onClick={handleExcluir}>
-                    <i className="icon">❌</i>
-                    <h2>Excluir</h2>
-                    <p>Remova Voluntários do sistema.</p>
+                    <h2>Gerenciar</h2>
+                    <p>Gerencie os Voluntários cadastrados, podendo adicionar, editar e excluir registros.</p>
                 </div>
                 <div className="card c1" onClick={handleMarcarPresenca}>
                     <i className="icon">✅</i>
