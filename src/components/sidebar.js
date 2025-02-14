@@ -1,14 +1,45 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import "../assets/css/sidebar.css";
 import logo from "../assets/logo.jpeg";
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from "../context/AuthContext"; // Importa o contexto de autenticação
+import { AuthContext } from "../context/AuthContext";
 
 function Sidebar() {
     const [isCollapsed, setIsCollapsed] = useState(false);
-    const [isDropdownVisible, setIsDropdownVisible] = useState(false); // Controle do dropdown no mobile
+    const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+    const [tokenExpiraEm, setTokenExpiraEm] = useState(null);
     const navigate = useNavigate();
-    const { logout } = useContext(AuthContext); // Obtém a função de logout do contexto
+    const { logout } = useContext(AuthContext);
+
+    useEffect(() => {
+        const atualizarTempoRestante = () => {
+            const token = localStorage.getItem("authToken");
+            if (token) {
+                try {
+                    const tokenPayload = JSON.parse(atob(token.split(".")[1]));
+                    const expirationTime = tokenPayload.exp * 1000; // Convertendo para milissegundos
+                    const timeLeft = expirationTime - Date.now();
+    
+                    if (timeLeft > 0) {
+                        const horas = Math.floor(timeLeft / (1000 * 60 * 60)); // Horas restantes
+                        const minutos = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60)); // Minutos restantes
+                        setTokenExpiraEm(`${horas} horas e ${minutos} minutos`);
+                    } else {
+                        setTokenExpiraEm("Expirado");
+                    }
+                } catch (error) {
+                    setTokenExpiraEm("Desconhecido");
+                }
+            }
+        };
+    
+        atualizarTempoRestante();
+    
+        const interval = setInterval(atualizarTempoRestante, 60000);
+    
+        return () => clearInterval(interval);
+    }, []);
+    
 
     const toggleSidebar = () => {
         setIsCollapsed(!isCollapsed);
@@ -19,7 +50,7 @@ function Sidebar() {
     };
 
     const handleLogout = () => {
-        logout(); // Chama a função de logout do AuthContext
+        logout();
     };
 
     const goToHome = () => {
@@ -27,15 +58,14 @@ function Sidebar() {
     };
 
     const goToPacientes = () => {
-        console.log("indo pra o home de assistidos")
         navigate("/homeassistidos");
-     };
+    };
+
     const goToVoluntarios = () => {
         navigate("/home-voluntarios");
     };
-    const goToEstoque = () => {
-        
-    };
+
+    const goToEstoque = () => {};
 
     const goToConfig = () => {
         navigate("/home-config");
@@ -43,7 +73,6 @@ function Sidebar() {
 
     return (
         <>
-            {/* Sidebar normal para telas maiores */}
             <div className={`sidebar ${isCollapsed ? "collapsed" : ""}`}>
                 <div className="sidebar-header">
                     <button className="collapse-btn" onClick={toggleSidebar}>
@@ -57,14 +86,13 @@ function Sidebar() {
                             alt=""
                             className={`profile-img ${isCollapsed ? "collapsed-img" : ""}`}
                         />
-                        {/* {!isCollapsed && <p>Administrador</p>} */}
                     </div>
                     <ul className="menu">
                         <li onClick={goToHome}>
                             <i className="icon">🏠</i>
                             {!isCollapsed && <span>Home</span>}
                         </li>
-                        <li onClick={goToPacientes} style={{ cursor: "pointer" }}>
+                        <li onClick={goToPacientes}>
                             <i className="icon">👥</i>
                             {!isCollapsed && <span>Assistidos</span>}
                         </li>
@@ -80,20 +108,25 @@ function Sidebar() {
                             <i className="icon">⚙️</i>
                             {!isCollapsed && <span>Configurações</span>}
                         </li>
-                        <li onClick={handleLogout} style={{ cursor: "pointer" }}>
+                        <li onClick={handleLogout}>
                             <i className="icon">⬅️</i>
                             {!isCollapsed && <span>Sair</span>}
                         </li>
                     </ul>
                 </div>
+                <div className="sidebar-footer">
+                    {!isCollapsed && (
+                        <p className="token-expiration-text">
+                            Tempo Restante: {tokenExpiraEm !== "Desconhecido" ? `${tokenExpiraEm} min` : "Desconhecido"}
+                        </p>
+                    )}
+                </div>
             </div>
 
-            {/* Botão flutuante para dispositivos móveis */}
             <button className="floating-btn" onClick={toggleDropdown}>
                 ☰
             </button>
 
-            {/* Dropdown para dispositivos móveis */}
             {isDropdownVisible && (
                 <ul className="dropdown-menu">
                     <li onClick={goToHome}>🏠 Home</li>

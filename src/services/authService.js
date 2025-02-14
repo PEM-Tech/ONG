@@ -4,7 +4,14 @@ const AUTH_COOKIE_NAME = "user_auth";
 
 // Salvar credenciais no cookie
 export const setAuthCookie = (userData) => {
-    Cookies.set(AUTH_COOKIE_NAME, JSON.stringify(userData), { expires: 1, secure: true, sameSite: "Strict" });
+    const expirationDate = new Date();
+    expirationDate.setHours(expirationDate.getHours() + 8); // Expira em 8 horas
+
+    Cookies.set(AUTH_COOKIE_NAME, JSON.stringify(userData), { 
+        expires: expirationDate, 
+        secure: true, 
+        sameSite: "Strict" 
+    });
 };
 
 // Obter usuário do cookie

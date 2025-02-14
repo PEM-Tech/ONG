@@ -1,10 +1,16 @@
 import React from "react";
 import "../../assets/css/voluntarios.css"; // Estilo do componente
+import { useNavigate } from "react-router-dom";
+
+
+
 
 function Voluntarios() {
+    const Navigate = useNavigate(); // Isso dá erro se estiver fora de um componente
+
     const handleListar = () => {
         console.log("Listar Voluntarios");
-        // Lógica para listar Voluntários (exemplo: redirecionar para outra página ou carregar dados)
+        Navigate("/listarVoluntarios")
     };
 
     const handleMarcarPresenca = () => {
