@@ -39,6 +39,7 @@ body {
 .login-form-container h1 {
     font-size: 2rem;
     margin-bottom: 20px;
+    color: white;
 }
 
 .login-form {
@@ -67,7 +68,7 @@ input {
 }
 
 .login-btn {
-    width: 107%; /* Garante que o botão seja responsivo */
+    width: 100%; /* Garante que o botão seja responsivo */
     padding: 10px;
     background-color: #5b8df6;
     color: white;
@@ -129,6 +130,7 @@ button:hover {
 
     .login-form-container h1 {
         font-size: 1.5rem; /* Ajusta o título */
+        margin-top: 20px;
     }
 
     input {
@@ -139,5 +141,8 @@ button:hover {
     button {
         padding: 10px; /* Reduz o padding do botão */
         font-size: 0.9rem; /* Ajusta o tamanho da fonte do botão */
+    }
+    .login-btn{
+        width: 100%;
     }
 }
