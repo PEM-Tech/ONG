@@ -26,7 +26,7 @@ function ListVoluntarios() {
     }
 
     try {
-      const res = await fetch("http://localhost:5000/api/voluntarios", {
+      const res = await fetch("http://localhost:5000/api/voluntarios/buscar", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,

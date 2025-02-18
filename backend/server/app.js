@@ -8,7 +8,8 @@ const fs = require("fs");
 const usuarioRoutes = require("../routes/usuarioRoutes");
 const anexoRoutes = require("../routes/anexoRoutes");
 const path = require("path");
-const assistidosRoutes = require("../routes/assistidos.routes");
+const assistidosRoutes = require("../routes/assistidosRoutes");
+const voluntarioRoutes = require("../routes/voluntarioRoutes");
 
 const app = express();
 
@@ -16,11 +17,7 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-<<<<<<< Updated upstream
 // 🔹 Adiciona o middleware para processar cookies
-=======
-// AC🔹 Adiciona o middleware para processar cookies
->>>>>>> Stashed changes
 app.use(cookieParser());
 
 // 🔹 Converte a variável de ambiente para array (se houver múltiplas origens)
@@ -59,6 +56,7 @@ app.use("/uploads", express.static(uploadsDir));
 app.use("/usuarios", usuarioRoutes);
 app.use("/anexos", anexoRoutes);
 app.use('/api/assistidos', assistidosRoutes);
+app.use('/api/voluntarios', voluntarioRoutes);
 
 // Iniciar o servidor
 const PORT = process.env.PORT || 5000;

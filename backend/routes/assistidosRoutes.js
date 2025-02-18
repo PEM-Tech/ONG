@@ -3,7 +3,7 @@ const express = require("express");
 const router = express.Router();
 const { body } = require("express-validator");
 const multer = require("multer");
-const assistidosController = require("../controllers/assistidos.controller");
+const assistidosController = require("../controllers/assistidosController");
 const verificarToken = require("../middlewares/authMiddleware");
 const path = require("path");
 

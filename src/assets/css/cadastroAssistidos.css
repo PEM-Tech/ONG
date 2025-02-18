@@ -28,7 +28,6 @@ html, body {
 /* Título */
 .cadastro-container h1 {
   text-align: center;
-<<<<<<< Updated upstream
   font-size: 2em;
   color: #007bff; 
 }
@@ -52,11 +51,6 @@ html, body {
 
 .back-button:hover {
   color: #0056b3;
-=======
-  margin-bottom: 30px;
-  font-size: 2em;
-  color: #007bff;
->>>>>>> Stashed changes
 }
 
 /* Estilo dos fieldsets */
@@ -225,12 +219,9 @@ button.submit:hover {
   .buttons button {
       margin-bottom: 10px;
   }
-<<<<<<< Updated upstream
   .title-container h1{
     font-size: 20px;
     
   }
-=======
->>>>>>> Stashed changes
 }
   
