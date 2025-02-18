@@ -256,6 +256,7 @@ function CadastroAssistidos() {
       celular: "",
       email: "",
       cep: "",
+      rua:"",
       endereco: "",
       numero: "",
       bairro: "",
@@ -347,7 +348,7 @@ function CadastroAssistidos() {
             </div>
             <div className="form-group">
               <label>Rua</label>
-              <input type="text" name="endereco" value={formData.endereco} onChange={handleChange} readOnly />
+              <input type="text" name="rua" value={formData.endereco} onChange={handleChange} readOnly />
               {errors.endereco && <span className="error">{errors.endereco}</span>}
             </div>
             <div className="form-group">
