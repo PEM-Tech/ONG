@@ -111,7 +111,6 @@ function TabelaUsuarios() {
                     <tr>
                         <th>Nome</th>
                         <th>Email</th>
-                        <th>Telefone</th>
                         <th>Permissão</th>
                         <th>Desabilitado</th>
                         <th>Ações</th>
@@ -122,7 +121,6 @@ function TabelaUsuarios() {
                         <tr key={usuario.id}>
                             <td>{usuario.nome}</td>
                             <td>{usuario.email}</td>
-                            <td>{usuario.telefone || "Não informado"}</td>
                             <td>{usuario.permissao}</td>
                             <td>{usuario.desabilitado}</td>
                             <td>

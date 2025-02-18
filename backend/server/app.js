@@ -1,8 +1,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const cookieParser = require("cookie-parser"); // 🔹 Importa o cookie-parser
-require("dotenv").config();
+const cookieParser = require("cookie-parser");
+require("dotenv").config(); // 🔹 Carrega as variáveis de ambiente
 const connection = require("../config/database");
 const fs = require("fs");
 const usuarioRoutes = require("../routes/usuarioRoutes");
@@ -16,12 +16,25 @@ const app = express();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+<<<<<<< Updated upstream
 // 🔹 Adiciona o middleware para processar cookies
-app.use(cookieParser()); // 🔹 Adiciona suporte a cookies
+=======
+// AC🔹 Adiciona o middleware para processar cookies
+>>>>>>> Stashed changes
+app.use(cookieParser());
 
-// Configuração do CORS
+// 🔹 Converte a variável de ambiente para array (se houver múltiplas origens)
+const allowedOrigins = process.env.CORS_ORIGINS ? process.env.CORS_ORIGINS.split(",") : [];
+
+// 🔹 Configuração do CORS
 app.use(cors({
-    origin: "http://localhost:3000",
+    origin: (origin, callback) => {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true, // 🔹 Permite envio de cookies
@@ -45,7 +58,6 @@ app.use("/uploads", express.static(uploadsDir));
 // Rotas
 app.use("/usuarios", usuarioRoutes);
 app.use("/anexos", anexoRoutes);
- 
 app.use('/api/assistidos', assistidosRoutes);
 
 // Iniciar o servidor

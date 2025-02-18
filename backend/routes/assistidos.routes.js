@@ -35,7 +35,30 @@ const upload = multer({
 const validations = [
   body("nome").isLength({ min: 3 }).withMessage("Nome deve ter pelo menos 3 caracteres."),
   // Outras validações...
-];
+]
+router.get('/cep/:cep', async (req, res) => {
+  try {
+    const cep = req.params.cep;
+    const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: 'Erro ao buscar o CEP' });
+  }
+});
+// Rota para criar um assistido (POST)
+router.post(
+  "/",
+  verificarToken,
+  upload.fields([
+    { name: "anexo_id", maxCount: 1 },
+    { name: "anexo2_id", maxCount: 1 },
+    { name: "anexo3_id", maxCount: 1 }
+  ]),
+  validations,
+  assistidosController.createAssistido
+);
+
 
 // Rota para listar assistidos (GET)
 router.get("/", verificarToken, assistidosController.listAssistidos);

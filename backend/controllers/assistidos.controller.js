@@ -22,6 +22,7 @@ exports.createAssistido = async (req, res) => {
     const cpf = req.body.cpf || null;
     const celular = req.body.celular || null;
     const cep = req.body.cep || null;
+    const rua = req.body.rua || null;
     const numero = req.body.numero || null;
     const bairro = req.body.bairro || null;
     const cidade = req.body.cidade || null;
@@ -39,6 +40,15 @@ exports.createAssistido = async (req, res) => {
     
     const data_assistente_social = req.body.data_assistente_social || null;
     const anamnese = req.body.anamnese || null;
+
+    // Validação: verifica se o CPF já está cadastrado
+    if (cpf) {
+      const checkCpfQuery = "SELECT id FROM assistidos WHERE cpf = ?";
+      const [cpfRows] = await connection.promise().execute(checkCpfQuery, [cpf]);
+      if (cpfRows.length > 0) {
+        return res.status(400).json({ error: "CPF já cadastrado" });
+      }
+    }
 
     // Processa os arquivos enviados via multer
     const files = req.files;
@@ -133,6 +143,7 @@ exports.createAssistido = async (req, res) => {
     res.status(500).json({ error: "Erro ao cadastrar assistido. Tente novamente mais tarde." });
   }
 };
+
 
 
 // Função para listar os assistidos
@@ -247,6 +258,7 @@ exports.updateAssistido = async (req, res) => {
         cpf = ?,
         celular = ?,
         cep = ?,
+        rua = ?,
         numero = ?,
         bairro = ?,
         cidade = ?,

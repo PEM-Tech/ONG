@@ -11,6 +11,7 @@ import EditarAssistido from "./pages/Assistidos/EditarAssistidos";
 import HomeVoluntarios from "./pages/Voluntarios/HomeVoluntarios";
 import HomeConfig from "./pages/Configurações/HomeConfig";
 import HomeUsuarios from "./pages/Usuarios/HomeUsuarios";
+import ListVoluntarios from "./pages/Voluntarios/ListarVoluntarios"
 import { mostrarErro } from "./components/SweetAlert";
 
 // 🔹 Função para proteger rotas privadas
@@ -52,7 +53,7 @@ function App() {
   return (
     <Router>
       <AuthProvider>
-        <Routes>
+        <Routes>  
           <Route path="/login" element={<Login />} />
 
           <Route path="/home" element={
@@ -108,6 +109,14 @@ function App() {
             <ProtectedRoute>
               <ProtectedLayout>
                 <ListarAssistidos />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          }/>
+
+            <Route path="/listarVoluntarios" element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <ListVoluntarios />
               </ProtectedLayout>
             </ProtectedRoute>
           }/>

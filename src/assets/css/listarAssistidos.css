@@ -1,109 +1,212 @@
-/* Container geral com layout em duas colunas */
+/* Container principal */
 .list-assistidos-container {
-    display: flex;
-    min-height: 100vh;
-  }
-  
-  /* Área do sidebar, assumindo que o componente Sidebar já tem seu estilo */
-  .list-assistidos-container .sidebar {
-    flex: 0 0 250px; /* Largura fixa para o sidebar */
-  }
-  
-  /* Área principal */
-  .main-content {
-    flex: 1;
-    padding: 20px;
-    background-color: #f5f5f5;
-  }
-  
-  /* Título da página */
-  .main-content h1 {
-    margin-bottom: 20px;
-    font-size: 2em;
-    color: #007bff;
-  }
-  
-  /* Tabela */
-  .assistidos-table {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: #fff;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .assistidos-table thead {
-    background-color: #007bff;
-    color: #fff;
-  }
-  
-  .assistidos-table th,
-  .assistidos-table td {
-    padding: 12px 15px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .assistidos-table tbody tr:hover {
-    background-color: #f1f1f1;
-    cursor: pointer;
-  }
-  
-  /* Botões de ação */
-  .action-btn {
-    background: none;
-    border: none;
-    cursor: pointer;
-    margin-right: 8px;
-    font-size: 1.2em;
-    color: #555;
-    transition: color 0.2s;
-  }
-  
-  .action-btn.edit:hover {
-    color: #007bff;
-  }
-  
-  .action-btn.delete:hover {
-    color: #e74c3c;
-  }
-  
-  .action-btn.view:hover {
-    color: #27ae60;
-  }
-  
-  /* Controles da lista (botões, filtros, etc.) */
-  .list-controls {
-    margin-top: 20px;
-    display: flex;
-    justify-content: flex-end;
-  }
-  
-  .list-controls button {
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .list-controls button:hover {
-    background-color: #0056b3;
-  }
-  
-  /* Responsividade */
-  @media (max-width: 768px) {
-    .list-assistidos-container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+/* Layout principal */
+.list-assistidos-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* Sidebar */
+.list-assistidos-container .sidebar {
+  flex: 0 0 250px;
+}
+
+/* Área principal */
+.main-content {
+  flex: 1;
+  padding: 20px;
+  background-color: #f5f5f5;
+}
+
+/* Título */
+h1 {
+  margin-bottom: 20px;
+  font-size: 1.5rem; /* Ajuste de tamanho */
+  text-align: center; /* Centralizar em telas menores */
+  color: #007bff;
+}
+
+/* Filtros */
+.filtros {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: center;
+  flex-wrap: wrap; /* Permite quebra em telas menores */
+}
+
+.filtros input {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  flex: 1;
+  min-width: 200px;
+}
+
+.filtros select {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  min-width: 150px;
+}
+
+.botao-adicionar {
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.botao-adicionar:hover {
+  background-color: #0056b3;
+}
+
+.botao-adicionar:active {
+  background-color: #003f8a;
+  transform: scale(0.98);
+}
+
+/* Tabela */
+.assistidos-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+thead {
+  background-color: #007bff;
+  color: #fff;
+}
+
+thead th {
+  padding: 10px;
+  text-align: left;
+  border: 1px solid #ddd;
+  font-size: 0.9rem;
+  color:#333
+}
+
+tbody td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  font-size: 0.85rem;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+/* Botões de ação */
+.action-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-right: 8px;
+  font-size: 1.2em;
+  color: #555;
+  transition: color 0.2s;
+}
+
+.action-btn.edit:hover {
+  color: #007bff;
+}
+
+.action-btn.delete:hover {
+  color: #e74c3c;
+}
+
+.action-btn.view:hover {
+  color: #27ae60;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .list-assistidos-container {
       flex-direction: column;
-    }
-    .main-content {
-      padding: 15px;
-    }
-    .list-controls {
-      justify-content: center;
-    }
   }
-  
+
+  .main-content {
+      padding: 15px;
+  }
+
+  /* Ajustar filtros */
+  .filtros {
+      flex-direction: column;
+      gap: 15px;
+  }
+
+  .filtros input,
+  .filtros select,
+  .botao-adicionar {
+      width: 100%;
+  }
+
+  /* Ocultar cabeçalho da tabela */
+  thead {
+      display: none;
+  }
+
+  table {
+      border: 0;
+  }
+
+  tbody tr {
+      display: block;
+      margin-bottom: 10px;
+      background: #fff;
+      border-radius: 8px;
+      padding: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+
+  tbody td {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px;
+      font-size: 0.9rem;
+      border: 0;
+      border-bottom: 1px solid #ddd;
+  }
+
+  tbody td:last-child {
+      border-bottom: none;
+  }
+
+  tbody td:before {
+      content: attr(data-label);
+      font-weight: bold;
+      text-transform: capitalize;
+      color: #333;
+  }
+}
+
+@media (max-width: 480px) {
+  .filtros {
+      gap: 10px;
+  }
+
+  tbody td {
+      font-size: 0.8rem;
+  }
+
+  .botao-adicionar {
+      font-size: 0.9rem;
+  }
+}

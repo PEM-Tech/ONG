@@ -1,25 +1,16 @@
 import React from "react";
 import "../../assets/css/voluntarios.css"; // Estilo do componente
+import { useNavigate } from "react-router-dom";
+
+
+
 
 function Voluntarios() {
+    const Navigate = useNavigate(); // Isso dá erro se estiver fora de um componente
+
     const handleListar = () => {
         console.log("Listar Voluntarios");
-        // Lógica para listar Voluntários (exemplo: redirecionar para outra página ou carregar dados)
-    };
-
-    const handleCadastrar = () => {
-        console.log("Cadastrar Voluntarios");
-        // Lógica para cadastrar um voluntário
-    };
-
-    const handleAlterar = () => {
-        console.log("Alterar Voluntarios");
-        // Lógica para alterar um voluntário
-    };
-
-    const handleExcluir = () => {
-        console.log("Excluir Voluntarios");
-        // Lógica para excluir um voluntário
+        Navigate("/listarVoluntarios")
     };
 
     const handleMarcarPresenca = () => {
@@ -33,23 +24,8 @@ function Voluntarios() {
             <div className="cards">
                 <div className="card" onClick={handleListar}>
                     <i className="icon">📄</i>
-                    <h2>Listar</h2>
-                    <p>Visualize todos os Voluntários cadastrados.</p>
-                </div>
-                <div className="card" onClick={handleCadastrar}>
-                    <i className="icon">➕</i>
-                    <h2>Cadastrar</h2>
-                    <p>Adicione um novo Voluntário ao sistema.</p>
-                </div>
-                <div className="card" onClick={handleAlterar}>
-                    <i className="icon">✏️</i>
-                    <h2>Alterar</h2>
-                    <p>Atualize as informações de um Voluntário.</p>
-                </div>
-                <div className="card" onClick={handleExcluir}>
-                    <i className="icon">❌</i>
-                    <h2>Excluir</h2>
-                    <p>Remova Voluntários do sistema.</p>
+                    <h2>Gerenciar</h2>
+                    <p>Gerencie os Voluntários cadastrados, podendo adicionar, editar e excluir registros.</p>
                 </div>
                 <div className="card c1" onClick={handleMarcarPresenca}>
                     <i className="icon">✅</i>

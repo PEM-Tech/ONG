@@ -160,9 +160,11 @@ button:hover {
 
     tbody td {
         font-size: 0.8rem;
+        justify-content: start;
     }
 
     .botao-adicionar {
         font-size: 0.9rem;
     }
+   
 }

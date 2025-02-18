@@ -218,3 +218,12 @@
         display: block; /* Mostra o dropdown quando ativo */
     }
 }
+
+.sidebar-footer{
+    margin-top: 100px;
+}
+
+.sidebar-footer p{
+    font-size: 10px;
+    margin-left: 10px;
+}

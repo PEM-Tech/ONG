@@ -10,21 +10,6 @@ function Pacientes() {
         navigate("/listarassistido");
     };
 
-    const handleCadastrar = () => {
-        console.log("Cadastrar assistido");
-        navigate("/cadastrar-assistido"); // 🔹 Redireciona para a página de cadastro
-    };
-
-    const handleAlterar = () => {
-        console.log("Alterar assistido");
-        // Lógica para alterar assistidos
-    };
-
-    const handleExcluir = () => {
-        console.log("Excluir assistido");
-        // Lógica para excluir assistidos
-    };
-
     const handleMarcarConsulta = () => {
         console.log("Marcar consulta");
         // Lógica para marcar consulta
@@ -41,23 +26,8 @@ function Pacientes() {
             <div className="cards">
                 <div className="card" onClick={handleListar}>
                     <i className="icon">📄</i>
-                    <h2>Listar</h2>
-                    <p>Visualize todos os assistidos cadastrados.</p>
-                </div>
-                <div className="card" onClick={handleCadastrar}>
-                    <i className="icon">➕</i>
-                    <h2>Cadastrar</h2>
-                    <p>Adicione um novo assistido ao sistema.</p>
-                </div>
-                <div className="card" onClick={handleAlterar}>
-                    <i className="icon">✏️</i>
-                    <h2>Alterar</h2>
-                    <p>Atualize as informações de um assistido.</p>
-                </div>
-                <div className="card" onClick={handleExcluir}>
-                    <i className="icon">❌</i>
-                    <h2>Excluir</h2>
-                    <p>Remova assistidos do sistema.</p>
+                    <h2>Gerenciar</h2>
+                    <p>Gerencie os assistidos cadastrados, podendo adicionar, editar e excluir registros.</p>
                 </div>
                 <div className="card" onClick={handleMarcarConsulta}>
                     <i className="icon">🗓️</i>
