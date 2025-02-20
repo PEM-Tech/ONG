@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import { FaEdit, FaTrashAlt,  FaFileAlt   } from "react-icons/fa";
 import "../../assets/css/listarAssistidos.css";
 import { confirmarAcao, mostrarErro, mostrarSucesso } from "../../components/SweetAlert";
 
@@ -44,12 +44,17 @@ function ListAssistidos() {
     }
   };
 
-  const handleEdit = (e, id) => {
+  const handleanamnese = (e, ficha) => {
     e.stopPropagation();
-    navigate(`/editarassistido/${id}`);
+    navigate(`/anamnese/${ficha}`);
   };
 
-  const handleDelete = async (e, id) => {
+  const handleEdit = (e, ficha) => {
+    e.stopPropagation();
+    navigate(`/editarassistido/${ficha}`);
+  };
+
+  const handleDelete = async (e, ficha) => {
     e.stopPropagation();
     const confirmado = await confirmarAcao(
       "Confirmar Exclusão",
@@ -60,7 +65,7 @@ function ListAssistidos() {
       const token = localStorage.getItem("authToken");
       try {
         const response = await fetch(
-          `http://localhost:5000/api/assistidos/${id}`,
+          `http://localhost:5000/api/assistidos/${ficha}`,
           {
             method: "DELETE",
             headers: {
@@ -72,12 +77,27 @@ function ListAssistidos() {
 
         if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
 
-        setAssistidos((prev) => prev.filter((item) => item.id !== id));
+        setAssistidos((prev) => prev.filter((item) => item.ficha !== ficha));
         mostrarSucesso("Exclusão", "Assistido excluído com sucesso!");
       } catch (err) {
         mostrarErro("Erro", "Erro ao excluir. Tente novamente.");
       }
     }
+  };
+
+
+//funcao para formatar o cpf
+const formatarCPF = (cpf) => {
+  if (!cpf) return "";
+  return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, "$1.$2.$3-$4");
+};
+  
+    // 🔹 Função para formatar a data de nascimento (YYYY-MM-DD → DD/MM/YYYY)
+  const formatarData = (data) => {
+    if (!data) return "";
+    return new Date(data).toLocaleDateString("pt-BR", {
+      timeZone: "UTC",
+    });
   };
 
   // 🔹 Filtrando os assistidos com base na pesquisa e ordenação
@@ -124,6 +144,7 @@ function ListAssistidos() {
       <table>
         <thead>
           <tr>
+            <th>Ficha</th>
             <th>Nome</th>
             <th>CPF</th>
             <th>Data de Nascimento</th>
@@ -133,17 +154,21 @@ function ListAssistidos() {
         </thead>
         <tbody>
           {assistidosFiltrados.map((item) => (
-            <tr key={item.id}>
+            <tr key={item.ficha}>
+              <td>{item.ficha}</td>
               <td>{item.nome}</td>
-              <td>{item.cpf}</td>
-              <td>{item.nascimento}</td>
+              <td>{formatarCPF(item.cpf)}</td>
+              <td>{formatarData(item.nascimento)}</td>
               <td>{item.email}</td>
               <td>
-                <button onClick={(e) => handleEdit(e, item.id)} title="Editar" className="action-btn edit">
+                <button onClick={(e) => handleEdit(e, item.ficha)} title="Editar" className="action-btn edit">
                   <FaEdit />
                 </button>
-                <button onClick={(e) => handleDelete(e, item.id)} title="Excluir" className="action-btn delete">
+                <button onClick={(e) => handleDelete(e, item.ficha)} title="Excluir" className="action-btn delete">
                   <FaTrashAlt />
+                </button>
+                <button onClick={(e) => handleanamnese(e, item.ficha) } title="Anamnese" className="action-btn anamnese">
+                <FaFileAlt />
                 </button>
               </td>
             </tr>
