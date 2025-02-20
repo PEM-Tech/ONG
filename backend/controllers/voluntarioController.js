@@ -1,5 +1,5 @@
 const { validationResult } = require("express-validator");
-const Voluntario = require("../models/Voluntario");
+const Voluntario = require("../models/voluntarioModel");
 
 // Criar um voluntário
 exports.createVoluntario = async (req, res) => {

@@ -30,6 +30,11 @@ function HomeConfiguracoes() {
                     <h2>Usuários</h2>
                     <p>Adicione, edite ou exclua usuários do sistema.</p>
                 </div>
+                <div className="card" onClick={handleManipularUsuarios}>
+                    <i className="icon">📑</i>
+                    <h2>Logs(Auditoria)</h2>
+                    <p>Monitore as atividades realizadas no sistema.</p>
+                </div>
             </div>
         </div>
     );

@@ -11,6 +11,7 @@
     const totalSteps = 4;
     const [currentStep, setCurrentStep] = useState(1);
     const [formData, setFormData] = useState({
+      id: "",
       nome: "",
       cpf: "",
       nascimento: "",
@@ -122,6 +123,7 @@
   };
   const handleReset = () => {
     setFormData({
+      id: "",
       nome: "",
       cpf: "",
       nascimento: "",
@@ -164,12 +166,16 @@
               <legend>Informações Pessoais</legend>
               <div className="form-grid">
                 <div className="form-group">
+                  <label>ID</label>
+                  <input type="number" name="id" value={formData.id} onChange={handleChange} />
+                </div>
+                <div className="form-group">
                   <label>Nome Completo</label>
                   <input type="text" name="nome" value={formData.nome} onChange={handleChange} />
                 </div>
                 <div className="form-group">
                   <label>CPF</label>
-                  <InputMask mask="999-999-999-99" type="text" name="cpf" value={formData.cpf} onChange={handleChange}  />
+                  <InputMask mask="999.999.999-99" type="text" name="cpf" value={formData.cpf} onChange={handleChange}  />
                 </div>
                 <div className="form-group">
                   <label>Data de Nascimento</label>
@@ -200,6 +206,7 @@
         {/* 🔹 Etapa 2: Endereço */}
         {currentStep === 2 && (
           <fieldset>
+            <div className="form-grid">
             <legend>Endereço</legend>
             <div className="form-group">
               <label>CEP</label>
@@ -240,6 +247,7 @@
               <label>Complemento</label>
               <input type="text" name="complemento" value={formData.complemento} onChange={handleChange} />
             </div>
+            </div>
           </fieldset>
         )}
 
@@ -268,23 +276,35 @@
             </fieldset>
           )}
 
-          {/* 🔹 Botões de Navegação */}
-          <div className="buttons">
-            {currentStep > 1 && (
-              <button type="button" className="prev" onClick={handlePrev}>
-                Voltar
-              </button>
-            )}
-            {currentStep < totalSteps ? (
-              <button type="button" className="next" onClick={handleNext}>
-                Próximo
-              </button>
-            ) : (
-              <button type="submit" className="submit">
-                Cadastrar
-              </button>
-            )}
-          </div>
+     {/* 🔹 Botões de Navegação */}
+        <div className="buttons">
+          {currentStep > 1 && (
+            <button type="button" className="prev" onClick={handlePrev}>
+              Voltar
+            </button>
+          )}
+
+          {currentStep < totalSteps ? (
+            <button 
+              type="button" 
+              className="next" 
+              onClick={() => {
+                console.log("Step atual:", currentStep); // Debugging
+                if (currentStep < totalSteps) {
+                  handleNext();
+                }
+              }}
+            >
+              Próximo
+            </button>
+          ) : null}
+
+          {currentStep === totalSteps && (
+            <button type="submit" className="submit">
+              Cadastrar
+            </button>
+          )}
+        </div>
         </form>
       </div>
     );
