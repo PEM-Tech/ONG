@@ -1,9 +1,9 @@
 const Usuario = require('../models/usuarioModel');
-const connection = require("../config/database"); // Certifique-se de que a conexão está sendo importada
+const connection = require("../config/database"); 
 const jwt = require("jsonwebtoken");
 
 class UsuarioController {
-
+    // Buscar todos os usuários
     async getAllUsuarios(req, res) {
         try {
             console.log("🔍 Buscando todos os usuários...");
@@ -16,6 +16,7 @@ class UsuarioController {
         }
     }
 
+    // Buscar usuário pelo ID
     async getUsuarioById(req, res) {
         try {
             const { id } = req.params;
@@ -33,6 +34,7 @@ class UsuarioController {
         }
     }
 
+    // Criar usuário
     async createUsuario(req, res) {
         try {
             console.log("📥 Recebendo dados no backend:", req.body);
@@ -59,6 +61,7 @@ class UsuarioController {
         }
     }
 
+    // Atualizar usuário
     async updateUsuario(req, res) {
         try {
             const { id } = req.params;
@@ -68,6 +71,11 @@ class UsuarioController {
             if (!dadosAtualizados.nome || !dadosAtualizados.email) {
                 console.log("⚠ Nome e email são obrigatórios.");
                 return res.status(400).json({ error: "Nome e email são obrigatórios." });
+            }
+
+            // Se a senha não foi enviada ou estiver vazia, removê-la da atualização
+            if (!dadosAtualizados.senha || dadosAtualizados.senha.trim() === "") {
+                delete dadosAtualizados.senha;
             }
 
             const usuarioAtualizado = await Usuario.update(id, dadosAtualizados);
@@ -80,6 +88,7 @@ class UsuarioController {
         }
     }
 
+    // Excluir usuário
     async deleteUsuario(req, res) {
         try {
             const { id } = req.params;
@@ -95,111 +104,96 @@ class UsuarioController {
         }
     }
 
+    // Login de usuário
     async loginUsuario(req, res) {
         console.log("📥 Requisição recebida no backend:", req.body);
         const { email, senha } = req.body;
-    
+
         try {
             const query = "SELECT * FROM usuarios WHERE email = ?";
-            connection.query(query, [email], async (err, results) => {
-                if (err) {
-                    console.error("❌ Erro na consulta SQL:", err);
-                    return res.status(500).json({ error: "Erro no servidor" });
-                }
-    
-                if (results.length === 0) {
-                    console.log("⚠️ Usuário não encontrado para o email:", email);
-                    return res.status(401).json({ error: "Usuário não encontrado" });
-                }
-    
-                const usuario = results[0];
-    
-                if (usuario.senha !== senha) {
-                    console.log("⚠️ Senha incorreta para usuário:", usuario.email);
-                    return res.status(401).json({ error: "Senha incorreta" });
-                }
-    
-                console.log("✅ Login bem-sucedido para:", usuario.email);
-    
-                // 🔹 Gerar token JWT com nível de acesso
-                const token = jwt.sign(
-                    { id: usuario.id, email: usuario.email, permissao: usuario.permissao }, 
-                    "secreta", 
-                    { expiresIn: "1h" }
-                );
-    
-                // 🔹 Salvar o token no banco de dados
-                connection.query("UPDATE usuarios SET token = ? WHERE id = ?", [token, usuario.id]);
-                console.log("🔑 Token gerado:", token);
-                res.json({ message: "Login bem-sucedido!", usuario, token });
-            });
-    
+            const [results] = await connection.promise().query(query, [email]);
+
+            if (results.length === 0) {
+                console.log("⚠️ Usuário não encontrado para o email:", email);
+                return res.status(401).json({ error: "Usuário não encontrado" });
+            }
+
+            const usuario = results[0];
+
+            if (usuario.senha !== senha) {
+                console.log("⚠️ Senha incorreta para usuário:", usuario.email);
+                return res.status(401).json({ error: "Senha incorreta" });
+            }
+
+            console.log("✅ Login bem-sucedido para:", usuario.email);
+
+            // 🔹 Gerar token JWT com nível de acesso
+            const token = jwt.sign(
+                { id: usuario.id, email: usuario.email, permissao: usuario.permissao },
+                "secreta",
+                { expiresIn: "1h" }
+            );
+
+            // 🔹 Salvar o token no banco de dados
+            await connection.promise().query("UPDATE usuarios SET token = ? WHERE id = ?", [token, usuario.id]);
+            console.log("🔑 Token gerado:", token);
+            res.json({ message: "Login bem-sucedido!", usuario, token });
+
         } catch (error) {
             console.error("❌ Erro ao processar login:", error);
             res.status(500).json({ error: "Erro ao processar login" });
         }
     }
 
+    // Buscar usuário pelo token
     async getUsuarioByToken(req, res) {
         const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
-    
+
         if (!token) {
             return res.status(401).json({ error: "Token não fornecido" });
         }
-    
+
         try {
             const decoded = jwt.verify(token, "secreta"); // Verifica o token
-    
-            const query = "SELECT * FROM usuarios WHERE id = ?";
-            connection.query(query, [decoded.id], (err, results) => {
-                if (err) {
-                    console.error("❌ Erro na consulta SQL:", err);
-                    return res.status(500).json({ error: "Erro no servidor" });
-                }
-    
-                if (results.length === 0) {
-                    console.log("⚠️ Usuário não encontrado.", token);
-                    return res.status(404).json({ error: "Usuário não encontrado ", token});
-                }
-    
-                console.log("✅ Sessão restaurada:", results[0]);
-                res.json({ usuario: results[0] });
-            });
+            const [results] = await connection.promise().query("SELECT * FROM usuarios WHERE id = ?", [decoded.id]);
+
+            if (results.length === 0) {
+                console.log("⚠️ Usuário não encontrado.");
+                return res.status(404).json({ error: "Usuário não encontrado" });
+            }
+
+            console.log("✅ Sessão restaurada:", results[0]);
+            res.json({ usuario: results[0] });
+
         } catch (error) {
             console.error("❌ Token inválido ou expirado:", error);
             return res.status(401).json({ error: "Token inválido ou expirado" });
         }
     }
-    
+
+    // Buscar usuário logado
     async getUsuarioLogado(req, res) {
         try {
             const userId = req.usuario.id; // Obtém o ID do usuário decodificado do token
             console.log("🔍 Buscando usuário logado com ID:", userId);
-    
-            connection.query("SELECT id, nome, email, permissao FROM usuarios WHERE id = ?", [userId], (err, results) => {
-                if (err) {
-                    console.error("❌ Erro ao buscar usuário:", err);
-                    return res.status(500).json({ error: "Erro ao buscar usuário" });
-                }
-    
-                if (results.length === 0) {
-                    console.log("⚠️ Usuário não encontrado!");
-                    return res.status(404).json({ error: "Usuário não encontrado" });
-                }
-    
-                console.log("✅ Usuário logado encontrado:", results[0]);
-                res.json({ usuario: results[0] });
-            });
-    
+
+            const [results] = await connection.promise().query(
+                "SELECT id, nome, email, permissao FROM usuarios WHERE id = ?", [userId]
+            );
+
+            if (results.length === 0) {
+                console.log("⚠️ Usuário não encontrado!");
+                return res.status(404).json({ error: "Usuário não encontrado" });
+            }
+
+            console.log("✅ Usuário logado encontrado:", results[0]);
+            res.json({ usuario: results[0] });
+
         } catch (error) {
             console.error("❌ Erro ao buscar usuário logado:", error);
             res.status(500).json({ error: "Erro ao recuperar dados do usuário" });
         }
     }
-    
-    
-
-}    
+}
 
 module.exports = new UsuarioController();
-

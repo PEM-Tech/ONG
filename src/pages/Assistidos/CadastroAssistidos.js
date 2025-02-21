@@ -204,7 +204,7 @@ function CadastroAssistidos() {
               <label>Celular</label>
               <InputMask mask="(99) 99999-9999" type="text" name="celular" value={formData.celular} onChange={handleChange} />
             </div>
-            <div class name="form-group">
+            <div className="form-group">
               <label>Email</label>
               <input type="email" name="email" value={formData.email} onChange={handleChange} />
             </div>
@@ -304,6 +304,14 @@ function CadastroAssistidos() {
               <div className="form-group">
                 <label>Documento de Identidade</label>
                 <input type="file" name="anexo_id" onChange={handleFileChange} />
+              </div>
+              <div className="form-group">
+                <label>Comprovante de Residencia</label>
+                <input type="file" name="anexo2_id" onChange={handleFileChange} />
+              </div>
+              <div className="form-group">
+                <label>Comprovante de Renda</label>
+                <input type="file" name="anexo3_id" onChange={handleFileChange} />
               </div>
             </fieldset>
           )}

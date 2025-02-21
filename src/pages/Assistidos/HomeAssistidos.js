@@ -6,7 +6,6 @@ function Pacientes() {
     const navigate = useNavigate(); // Inicializa a navegação
 
     const handleListar = () => {
-        console.log("Listar assistidos");
         navigate("/listarassistido");
     };
 

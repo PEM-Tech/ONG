@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaEdit, FaTrashAlt,  FaFileAlt   } from "react-icons/fa";
+import { FaEdit, FaTrashAlt, FaFileAlt,  FaSearch   } from "react-icons/fa";
 import "../../assets/css/listarAssistidos.css";
 import { confirmarAcao, mostrarErro, mostrarSucesso } from "../../components/SweetAlert";
 
@@ -49,6 +49,11 @@ function ListAssistidos() {
     navigate(`/anamnese/${ficha}`);
   };
 
+  const handleVisualizar = (e, ficha) => {
+    e.stopPropagation();
+
+  }
+ 
   const handleEdit = (e, ficha) => {
     e.stopPropagation();
     navigate(`/editarassistido/${ficha}`);
@@ -169,6 +174,9 @@ const formatarCPF = (cpf) => {
                 </button>
                 <button onClick={(e) => handleanamnese(e, item.ficha) } title="Anamnese" className="action-btn anamnese">
                 <FaFileAlt />
+                </button>
+                <button onClick={(e) => handleVisualizar(e, item.ficha) } title="Visualizar Assistido" className="action-btn Visualizar">
+                <FaSearch />
                 </button>
               </td>
             </tr>

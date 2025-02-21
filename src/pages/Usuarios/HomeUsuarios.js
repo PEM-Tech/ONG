@@ -36,11 +36,19 @@ function TabelaUsuarios() {
         if (!confirmacao) return;
     
         try {
+            // Cria uma cópia dos dados para evitar modificar o estado diretamente
+            const usuarioParaEnviar = { ...usuario };
+    
+            // Se o campo de senha estiver vazio, removê-lo da requisição
+            if (!usuarioParaEnviar.senha) {
+                delete usuarioParaEnviar.senha;
+            }
+    
             if (usuarioSelecionado) {
-                await usuarioService.atualizarUsuario(usuarioSelecionado.id, usuario);
+                await usuarioService.atualizarUsuario(usuarioSelecionado.id, usuarioParaEnviar);
                 mostrarSucesso("Usuário atualizado!", "Os dados foram atualizados com sucesso.");
             } else {
-                await usuarioService.criarUsuario(usuario);
+                await usuarioService.criarUsuario(usuarioParaEnviar);
                 mostrarSucesso("Usuário cadastrado!", "O usuário foi adicionado com sucesso.");
             }
     
@@ -51,6 +59,7 @@ function TabelaUsuarios() {
             mostrarErro("Erro ao salvar", "Houve um problema ao salvar o usuário.");
         }
     };
+    
     const handleExcluir = async (id) => {
         const confirmado = await confirmarAcao("Tem certeza?", "Essa ação não pode ser desfeita!");
     

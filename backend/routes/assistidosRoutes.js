@@ -64,11 +64,11 @@ router.post(
 router.get("/", verificarToken, assistidosController.listAssistidos);
 
 // Rota para buscar um assistido específico (GET)
-router.get("/:id", verificarToken, assistidosController.getAssistido);
+router.get("/:ficha", verificarToken, assistidosController.getAssistido);
 
 // Rota para atualizar um assistido (PUT)
 router.put(
-  "/:id",
+  "/:ficha",
   verificarToken,
   upload.fields([
     { name: "anexo_id", maxCount: 1 },
@@ -80,6 +80,6 @@ router.put(
 );
 
 // **Rota para excluir um assistido (DELETE)**
-router.delete("/:id", verificarToken, assistidosController.deleteAssistido);
+router.delete("/:ficha", verificarToken, assistidosController.deleteAssistido);
 
 module.exports = router;

@@ -6,14 +6,13 @@ import { AuthContext } from "../../context/AuthContext";
 import InputMask from "react-input-mask";
 
 function EditarAssistido() {
-  const { token, user } = useContext(AuthContext);
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { token, user } = useContext(AuthContext);
+  const { id } = useParams(); // Obtém o ID do assistido da URL
 
   const totalSteps = 4;
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(true);
-  const [errors, setErrors] = useState({});
   const [formData, setFormData] = useState({
     ficha: "",
     nome: "",
@@ -40,18 +39,22 @@ function EditarAssistido() {
     anexo3_id: null,
   });
 
+  const [errors, setErrors] = useState({});
+
+  // 🚀 Busca os dados do assistido ao carregar a página
   useEffect(() => {
     const fetchAssistido = async () => {
       try {
         const response = await fetch(`http://localhost:5000/api/assistidos/${id}`, {
           headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
+            Authorization: `Bearer ${token}`,
           },
         });
+
         if (!response.ok) {
           throw new Error(`Erro HTTP: ${response.status}`);
         }
+
         const data = await response.json();
         setFormData({
           ficha: data.ficha || "",
@@ -78,6 +81,7 @@ function EditarAssistido() {
           anexo2_id: null,
           anexo3_id: null,
         });
+
         setLoading(false);
       } catch (error) {
         console.error("Erro ao buscar assistido:", error);
@@ -88,6 +92,15 @@ function EditarAssistido() {
 
     fetchAssistido();
   }, [id, token]);
+
+  const handleNext = () => {
+    setCurrentStep((prev) => prev + 1);
+  };
+
+  const handlePrev = () => {
+    setCurrentStep((prev) => prev - 1);
+  };
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -168,34 +181,179 @@ function EditarAssistido() {
       <h1>Editar Assistido</h1>
 
       <form onSubmit={handleSubmit}>
+      {currentStep === 1 && (
         <fieldset>
           <legend>Informações Pessoais</legend>
-          <input type="text" name="nome" value={formData.nome} onChange={handleChange} />
-          <InputMask mask="999.999.999-99" type="text" name="cpf" value={formData.cpf} onChange={handleChange} />
-          <input type="date" name="nascimento" value={formData.nascimento} onChange={handleChange} />
-          <input type="text" name="celular" value={formData.celular} onChange={handleChange} />
-          <input type="email" name="email" value={formData.email} onChange={handleChange} />
+          <div className="form-grid">
+          <div className="form-group">
+              <label>Ficha (ID)</label>
+              <input type="number" name="ficha" value={formData.ficha} onChange={handleChange} />
+            </div>
+            <div className="form-group">
+              <label>Nome Completo</label>
+              <input type="text" name="nome" value={formData.nome} onChange={handleChange} />
+            </div>
+            <div className="form-group">
+               <label>CPF</label>
+               <InputMask mask="999.999.999-99" type="text" name="cpf" value={formData.cpf} onChange={handleChange} />
+            </div>
+            <div className="form-group">
+              <label>Data de Nascimento</label>
+              <input type="date" name="nascimento" value={formData.nascimento} onChange={handleChange} />
+            </div>
+            <div className="form-group">
+              <label>Gênero</label>
+              <select name="genero" value={formData.genero} onChange={handleChange}>
+                <option value="">Selecione</option>
+                <option value="masculino">Masculino</option>
+                <option value="feminino">Feminino</option>
+                <option value="outro">Outro</option>
+              </select>
+            </div>
+             <div className="form-group">
+               <label>Celular</label>
+               <InputMask mask="(99) 99999-9999" type="text" name="celular" value={formData.celular} onChange={handleChange} />
+             </div>
+             <div className="form-group">
+              <label>Email</label>
+              <input type="email" name="email" value={formData.email} onChange={handleChange} />
+            </div>
+              <div className="form-group">
+              <label>De Menor?</label>
+              <select name="de_menor" value={formData.de_menor} onChange={handleChange}>
+                <option value="nao">Não</option>
+                <option value="sim">Sim</option>
+              </select>
+            </div>
+        
+               {/* 🔹 Mostrar assistido_id apenas se "de_menor" for "sim" */}
+               {formData.de_menor === "sim" && (
+              <>
+                <div className="form-group">
+                  <label>Assistido Responsável (ID)</label>
+                  <input type="number" name="assistido_id" value={formData.assistido_id} onChange={handleChange} />
+                </div>
+                <div className="form-group">
+                  <label>Parentesco</label>
+                  <input type="text" name="parentesco" value={formData.parentesco} onChange={handleChange} />
+                </div>
+              </>
+            )}
+              </div>
         </fieldset>
+      )}
 
+        
+      {currentStep === 2 && (
         <fieldset>
           <legend>Endereço</legend>
-          <InputMask mask="99999-999" type="text" name="cep" value={formData.cep} onChange={handleChange} onBlur={fetchCEP} />
-          <input type="text" name="rua" value={formData.rua} readOnly />
-          <input type="text" name="numero" value={formData.numero} onChange={handleChange} />
-          <input type="text" name="bairro" value={formData.bairro} readOnly />
+          <div className="form-grid">
+            <div className="form-group">
+              <label>CEP</label>
+               <InputMask mask="99999-999" type="text" name="cep" value={formData.cep} onChange={handleChange} onBlur={fetchCEP} />
+               {errors.cep && <span className="error">{errors.cep}</span>}
+            </div>
+            <div className="form-group">
+              <label>Rua</label>
+              <input type="text" name="rua" value={formData.rua} readOnly />
+            </div>
+            <div className="form-group">
+              <label>Número</label>
+              <input type="text" name="numero" value={formData.numero} onChange={handleChange} />
+            </div>
+            <div className="form-group">
+              <label>Bairro</label>
+              <input type="text" name="bairro" value={formData.bairro} readOnly />
+            </div>
+            <div className="form-group">
+              <label>Cidade</label>
+              <input type="text" name="cidade" value={formData.cidade} readOnly />
+            </div>
+            <div className="form-group">
+              <label>Estado</label>
+              <input type="text" name="estado" value={formData.estado} readOnly />
+            </div>
+            <div className="form-group">
+              <label>Complemento</label>
+              <input type="text" name="complemento" value={formData.complemento} onChange={handleChange} />
+            </div>
+            </div>
         </fieldset>
+      )}
 
+      {currentStep === 3 && (
         <fieldset>
-          <legend>Documentos</legend>
-          <input type="file" name="anexo_id" onChange={handleFileChange} />
-          <input type="file" name="anexo2_id" onChange={handleFileChange} />
-          <input type="file" name="anexo3_id" onChange={handleFileChange} />
-        </fieldset>
+              <legend>Situação Social</legend>
+              <div className="form-group">
+                <label>Recebe cesta básica?</label>
+                <select name="cesta_basica" value={formData.cesta_basica} onChange={handleChange}>
+                  <option value="nao">Não</option>
+                  <option value="sim">Sim</option>
+                </select>
+                <div className="form-group">
+                  <label>Data da Consulta com Assistente Social</label>
+                  <input type="date" name="data_assistente_social" value={formData.data_assistente_social} onChange={handleChange} />
+                </div>
 
-        <button type="submit" className="submit">Atualizar</button>
-        <button type="button" className="cancel" onClick={() => navigate(-1)}>Cancelar</button>
+                <div className="form-group">
+                  <label>Data da Anamnese</label>
+                  <input type="date" name="anamnese" value={formData.anamnese} onChange={handleChange} />
+                </div>
+              </div>
+            </fieldset>
+      )}
+
+          {currentStep === 4 && (
+          <fieldset>
+              <legend>Anexos</legend>
+              <div className="form-group">
+                <label>Documento de Identidade</label>
+                <input type="file" name="anexo_id" onChange={handleFileChange} />
+              </div>
+              <div className="form-group">
+                <label>Comprovante de Residencia</label>
+                <input type="file" name="anexo2_id" onChange={handleFileChange} />
+              </div>
+              <div className="form-group">
+                <label>Comprovante de Renda</label>
+                <input type="file" name="anexo3_id" onChange={handleFileChange} />
+              </div>
+            </fieldset>
+          )}
+
+<div className="buttons">
+          {currentStep > 1 && (
+            <button type="button" className="prev" onClick={handlePrev}>
+              Voltar
+            </button>
+          )}
+
+          {currentStep < totalSteps ? (
+            <button 
+              type="button" 
+              className="next" 
+              onClick={() => {
+                console.log("Step atual:", currentStep); // Debugging
+                if (currentStep < totalSteps) {
+                  handleNext();
+                }
+              }}
+            >
+              Próximo
+            </button>
+          ) : null}
+
+          {currentStep === totalSteps && (
+            <button type="submit" className="submit">
+              Atualizar
+            </button>
+          )}
+        </div>
+
+  
       </form>
     </div>
+
   );
 }
 
