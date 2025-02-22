@@ -1,11 +1,11 @@
 const path = require("path");
 const multer = require("multer");
-const  Anexo  = require("../models/anexoModel.js");
+const { Anexo, buscarAnexoPorId } = require("../models/anexoModel.js");
 
 // Configuração do multer para salvar arquivos
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, path.join(__dirname, "../uploads")); // Pasta onde os arquivos serão salvos
+        cb(null, path.join(__dirname, "../server/uploads")); // Pasta onde os arquivos serão salvos
     },
     filename: (req, file, cb) => {
         const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
@@ -39,7 +39,33 @@ const criarAnexo = async (req, res) => {
     }
 };
 
+// Função para buscar um anexo pelo ID
+const obterAnexoPorId = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const anexo = await buscarAnexoPorId(id);
+
+        if (!anexo) {
+            return res.status(404).json({ error: "Anexo não encontrado." });
+        }
+
+        // Base URL para acessar os arquivos via HTTP
+        const baseUrl = "http://localhost:5000/anexos/";
+
+        res.json({
+            id: anexo.id,
+            nome: anexo.nome,
+            caminho: `${baseUrl}${anexo.caminho}`, // Retorna a URL completa
+            tamanho: anexo.tamanho,
+        });
+    } catch (error) {
+        console.error("Erro ao obter anexo:", error);
+        res.status(500).json({ error: "Erro ao buscar anexo." });
+    }
+};
+
 module.exports = {
     upload,
     criarAnexo,
+    obterAnexoPorId,
 };

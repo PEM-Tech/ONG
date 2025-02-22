@@ -10,6 +10,13 @@ function EditarAssistido() {
   const { token, user } = useContext(AuthContext);
   const { id } = useParams(); // Obtém o ID do assistido da URL
 
+  const [filePreviews, setFilePreviews] = useState({
+    anexo_id_url: "",
+    anexo2_id_url: "",
+    anexo3_id_url: "",
+  });
+
+
   const totalSteps = 4;
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(true);
@@ -50,12 +57,14 @@ function EditarAssistido() {
             Authorization: `Bearer ${token}`,
           },
         });
-
+  
         if (!response.ok) {
           throw new Error(`Erro HTTP: ${response.status}`);
         }
-
+  
         const data = await response.json();
+        console.log("Dados recebidos do assistido:", data); // 🔍 Verifique se os anexos estão sendo retornados
+  
         setFormData({
           ficha: data.ficha || "",
           nome: data.nome || "",
@@ -81,7 +90,21 @@ function EditarAssistido() {
           anexo2_id: null,
           anexo3_id: null,
         });
-
+  
+        // Verifique se as URLs dos anexos estão presentes
+        setFilePreviews({
+          anexo_id_url: data.anexo_id ? `http://localhost:5000/anexos/${data.anexo_id}` : "",
+          anexo2_id_url: data.anexo2_id ? `http://localhost:5000/anexos/${data.anexo2_id}` : "",
+          anexo3_id_url: data.anexo3_id ? `http://localhost:5000/anexos/${data.anexo3_id}` : "",
+        });
+        
+  
+        console.log("URLs dos anexos:", {
+          anexo_id_url: data.anexo_id_url,
+          anexo2_id_url: data.anexo2_id_url,
+          anexo3_id_url: data.anexo3_id_url,
+        });
+  
         setLoading(false);
       } catch (error) {
         console.error("Erro ao buscar assistido:", error);
@@ -89,9 +112,11 @@ function EditarAssistido() {
         setLoading(false);
       }
     };
-
+  
     fetchAssistido();
   }, [id, token]);
+  
+  
 
   const handleNext = () => {
     setCurrentStep((prev) => prev + 1);
@@ -304,21 +329,53 @@ function EditarAssistido() {
       )}
 
           {currentStep === 4 && (
-          <fieldset>
-              <legend>Anexos</legend>
-              <div className="form-group">
-                <label>Documento de Identidade</label>
-                <input type="file" name="anexo_id" onChange={handleFileChange} />
-              </div>
-              <div className="form-group">
-                <label>Comprovante de Residencia</label>
-                <input type="file" name="anexo2_id" onChange={handleFileChange} />
-              </div>
-              <div className="form-group">
-                <label>Comprovante de Renda</label>
-                <input type="file" name="anexo3_id" onChange={handleFileChange} />
-              </div>
-            </fieldset>
+       <fieldset>
+       <legend>Anexos</legend>
+     
+       <div className="form-group">
+         <label>Documento de Identidade</label>
+         {filePreviews.anexo_id_url ? (
+           <div>
+             <a className="preview-link" href={filePreviews.anexo_id_url} target="_blank" rel="noopener noreferrer">
+               📄 Visualizar Documento Atual
+             </a>
+           </div>
+         ) : (
+           <p className="no-file">Nenhum arquivo disponível</p>
+         )}
+         <input type="file" name="anexo_id" onChange={handleFileChange} />
+       </div>
+     
+       <div className="form-group">
+         <label>Comprovante de Residência</label>
+         {filePreviews.anexo2_id_url ? (
+           <div>
+             <a className="preview-link" href={filePreviews.anexo2_id_url} target="_blank" rel="noopener noreferrer">
+               📄 Visualizar Comprovante Atual
+             </a>
+           </div>
+         ) : (
+           <p className="no-file">Nenhum arquivo disponível</p>
+         )}
+         <input type="file" name="anexo2_id" onChange={handleFileChange} />
+       </div>
+     
+       <div className="form-group">
+         <label>Comprovante de Renda</label>
+         {filePreviews.anexo3_id_url ? (
+           <div>
+             <a className="preview-link" href={filePreviews.anexo3_id_url} target="_blank" rel="noopener noreferrer">
+               📄 Visualizar Comprovante Atual
+             </a>
+           </div>
+         ) : (
+           <p className="no-file">Nenhum arquivo disponível</p>
+         )}
+         <input type="file" name="anexo3_id" onChange={handleFileChange} />
+       </div>
+     </fieldset>
+     
+      
           )}
 
 <div className="buttons">

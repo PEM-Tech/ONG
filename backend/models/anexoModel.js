@@ -11,4 +11,20 @@ const Anexo = async ({ nome, caminho, tamanho }) => {
   }
 };
 
-module.exports = { Anexo };
+// Função para buscar um anexo pelo ID
+const buscarAnexoPorId = async (id) => {
+  try {
+    const query = `SELECT * FROM anexos WHERE id = ?`;
+    const [rows] = await db.execute(query, [id]);
+
+    if (rows.length === 0) {
+      return null; // Retorna null se não encontrar o anexo
+    }
+
+    return rows[0]; // Retorna o anexo encontrado
+  } catch (error) {
+    throw new Error("Erro ao buscar anexo no banco de dados: " + error.message);
+  }
+};
+
+module.exports = { Anexo, buscarAnexoPorId };
