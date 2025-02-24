@@ -12,7 +12,9 @@ import HomeVoluntarios from "./pages/Voluntarios/HomeVoluntarios";
 import HomeConfig from "./pages/Configurações/HomeConfig";
 import HomeUsuarios from "./pages/Usuarios/HomeUsuarios";
 import ListVoluntarios from "./pages/Voluntarios/ListarVoluntarios"
+import anamnese from "./pages/Assistidos/anamnese";
 import { mostrarErro } from "./components/SweetAlert";
+
 
 // 🔹 Função para proteger rotas privadas
 function ProtectedRoute({ children }) {
@@ -109,6 +111,14 @@ function App() {
             <ProtectedRoute>
               <ProtectedLayout>
                 <ListarAssistidos />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          }/>
+
+          <Route path="/anamnese" element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <anamnese />
               </ProtectedLayout>
             </ProtectedRoute>
           }/>

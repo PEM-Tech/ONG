@@ -15,16 +15,24 @@ const Anexo = async ({ nome, caminho, tamanho }) => {
 const buscarAnexoPorId = async (id) => {
   try {
     const query = `SELECT * FROM anexos WHERE id = ?`;
-    const [rows] = await db.execute(query, [id]);
+    const [rows] = await db.promise().execute(query, [id]); // Garante retorno correto
 
-    if (rows.length === 0) {
-      return null; // Retorna null se não encontrar o anexo
+    if (!rows || rows.length === 0) {
+      console.log("Nenhum anexo encontrado para o ID:", id);
+      return null;
     }
+
+    console.log("✅ Anexo encontrado:", rows[0]); // Debug para ver o que retorna
 
     return rows[0]; // Retorna o anexo encontrado
   } catch (error) {
-    throw new Error("Erro ao buscar anexo no banco de dados: " + error.message);
+    console.error("🚨 Erro ao buscar anexo:", error.message);
+    return null;
   }
 };
+
+
+
+
 
 module.exports = { Anexo, buscarAnexoPorId };

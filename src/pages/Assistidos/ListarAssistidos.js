@@ -46,7 +46,7 @@ function ListAssistidos() {
 
   const handleanamnese = (e, ficha) => {
     e.stopPropagation();
-    navigate(`/anamnese/${ficha}`);
+    navigate(`/anamnese`);
   };
 
   const handleVisualizar = (e, ficha) => {

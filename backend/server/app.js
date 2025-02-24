@@ -49,8 +49,8 @@ if (!fs.existsSync(uploadsDir)) {
     fs.mkdirSync(uploadsDir, { recursive: true });
 }
 
-// Middleware para servir arquivos estáticos
-app.use("/uploads", express.static(uploadsDir));
+// Middleware para servir arquivos estáticos (para abrir anexos diretamente no navegador)
+app.use("/anexos", express.static(path.join(__dirname, "uploads")));
 
 // Rotas
 app.use("/usuarios", usuarioRoutes);

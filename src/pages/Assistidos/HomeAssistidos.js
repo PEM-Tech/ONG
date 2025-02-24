@@ -9,6 +9,7 @@ function Pacientes() {
         navigate("/listarassistido");
     };
 
+   
     const handleMarcarConsulta = () => {
         console.log("Marcar consulta");
         // Lógica para marcar consulta

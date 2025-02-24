@@ -49,20 +49,22 @@ const obterAnexoPorId = async (req, res) => {
             return res.status(404).json({ error: "Anexo não encontrado." });
         }
 
-        // Base URL para acessar os arquivos via HTTP
-        const baseUrl = "http://localhost:5000/anexos/";
+        // Caminho absoluto do arquivo
+        const filePath = anexo.path;
 
-        res.json({
-            id: anexo.id,
-            nome: anexo.nome,
-            caminho: `${baseUrl}${anexo.caminho}`, // Retorna a URL completa
-            tamanho: anexo.tamanho,
+        // Enviar o arquivo para o navegador
+        res.sendFile(filePath, (err) => {
+            if (err) {
+                console.error("Erro ao enviar o arquivo:", err);
+                res.status(500).json({ error: "Erro ao abrir o arquivo." });
+            }
         });
     } catch (error) {
         console.error("Erro ao obter anexo:", error);
         res.status(500).json({ error: "Erro ao buscar anexo." });
     }
 };
+
 
 module.exports = {
     upload,
