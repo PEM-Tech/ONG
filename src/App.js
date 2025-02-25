@@ -12,7 +12,7 @@ import HomeVoluntarios from "./pages/Voluntarios/HomeVoluntarios";
 import HomeConfig from "./pages/Configurações/HomeConfig";
 import HomeUsuarios from "./pages/Usuarios/HomeUsuarios";
 import ListVoluntarios from "./pages/Voluntarios/ListarVoluntarios"
-import anamnese from "./pages/Assistidos/anamnese";
+import Anamnese from "./pages/Assistidos/Anamnese";
 import { mostrarErro } from "./components/SweetAlert";
 
 
@@ -118,7 +118,7 @@ function App() {
           <Route path="/anamnese" element={
             <ProtectedRoute>
               <ProtectedLayout>
-                <anamnese />
+                <Anamnese />
               </ProtectedLayout>
             </ProtectedRoute>
           }/>

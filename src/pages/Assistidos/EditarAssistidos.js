@@ -204,7 +204,7 @@ function EditarAssistido() {
   return (
     <div className="cadastro-container">
       <h1>Editar Assistido</h1>
-
+      <button className="back-button" onClick={() => navigate(-1)}>⬅ Sair</button>
       <form onSubmit={handleSubmit}>
       {currentStep === 1 && (
         <fieldset>
