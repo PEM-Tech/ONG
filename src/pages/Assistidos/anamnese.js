@@ -98,38 +98,7 @@ function Anamnese() {
   };
 
   //função pra resetar os campos do formulário
-  const resetForm = () => {
-    setCurrentStep(1);
-    setFormData({
-      ficha: "",
-      nome: "",
-      cpf: "",
-      nascimento: "",
-      genero: "",
-      email: "",
-      celular: "",
-      email: "",
-      cep: "",
-      rua: "",
-      numero: "",
-      bairro: "",
-      cidade: "",
-      estado: "",
-      complemento: "",
-      medicamentos: "nao",
-      assistido_id: "",
-      parentesco: "",
-      cesta_basica: "nao",
-      data_assistente_social: "",
-      anamnese: "",
-      anexo_id: null,
-      anexo2_id: null,
-      anexo3_id: null,
-    });
-    setErrors({});
-    setSuccessMessage("");
-    setCurrentStep(1);
-  };
+
 
   return (
     <div className="cadastro-container">
@@ -235,7 +204,7 @@ function Anamnese() {
               </select>
 
              {/* 🔹 Mostrar quais apenas se "medicamentos" for "sim" */}
-            {formData.medicamentos === "sim" && (
+            {formData.medicamentos === "Sim" && (
               <>
                 <div className="form-group">
                   <label>Quais?</label>
@@ -293,8 +262,8 @@ function Anamnese() {
                 <div className="form-group">
               <label>Algum uso de Medicamentos</label>
               <select name="medicamentos_gestacao" value={formData.medicamentos_gestacao} onChange={handleChange}>
-                <option value="Nao">Nao</option>
-                <option value="Sim">Sim</option>
+                <option value="nao">Nao</option>
+                <option value="sim">Sim</option>
               </select>
 
              {/* 🔹 Mostrar quais apenas se "medicamentos" for "sim" */}
@@ -368,15 +337,442 @@ function Anamnese() {
 
             <fieldset>
             <legend>linguagem</legend>
+            <div className="form-group">
+              <label>Quando iniciou a fala?</label>
+              <input type="text" name="iniciou_fala" value={formData.iniciou_fala} onChange={handleChange}/>
+            </div>
+            <div className="form-group">
+              <label>Apresenta Dificuldade?</label>
+              <select name="dificuldade" value={formData.dificuldade} onChange={handleChange}>
+               <option value="Nao">Nao</option>
+                <option value="Sim">Sim</option>
+              </select>
+              {/*🔹 Mostrar quais apenas se "dificuldade" for "sim" */}
+              {formData.dificuldade === "Sim" && (
+                <>
+                  <div className="form-group">
+                    <label>Quais?</label>
+                    <input type="text" name="quais_linguagem" value={formData.quais_linguagem} onChange={handleChange}/>
+                  </div>
+                </>
+              )}
+            </div> 
+            <div className="form-group">
+              <label>Tem boa compreenção verbal?</label>
+              <select name="compreensao_verbal" value={formData.compreensao_verbal} onChange={handleChange}>
+                <option value="sim">Sim</option>
+                <option value="nao">Nao</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <label>Comunica-se de forma verbal ou não verbal?</label>
+              <select name="comunica_verbal" value={formData.comunica_verbal} onChange={handleChange}>
+                <option value="sim">Sim</option>
+                <option value="nao">Nao</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <label>Comunica-se através da escrita?(escreve, copia, recorta, rasga, desenha...)</label>
+              <input type="text" name="escrita" value={formData.escrita} onChange={handleChange}/>
+            </div>
+            <div className="form-group">
+              <label>Consegue seguir comandos(simples e complexos)??</label>
+              <input type="text" name="comandos" value={formData.comandos} onChange={handleChange}/>
+            </div>
+            </fieldset>
+          )}
 
+          {/* 🔹 Etapa 6: habitos alimentares */}
+          {currentStep === 6 && (
+            <fieldset>
+            <legend>Habitos Alimentares</legend>
+            <div className="form-group">
+              <label>Refeições por dia</label>
+              <input type="number" name="refeicoes_por_dia" value={formData.refeicoes_por_dia} onChange={handleChange}/>
+            </div>
+            <div className="form-group">
+              <label>Dificuldade com algum alimento ou seletividade alimentar?</label>
+              <input type="text" name="dificuldade_alimentar" value={formData.dificuldade_alimentar} onChange={handleChange}/>
+            </div>
+            </fieldset>
+          )}
 
+          {/* 🔹 Etapa 7: dados sobre o sono */}
+          {currentStep === 7 && (
+            <fieldset>
+            <legend>Dados sobre o Sono</legend>
+            <div className="form-group">
+              <label>Como é o sono?</label>
+              <input type="text" name="como_e_sono" value={formData.como_e_sono} onChange={handleChange}/>
+            </div>
+            <div className="form-group">
+              <label>Teve alguma alteração de sono significativo em alguma outra fase da vida?</label>
+              <input type="text" name="alteracao_sono" value={formData.alteracao_sono} onChange={handleChange}/>
+            </div>
+            <div className="form-group">
+              <label>Divide quarto ou cama com alguém?</label>
+              <input type="text" name="divide_cama" value={formData.divide_cama} onChange={handleChange}/>
+            </div>
+            <div className="form-group">
+              <label>Tem algum hábito ou rotina noturna?</label>
+              <input type="text" name="rotina_noturna" value={formData.rotina_noturna} onChange={handleChange}/>
+            </div>
+            </fieldset>
+          )}
 
+          {/* 🔹 Etapa 8: dados sobre a saúde */}
+          {currentStep === 8 && (
+            <fieldset>
+            <legend>Dados sobre a Saude</legend>
+            <div className="form-group">
+              <label>Casos de convulsões, eplepsia, desmaia e etc?</label>
+              <input type="text" name="casos_saude" value={formData.casos_saude} onChange={handleChange}/>
+            </div>
+            <div className="form-group">
+              <label>Alergias?</label>
+              <select name="alergias" value={formData.alergias} onChange={handleChange}>
+               <option value="Nao">Nao</option>
+                <option value="Sim">Sim</option>
+              </select>
+               {/*🔹 Mostrar quais apenas se "dificuldade" for "sim" */}
+               {formData.alergias === "Sim" && (
+                <>
+                  <div className="form-group">
+                    <label>Quais?</label>
+                    <input type="text" name="quais_alergias" value={formData.quais_alergias} onChange={handleChange}/>
+                  </div>
+                </>
+              )}
+            </div>
+            <div className="form-group">
+              <label>Tomou todas as vacinas?</label>
+              <input type="text" name="vacinas" value={formData.vacinas} onChange={handleChange}/>
+            </div>
+            <div className="form-group">
+              <label>Ja fez exames específicos?</label>
+              <input type="text" name="maior_dificuldade" value={formData.maior_dificuldade} onChange={handleChange}/>
+            </div>
+            <div className="form-group">
+              <legend>Dificuldades</legend>
+              <label>Visão</label>
+              <select name="visao" value={formData.visao} onChange={handleChange}> 
+                <option value="Nao">Nao</option>
+                <option value="Sim">Sim</option>
+              </select>
+              <label>Audição</label>
+              <select name="audicao" value={formData.audicao} onChange={handleChange}>
+                <option value="Nao">Nao</option>
+                <option value="Sim">Sim</option>
+              </select>
+            </div>
+            </fieldset>
+          )}
 
+          {/* 🔹 Etapa 9: manipulação e hábitos */}
+          
+          {currentStep === 9 && (
+            <fieldset>
+            <legend>Manipulação e Hábitos</legend>
+            <div className="form-group">
+              <label>Usou chupeta?</label>
+              <select name="chupeta" value={formData.chupeta} onChange={handleChange}>
+                <option value="Nao">Nao</option>
+                <option value="Sim">Sim</option>
+              </select>
+                {/*🔹 Mostrar quais apenas se "chupeta" for "sim" */}
+                {formData.chupeta === "Sim" && (
+                <>
+                  <div className="form-group">
+                    <label>Até quando?</label>
+                    <input type="text" name="ate_quando_chupeta" value={formData.ate_quando_chupeta} onChange={handleChange}/>
+                  </div>
+                </>
+              )}
+            </div>
+            <div className="form-group">
+              <label>Roeu as unhas?</label>
+              <select name="unhas" value={formData.unhas} onChange={handleChange}>
+                <option value="Nao">Nao</option>
+                <option value="Sim">Sim</option>
+              </select>
+                {/*🔹 Mostrar quais apenas se "unhas" for "sim" */}
+                {formData.unhas === "Sim" && (
+                <>
+                  <div className="form-group">
+                    <label>Até quando?</label>
+                    <input type="text" name="ate_quando_unhas" value={formData.ate_quando_unhas} onChange={handleChange}/>
+                  </div>
+                </>
+              )}
+            </div>
+            <div className="form-group">
+              <label>Algum tique ou manias?</label>
+              <select name="manias" value={formData.manias} onChange={handleChange}>
+                <option value="Nao">Nao</option>
+                <option value="Sim">Sim</option>
+              </select>
+                {/*🔹 Mostrar quais apenas se "manias" for "sim" */}
+                {formData.manias === "Sim" && (
+                <>
+                  <div className="form-group">
+                    <label>Até quando?</label>
+                    <input type="text" name="quais_manias" value={formData.quais_manias} onChange={handleChange}/>
+                  </div>
+                </>
+              )}
+            </div>
+            <div className="form-group">
+              <label>Como reage a mudanças na rotina e nos hábitos?</label>
+              <input  type="text" name="mudança_rotina" value={formData.mudança_rotina} onChange={handleChange}/>
+            </div>
+            <div className="form-group">
+              <label>Como lida com frustrações?</label>
+              <input  type="text" name="lida_frustações" value={formData.lida_frustações} onChange={handleChange}/>
+            </div>
+            </fieldset>
+          )}
 
+          {/* 🔹 Etapa 10: Sexualidade */}
 
+          {currentStep === 10 && (
+            <fieldset>
+            <legend>Sexualidade</legend>
+            <div className="form-group">
+              <label>Já demonstrou curiosidade sexual?</label>
+              <select name="curiosidade_sexual" value={formData.curiosidade_sexual} onChange={handleChange}>
+                <option value="Nao">Nao</option>
+                <option value="Sim">Sim</option>
+              </select>
+            </div>
+            <div className="form-group">
+              <label>Apresenta atitudes com outras pessoas?</label>
+              <input type="text" name="atitudes_sexuais" value={formData.atitudes_sexuais} onChange={handleChange}/>
+            </div>
+            
+            <div className="form-group">
+              <label>Atitude da familia em relação à sexualidade?</label>
+              <input type="text" name="familia_sexualidade" value={formData.familia_sexualidade} onChange={handleChange}/>
+            </div>
+            </fieldset>
+          )}
 
+          {/* 🔹 Etapa 11: Dados sobre sociabilidade */}
 
+          {currentStep === 11 && (
+            <fieldset>
+            <legend>Dados sobre Sociabilidade</legend>
+            <div className="form-group">
+              <label>O que faz quando não está na escola/faculdade/trabalho?</label>
+              <input  type="text" name="fora_escola" value={formData.fora_escola} onChange={handleChange}/>
+            </div>
+            <div className="form-group">
+              <label>Tem amigos? Brinca/sai sozinho ou acompanhado</label>
+              <input  type="text" name="amigos" value={formData.amigos} onChange={handleChange}/>
+            </div>
+            <div className="form-group">  
+              <label>Faz amizade facilmente? Interage com facilidade?</label>
+              <input  type="text" name="amizade" value={formData.amizade} onChange={handleChange}/>
+            </div>
+            <div className="form-group">  
+              <label>Fala sozinho?</label>
+              <select name="fala_sozinho" value={formData.fala_sozinho} onChange={handleChange}>
+                <option value="Nao">Nao</option>
+                <option value="Sim">Sim</option>
+             </select>
+            </div>
+            <div className="form-group">  
+              <label>Brinca de faz de conta?</label>
+              <select name="faz_de_conta" value={formData.faz_de_conta} onChange={handleChange}>
+                <option value="Nao">Nao</option>
+                <option value="Sim">Sim</option>
+             </select>
+            </div>
+            <div className="form-group">  
+              <label>Imita animais?</label>
+              <select name="imita_animais" value={formData.imita_animais} onChange={handleChange}>
+                <option value="Nao">Nao</option>
+                <option value="Sim">Sim</option>
+             </select>
+            </div>
+            <div className="form-group">  
+              <label>Imita Pessoas?</label>
+             <select name="imita_pessoas" value={formData.imita_pessoas} onChange={handleChange}>
+                <option value="Nao">Nao</option>
+                <option value="Sim">Sim</option>
+             </select>
+            </div>
+            </fieldset>
+          )}
 
+          {/* 🔹 Etapa 12: vestuario/higiene/organizacao */}
+
+          {currentStep === 12 && (
+            <fieldset>
+            <legend>Vestuario/Higiene/Organizacao</legend>
+            <div className="form-group">
+              <label>Se veste sozinho?</label>
+              <select name="veste_sozinho" value={formData.veste_sozinho} onChange={handleChange}>
+                <option value="Nao">Nao</option>
+                <option value="Sim">Sim</option>
+             </select>
+            </div>
+            <div className="form-group">
+              <label>Se penteia?</label>
+              <select name="se_penteia" value={formData.se_penteia} onChange={handleChange}>
+                <option value="Nao">Nao</option>
+                <option value="Sim">Sim</option>
+             </select>
+            </div>
+            <div className="form-group">
+              <label>Toma banho sozinho?</label>
+              <select name="banho_sozinho" value={formData.banho_sozinho} onChange={handleChange}>
+                <option value="Nao">Nao</option>
+                <option value="Sim">Sim</option>
+             </select>
+            </div>
+            <div className="form-group">
+              <label>Escova os dentes?</label>
+              <select name="escova_dentes" value={formData.escova_dentes} onChange={handleChange}>
+                <option value="Nao">Nao</option>
+                <option value="Sim">Sim</option>
+             </select>
+            </div>
+            <div className="form-group">
+              <label>Faz nós e laços?</label>
+              <select name="faz_laco" value={formData.faz_laco} onChange={handleChange}>
+                <option value="Nao">Nao</option>
+                <option value="Sim">Sim</option>
+             </select>
+            </div>
+            <div className="form-group">
+              <label>Arruma os seus materias e seus pertences?</label>
+              <select name="arruma_pertences" value={formData.arruma_pertences} onChange={handleChange}>
+                <option value="Nao">Nao</option>
+                <option value="Sim">Sim</option>
+             </select>
+            </div>
+            </fieldset>
+          )}
+
+          {/* 🔹 Etapa 13: antecedentes familiares */}
+
+          {currentStep === 13 && (
+            <fieldset>
+            <legend>Antecedentes Familiares</legend>
+            <div className="form-group">
+              <label>Deficiências físicas?</label>
+              <input  type="text" name="deficiencias_fisicas" value={formData.deficiencias_fisicas} onChange={handleChange}/>
+            </div>
+            <div className="form-group">
+              <label>Mentais ou outras?</label>
+              <input  type="text" name="deficiencias_mentais" value={formData.deficiencias_mentais} onChange={handleChange}/>
+            </div>
+            <div className="form-group">
+              <label>Caso de alcoolismo?</label>
+              <input  type="text" name="alcoolismo" value={formData.alcoolismo} onChange={handleChange}/>
+            </div>
+            <div className="form-group">
+              <label>Historico de Suicídio?</label> 
+              <input  type="text" name="historico_suicidio" value={formData.historico_suicidio} onChange={handleChange}/>
+            </div>
+            <div className="form-group">
+              <label>Alergia</label>
+              <input  type="text" name="historico_alergia" value={formData.historico_alergia} onChange={handleChange}/>
+            </div>
+            <div className="form-group">
+              <label>Perda ou processo de luto na família</label>
+              <input  type="text" name="luto_familia" value={formData.luto_familia} onChange={handleChange}/>
+            </div>
+        
+            </fieldset>
+          )}
+
+          {/* 🔹 Etapa 14: relacionamento familiar */}
+
+          {currentStep === 14 && (
+            <fieldset>
+            <legend>Relacionamento Familiar</legend>
+            <div className="form-group">
+              <label>Conflitos?</label>
+              <select  type="text" name="conflitos_familiares" value={formData.conflitos_familiares} onChange={handleChange}>
+                <option value="Nao">Nao</option>
+                <option value="Sim">Sim</option>
+             </select>
+              {/*🔹 Mostrar quais apenas se "conflitos_familiares" for "sim" */}
+              {formData.conflitos_familiares === "Sim" && (
+                <>
+                 <div className="form-group">
+                    <label>Quais?</label>
+                     <input  type="text" name="quais_conflitos" value={formData.quais_conflitos} onChange={handleChange}/>
+                  </div>
+                </>
+              )}
+            
+            </div>
+            <div className="form-group">
+              <label>Historico e dinamica familiar?</label>
+              <input  type="text" name="lida_frustações" value={formData.lida_frustações} onChange={handleChange}/>
+            </div>
+            <div className="form-group">
+              <label>Como lidam com crises e birras?</label>
+              <input  type="text" name="crises_birras" value={formData.crises_birras} onChange={handleChange}/>
+            </div>
+            <div className="form-group">
+              <label>Com quem o paciente fica a maior parte do tempo?</label>
+              <input  type="text" name="com_quem_fica" value={formData.com_quem_fica} onChange={handleChange}/>
+            </div>
+              <div className="form-group">
+              <label>Demonstra comportamento de fuga ou agressividade?</label>
+              <input  type="text" name="com_quem_se_relaciona" value={formData.com_quem_se_relaciona} onChange={handleChange}/>
+            </div>
+            <div className="form-group">
+              <label>Ajuda nas tarefas?</label>
+              <select name="ajuda_tarefas" value={formData.ajuda_tarefas} onChange={handleChange}>
+                <option value="Nao">Nao</option>
+                <option value="Sim">Sim</option>
+             </select>
+                 {/*🔹 Mostrar quais apenas se "ajuda_tarefas" for "sim" */}
+                 {formData.conflitos_familiares === "Sim" && (
+                <>
+                 <div className="form-group">
+                    <label>Quais?</label>
+                     <input  type="text" name="quais_tarrefas" value={formData.quais_tarefas} onChange={handleChange}/>
+                  </div>
+                </>
+              )}
+            </div>
+            </fieldset>
+          )}
+
+          {/* 🔹 Etapa 15: escolaridade */}
+
+          {currentStep === 15 && (
+            <fieldset>
+            <legend>Escolaridade</legend>
+            <div className="form-group">
+              <label>Como reage a mudanças na rotina e nos hábitos?</label>
+              <input  type="text" name="mudança_rotina" value={formData.mudança_rotina} onChange={handleChange}/>
+            </div>
+            <div className="form-group">
+              <label>Como lida com frustrações?</label>
+              <input  type="text" name="lida_frustações" value={formData.lida_frustações} onChange={handleChange}/>
+            </div>
+            </fieldset>
+          )}
+
+          {/* 🔹 Etapa 16: historico social */}
+
+          {currentStep === 16 && (
+            <fieldset>
+            <legend>Historico Social</legend>
+            <div className="form-group">
+              <label>Como reage a mudanças na rotina e nos hábitos?</label>
+              <input  type="text" name="mudança_rotina" value={formData.mudança_rotina} onChange={handleChange}/>
+            </div>
+            <div className="form-group">
+              <label>Como lida com frustrações?</label>
+              <input  type="text" name="lida_frustações" value={formData.lida_frustações} onChange={handleChange}/>
+            </div>
             </fieldset>
           )}
 
