@@ -11,29 +11,7 @@ function Anamnese() {
   const totalSteps = 17;
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
-    ficha: "",
-    nome: "",
-    cpf: "",
-    nascimento: "",
-    genero: "",
-    celular: "",
-    email: "",
-    cep: "",
-    endereco: "",
-    numero: "",
-    bairro: "",
-    cidade: "",
-    estado: "",
-    complemento: "",
-    medicamentos: "nao",
-    assistido_id: "",
-    parentesco: "",
-    cesta_basica: "nao",
-    data_assistente_social: "",
-    anamnese: "",
-    anexo_id: null,
-    anexo2_id: null,
-    anexo3_id: null,
+   
   });
 
   const [errors, setErrors] = useState({});
@@ -97,7 +75,26 @@ function Anamnese() {
     }
   };
 
-  //função pra resetar os campos do formulário
+  // 🔹 Adicionando tabela de Marcos do Desenvolvimento na Etapa 17
+  const marcos = [
+    "Canta uma música inteira",
+    "Canta partes de uma música",
+    "Dança acompanhando as batidas da música",
+    "Dança acompanhando alguém",
+    "Percebe a localização do seu corpo no ambiente",
+    "Percebe a localização de outros corpos em relação ao seu",
+    "Identifica roteiros a ser seguidos assinalando entradas, saídas e alguns pontos de referência",
+  ];
+
+  const [marcosDesenvolvimento, setMarcosDesenvolvimento] = useState(
+    Array(marcos.length).fill(null)
+  );
+
+  const handleMarcosSelection = (index, value) => {
+    const newMarcos = [...marcosDesenvolvimento];
+    newMarcos[index] = value;
+    setMarcosDesenvolvimento(newMarcos);
+  };
 
 
   return (
@@ -750,12 +747,31 @@ function Anamnese() {
             <fieldset>
             <legend>Escolaridade</legend>
             <div className="form-group">
-              <label>Como reage a mudanças na rotina e nos hábitos?</label>
-              <input  type="text" name="mudança_rotina" value={formData.mudança_rotina} onChange={handleChange}/>
+              <label>Serie Atual?</label>
+              <input  type="text" name="serie_atual" value={formData.serie_atual} onChange={handleChange}/>
             </div>
             <div className="form-group">
-              <label>Como lida com frustrações?</label>
+              <label>Casos de reprovação?</label>
               <input  type="text" name="lida_frustações" value={formData.lida_frustações} onChange={handleChange}/>
+            </div>
+            <div className="form-group">
+              <label>Área de dificuldade?</label>
+              <input  type="text" name="area_dificuldade" value={formData.area_dificuldade} onChange={handleChange}/>
+            </div>
+            <div className="form-group">
+              <label>Local tem professor de apoio ou mediador?</label>
+              <select name="local_professor" value={formData.local_professor} onChange={handleChange}>
+                <option value="Nao">Nao</option>
+                <option value="Sim">Sim</option>
+             </select>
+            </div>
+            <div className="form-group">
+              <label>Paciente consegue fazer todas as tarefas ou nescessita de suporte?</label>
+              <input  type="text" name="suporte" value={formData.suporte} onChange={handleChange}/>
+            </div>
+            <div className="form-group">
+              <label>Como é o comportamento do paciente no local?</label>
+              <input  type="text" name="suporte" value={formData.suporte} onChange={handleChange}/>
             </div>
             </fieldset>
           )}
@@ -766,15 +782,71 @@ function Anamnese() {
             <fieldset>
             <legend>Historico Social</legend>
             <div className="form-group">
-              <label>Como reage a mudanças na rotina e nos hábitos?</label>
-              <input  type="text" name="mudança_rotina" value={formData.mudança_rotina} onChange={handleChange}/>
+              <label>Hábitos de lazer. inserção em grupos:</label>
+              <input  type="text" name="habitos_lazer" value={formData.habitos_lazer} onChange={handleChange}/>
             </div>
             <div className="form-group">
-              <label>Como lida com frustrações?</label>
-              <input  type="text" name="lida_frustações" value={formData.lida_frustações} onChange={handleChange}/>
+              <label>Rede de apoio:</label>
+              <input  type="text" name="rede_apoio" value={formData.rede_apoio} onChange={handleChange}/>
+            </div>
+            <div className="form-group">
+              <label>Observações:</label>
+              <input  type="text" name="obs" value={formData.obs} onChange={handleChange}/>
             </div>
             </fieldset>
           )}
+
+           {/* 🔹 Etapa 17: marcos */}
+
+           {currentStep === 17 && (
+          <fieldset>
+            <legend>Marcos do Desenvolvimento</legend>
+            <table className="tabela">
+              <thead>
+                <tr>
+                  <th>Marcos do Desenvolvimento</th>
+                  <th>Consegue Fazer Sozinho</th>
+                  <th>Consegue Fazer com Ajuda</th>
+                  <th>Ainda Não Consegue Fazer</th>
+                </tr>
+              </thead>
+              <tbody>
+                {marcos.map((marco, index) => (
+                  <tr key={index}>
+                    <td>{marco}</td>
+                    <td>
+                      <input
+                        type="radio"
+                        name={`marco-${index}`}
+                        value="sozinho"
+                        checked={marcosDesenvolvimento[index] === "sozinho"}
+                        onChange={() => handleMarcosSelection(index, "sozinho")}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="radio"
+                        name={`marco-${index}`}
+                        value="com-ajuda"
+                        checked={marcosDesenvolvimento[index] === "com-ajuda"}
+                        onChange={() => handleMarcosSelection(index, "com-ajuda")}
+                      />
+                    </td>
+                    <td>
+                      <input
+                        type="radio"
+                        name={`marco-${index}`}
+                        value="nao-consegue"
+                        checked={marcosDesenvolvimento[index] === "nao-consegue"}
+                        onChange={() => handleMarcosSelection(index, "nao-consegue")}
+                      />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </fieldset>
+        )}
 
        {/* 🔹 Botões de Navegação */}
        <div className="buttons">
