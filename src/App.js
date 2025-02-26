@@ -11,8 +11,9 @@ import EditarAssistido from "./pages/Assistidos/EditarAssistidos";
 import HomeVoluntarios from "./pages/Voluntarios/HomeVoluntarios";
 import HomeConfig from "./pages/Configurações/HomeConfig";
 import HomeUsuarios from "./pages/Usuarios/HomeUsuarios";
-import ListVoluntarios from "./pages/Voluntarios/ListarVoluntarios"
+import ListVoluntarios from "./pages/Voluntarios/ListarVoluntarios";
 import Anamnese from "./pages/Assistidos/Anamnese";
+import CadastroVoluntarios from "./pages/Voluntarios/CadastroVoluntarios";
 import { mostrarErro } from "./components/SweetAlert";
 
 
@@ -70,6 +71,14 @@ function App() {
             <ProtectedRoute>
               <ProtectedLayout>
                 <CadastroAssistidos />
+              </ProtectedLayout>
+            </ProtectedRoute>
+          } />
+
+          <Route path="/cadastrar-voluntario" element={
+            <ProtectedRoute>
+              <ProtectedLayout>
+                <CadastroVoluntarios />
               </ProtectedLayout>
             </ProtectedRoute>
           } />

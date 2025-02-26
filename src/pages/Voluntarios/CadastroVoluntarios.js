@@ -22,7 +22,6 @@ function CadastroVoluntarios() {
     bairro: "",
     cidade: "",
     estado: "",
-    agenda: "",
     anexo_id: null,
   });
 
@@ -84,7 +83,7 @@ function CadastroVoluntarios() {
       submissionData.set("cep", removeMask(formData.cep));
       submissionData.append("executado_por", user.id);
 
-      const response = await fetch("http://localhost:5000/api/voluntarios", {
+      const response = await fetch("http://localhost:5000/api/voluntarios/criar", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
