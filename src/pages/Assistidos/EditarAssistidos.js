@@ -7,6 +7,7 @@ import InputMask from "react-input-mask";
 
 function EditarAssistido() {
   const navigate = useNavigate();
+
   const { token, user } = useContext(AuthContext);
   const { id } = useParams(); // Obtém o ID do assistido da URL
 

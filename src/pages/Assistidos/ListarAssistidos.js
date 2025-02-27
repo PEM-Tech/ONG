@@ -46,7 +46,8 @@ function ListAssistidos() {
 
   const handleanamnese = (e, ficha) => {
     e.stopPropagation();
-    navigate(`/anamnese`);
+    // Navega para /anamnese/<valor-da-ficha>
+    navigate(`/anamnese/${ficha}`);
   };
 
   const handleVisualizar = (e, ficha) => {
@@ -97,7 +98,7 @@ const formatarCPF = (cpf) => {
   return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, "$1.$2.$3-$4");
 };
   
-    // 🔹 Função para formatar a data de nascimento (YYYY-MM-DD → DD/MM/YYYY)
+    //  Função para formatar a data de nascimento (YYYY-MM-DD → DD/MM/YYYY)
   const formatarData = (data) => {
     if (!data) return "";
     return new Date(data).toLocaleDateString("pt-BR", {
@@ -105,7 +106,7 @@ const formatarCPF = (cpf) => {
     });
   };
 
-  // 🔹 Filtrando os assistidos com base na pesquisa e ordenação
+  //  Filtrando os assistidos com base na pesquisa e ordenação
   const assistidosFiltrados = assistidos
     .filter((item) =>
       item.nome.toLowerCase().includes(search.toLowerCase())
@@ -120,7 +121,7 @@ const formatarCPF = (cpf) => {
     <div className="tabela-container">
       <h1>Gerenciamento de Assistidos</h1>
 
-      {/* 🔹 Filtros */}
+      {/*  Filtros */}
       <div className="filtros">
         <input
           type="text"
@@ -145,7 +146,7 @@ const formatarCPF = (cpf) => {
         </button>
       </div>
 
-      {/* 🔹 Tabela */}
+      {/* Tabela */}
       <table>
         <thead>
           <tr>

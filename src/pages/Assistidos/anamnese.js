@@ -1,5 +1,7 @@
-import React, { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+
+
+import React, { useState, useContext, useEffect } from "react";
+import { useNavigate,  useParams } from "react-router-dom";
 import "../../assets/css/Anamnese.css";
 import { mostrarSucesso, mostrarErro } from "../../components/SweetAlert";
 import { AuthContext } from "../../context/AuthContext";
@@ -7,6 +9,7 @@ import InputMask from "react-input-mask";
 
 function Anamnese() {
   const navigate = useNavigate();
+  const { ficha } = useParams(); // aqui pegamos o valor da URL
   const { token, user } = useContext(AuthContext);
   const totalSteps = 17;
   const [currentStep, setCurrentStep] = useState(1);
@@ -95,7 +98,24 @@ function Anamnese() {
     newMarcos[index] = value;
     setMarcosDesenvolvimento(newMarcos);
   };
+  useEffect(() => {
+    const fetchAssistido = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:5000/api/assistidos/${ficha}`,
+          { /* ...headers etc. */ }
+        );
+        // se o backend aceita /assistidos/<ficha>, faça a busca
+        // e preencha seus campos de anamnese
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
+    if (ficha) {
+      fetchAssistido();
+    }
+  }, [ficha]);
 
   return (
     <div className="cadastro-container">
