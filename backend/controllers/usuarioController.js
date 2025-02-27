@@ -131,7 +131,7 @@ class UsuarioController {
             const token = jwt.sign(
                 { id: usuario.id, email: usuario.email, permissao: usuario.permissao },
                 "secreta",
-                { expiresIn: "1h" }
+                { expiresIn: "8h" }
             );
 
             // 🔹 Salvar o token no banco de dados

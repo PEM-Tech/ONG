@@ -104,6 +104,11 @@
     display: none; /* Esconde o texto do administrador */
 }
 
+.token-expiration-text{
+    font-weight: bold;
+    font-size: 20px;
+}
+
 /* RESPONSIVIDADE PARA TELEFONE */
 @media (max-width: 768px) {
     /* Esconde a sidebar principal em telas pequenas */

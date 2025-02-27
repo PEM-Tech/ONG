@@ -8,7 +8,8 @@ import InputMask from "react-input-mask";
 function CadastroVoluntarios() {
   const navigate = useNavigate();
   const { token, user } = useContext(AuthContext);
-
+  const totalSteps = 3;
+  const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
     nome: "",
     cpf: "",
@@ -30,6 +31,14 @@ function CadastroVoluntarios() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleNext = () => {
+    setCurrentStep((prev) => prev + 1);
+  };
+
+  const handlePrev = () => {
+    setCurrentStep((prev) => prev - 1);
   };
 
   const handleFileChange = (e) => {
@@ -107,11 +116,14 @@ function CadastroVoluntarios() {
   return (
     <div className="cadastro-container">
       <div className="title-container">
-        <button className="back-button" onClick={() => navigate(-1)}>⬅ Voltar</button>
+        <button className="back-button" onClick={() => navigate(-1)}>⬅ Sair</button>
         <h1>Cadastro de Voluntários</h1>
       </div>
 
       <form onSubmit={handleSubmit}>
+        {currentStep === 1 && (
+          
+     
         <fieldset>
           <legend>Dados do Voluntário</legend>
           <div className="form-grid">
@@ -160,7 +172,9 @@ function CadastroVoluntarios() {
             </div>
           </div>
         </fieldset>
+       )}
 
+        {currentStep === 2 && (
         <fieldset>
           <legend>Endereço</legend>
           <div className="form-grid">
@@ -198,6 +212,9 @@ function CadastroVoluntarios() {
             </div>
           </div>
         </fieldset>
+        )}
+
+        {currentStep === 3 && (
 
         <fieldset>
           <legend>Anexos</legend>
@@ -206,9 +223,36 @@ function CadastroVoluntarios() {
             <input type="file" name="anexo_id" onChange={handleFileChange} />
           </div>
         </fieldset>
+         )}
 
-        <div className="buttons">
-          <button type="submit" className="submit">Cadastrar</button>
+         {/* 🔹 Botões de Navegação */}
+       <div className="buttons">
+          {currentStep > 1 && (
+            <button type="button" className="prev" onClick={handlePrev}>
+              Voltar
+            </button>
+          )}
+
+          {currentStep < totalSteps ? (
+            <button 
+              type="button" 
+              className="next" 
+              onClick={() => {
+                console.log("Step atual:", currentStep); // Debugging
+                if (currentStep < totalSteps) {
+                  handleNext();
+                }
+              }}
+            >
+              Próximo
+            </button>
+          ) : null}
+
+          {currentStep === totalSteps && (
+            <button type="submit" className="submit">
+              Cadastrar
+            </button>
+          )}
         </div>
       </form>
     </div>
