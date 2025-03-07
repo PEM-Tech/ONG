@@ -1,7 +1,8 @@
 // backend/controllers/anamneseController.js
 const { validationResult } = require("express-validator");
 // Certifique-se de que o modelo "Anamnese" esteja definido em ../models
-const { Anamnese } = require("../models");
+const Anamnese = require("../models/anamneseModel");
+
 
 /**
  * Cria uma nova ficha de anamnese.

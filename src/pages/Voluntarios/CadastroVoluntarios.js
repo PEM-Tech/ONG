@@ -83,6 +83,7 @@ function CadastroVoluntarios() {
     try {
       const submissionData = new FormData();
       for (const key in formData) {
+        console.log(key, formData)
         submissionData.append(key, formData[key]);
       }
 
@@ -98,8 +99,9 @@ function CadastroVoluntarios() {
           Authorization: `Bearer ${token}`,
         },
         body: submissionData,
+       
       });
-
+      console.log(submissionData);
       if (response.ok) {
         mostrarSucesso("Sucesso", "Voluntário cadastrado com sucesso!");
         setTimeout(() => {

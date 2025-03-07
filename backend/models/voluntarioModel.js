@@ -3,21 +3,25 @@ const connection = require("../config/database");
 const Voluntario = {
   // Criar um novo voluntário
   async create(data) {
+    // Se data.anexo_id for undefined, assumirá null
+    const anexoIdValue = data.anexo_id ?? null;
+  
     const query = `
       INSERT INTO voluntarios 
-      (nome, cpf, celular, cep, numero, bairro, cidade, estado, nascimento, genero, email, agenda, anexo_id) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      (nome, cpf, celular, cep,rua, numero, bairro, cidade, estado, nascimento, genero, email, anexo_id) 
+      VALUES (?, ?, ?, ?,?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
-    
+  
     const values = [
-      data.nome, data.cpf, data.celular, data.cep, data.numero, 
-      data.bairro, data.cidade, data.estado, data.nascimento, 
-      data.genero, data.email, data.agenda, data.anexo_id
+      data.nome, data.cpf, data.celular, data.cep, data.numero,
+      data.bairro, data.cidade, data.estado, data.nascimento,
+      data.genero, data.email, anexoIdValue
     ];
-
+  
     const [result] = await connection.promise().execute(query, values);
     return result.insertId;
   },
+  
 
   // Buscar todos os voluntários
   async findAll() {
@@ -35,23 +39,27 @@ const Voluntario = {
 
   // Atualizar um voluntário
   async update(id, data) {
+    // Se data.anexo_id for undefined, assumirá null
+    const anexoIdValue = data.anexo_id ?? null;
+  
     const query = `
       UPDATE voluntarios SET 
-        nome = ?, cpf = ?, celular = ?, cep = ?, numero = ?, bairro = ?, 
+        nome = ?, cpf = ?, celular = ?, cep = ?, rua= ?, numero = ?, bairro = ?, 
         cidade = ?, estado = ?, nascimento = ?, genero = ?, email = ?, 
-        agenda = ?, anexo_id = COALESCE(?, anexo_id) 
+        anexo_id = COALESCE(?, anexo_id) 
       WHERE id = ?
     `;
-    
+  
     const values = [
-      data.nome, data.cpf, data.celular, data.cep, data.numero, 
-      data.bairro, data.cidade, data.estado, data.nascimento, 
-      data.genero, data.email, data.agenda, data.anexo_id, id
+      data.nome, data.cpf, data.celular, data.cep, data.numero,
+      data.bairro, data.cidade, data.estado, data.nascimento,
+      data.genero, data.email, anexoIdValue, id
     ];
-
+  
     const [result] = await connection.promise().execute(query, values);
     return result.affectedRows > 0;
   },
+  
 
   // Excluir um voluntário
   async delete(id) {

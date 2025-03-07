@@ -22,6 +22,8 @@ import Anamnese from "./pages/Assistidos/anamnese";
 import CadastroVoluntarios from "./pages/Voluntarios/CadastroVoluntarios";
 import { mostrarErro } from "./components/SweetAlert";
 
+import  EditVoluntarios from "./pages/Voluntarios/AlterarVoluntarios"
+
 // 🔹 Função para proteger rotas privadas
 function ProtectedRoute({ children }) {
   const { user, token, loading } = useContext(AuthContext);
@@ -188,6 +190,17 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+  path="/editarvoluntario/:id"
+  element={
+    <ProtectedRoute>
+      <ProtectedLayout>
+        <EditVoluntarios />
+      </ProtectedLayout>
+    </ProtectedRoute>
+  }
+/>
+
 
           <Route path="*" element={<Navigate to="/login" />} />
         </Routes>
