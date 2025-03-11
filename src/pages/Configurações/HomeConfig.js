@@ -8,7 +8,7 @@ function HomeConfiguracoes() {
 
     const handleGerenciarCategorias = () => {
         console.log("Gerenciar Categorias dos Voluntários");
-        // Lógica para gerenciar categorias
+        navigate("/categorias")
     };
 
     const handleManipularUsuarios = () => {

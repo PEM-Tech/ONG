@@ -1,4 +1,5 @@
 const connection = require('../config/database'); // Importa a conexão com o banco de dados
+const Audit = require("../models/auditModel");
 
 class Usuario {
     // Buscar todos os usuários
@@ -22,7 +23,7 @@ class Usuario {
     }
 
     // Criar novo usuário
-    static async create(data) {
+    static async create(data, usuario) {
         try {
             // Verifica se o email já existe
             const [emailExiste] = await connection.promise().query("SELECT id FROM usuarios WHERE email = ?", [data.email]);
@@ -43,6 +44,7 @@ class Usuario {
                 data.permissao
             ]);
 
+            await Audit.log(usuario, "CREATE", `Usuário criado: ${data.nome}`);
             return { id: result.insertId, ...data };
         } catch (err) {
             throw err;
@@ -50,7 +52,7 @@ class Usuario {
     }
 
     // Atualizar um usuário
-    static async update(id, data) {
+    static async update(id, data, usuario) {
         try {
             // Verifica se o usuário existe
             const [userExists] = await connection.promise().query("SELECT id FROM usuarios WHERE id = ?", [id]);
@@ -68,6 +70,7 @@ class Usuario {
             }
 
             await connection.promise().query(query, values);
+            await Audit.log(usuario, "UPDATE", `Usuário atualizado: ${data.nome}`);
             return { id, ...data };
         } catch (err) {
             throw err;
@@ -75,7 +78,7 @@ class Usuario {
     }
 
     // Excluir usuário
-    static async delete(id) {
+    static async delete(id, usuario) {
         try {
             // Verifica se o usuário existe antes de deletar
             const [userExists] = await connection.promise().query("SELECT id FROM usuarios WHERE id = ?", [id]);
@@ -84,6 +87,7 @@ class Usuario {
             }
 
             await connection.promise().query("DELETE FROM usuarios WHERE id = ?", [id]);
+            await Audit.log(usuario, "DELETE", `Usuário ID ${id} excluído`);
             return { message: "Usuário deletado com sucesso." };
         } catch (err) {
             throw err;

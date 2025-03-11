@@ -4,14 +4,13 @@ import "../../assets/css/cadastroAssistidos.css";
 import { mostrarSucesso, mostrarErro } from "../../components/SweetAlert";
 import { AuthContext } from "../../context/AuthContext";
 import InputMask from "react-input-mask";
-
-import { createAssistido } from "../../services/assistidoService";
 import { fetchAddressByCep } from "../../services/cepService";
 import { removeMask } from "../../services/utils";
 
 function CadastroAssistidos() {
   const navigate = useNavigate();
   const { token, user } = useContext(AuthContext);
+
   const totalSteps = 4;
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState({
@@ -23,7 +22,7 @@ function CadastroAssistidos() {
     celular: "",
     email: "",
     cep: "",
-    endereco: "",
+    rua: "",
     numero: "",
     bairro: "",
     cidade: "",
@@ -41,25 +40,25 @@ function CadastroAssistidos() {
   });
 
   const [errors, setErrors] = useState({});
-  const [successMessage, setSuccessMessage] = useState("");
 
-  // Validação local antes de enviar o formulário
-  const validateForm = () => {
-    const newErrors = {};
-    if (!formData.nome.trim()) {
-      newErrors.nome = "Nome não preenchido";
+  const handleNext = () => setCurrentStep((prev) => prev + 1);
+  const handlePrev = () => setCurrentStep((prev) => prev - 1);
+
+  const handleCEP = async () => {
+    try {
+      const addressData = await fetchAddressByCep(formData.cep);
+      setFormData((prev) => ({
+        ...prev,
+        endereco: addressData.endereco,
+        bairro: addressData.bairro,
+        cidade: addressData.cidade,
+        estado: addressData.estado,
+      }));
+      setErrors((prev) => ({ ...prev, cep: "" }));
+    } catch (error) {
+      setErrors((prev) => ({ ...prev, cep: error.message }));
     }
-    if (!formData.cpf.trim()) {
-      newErrors.cpf = "CPF não preenchido";
-    }
-    // Exemplo: verificação se o anexo está presente (caso seja obrigatório)
-    if (!formData.anexo_id) {
-      newErrors.anexo_id = "Documento de Identidade é obrigatório";
-    }
-    // Outras validações podem ser adicionadas, como formato de CPF, e-mail, etc.
-    return newErrors;
   };
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -77,105 +76,51 @@ function CadastroAssistidos() {
     }
   };
 
-  const handleCEP = async () => {
-    try {
-      const addressData = await fetchAddressByCep(formData.cep);
-      setFormData((prev) => ({
-        ...prev,
-        endereco: addressData.endereco,
-        bairro: addressData.bairro,
-        cidade: addressData.cidade,
-        estado: addressData.estado,
-      }));
-      setErrors((prev) => ({ ...prev, cep: "" }));
-    } catch (error) {
-      setErrors((prev) => ({ ...prev, cep: error.message }));
-    }
-  };
-
-  const handleNext = () => {
-    setCurrentStep((prev) => prev + 1);
-  };
-
-  const handlePrev = () => {
-    setCurrentStep((prev) => prev - 1);
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setSuccessMessage("");
-    // Primeiro, validamos os campos localmente
-    const validationErrors = validateForm();
-    if (Object.keys(validationErrors).length > 0) {
-      setErrors(validationErrors);
-      mostrarErro("Erro", "Verifique os campos obrigatórios.");
-      return;
-    }
     try {
-      await createAssistido(formData, token, user.id);
-      mostrarSucesso("Sucesso", "Assistido cadastrado com sucesso!");
-      setTimeout(() => {
-        navigate("/home");
-      }, 1500);
-    } catch (error) {
-      // Se a API retornou detalhes do erro, mostramos eles
-      if (error.details) {
-        // Exemplo: combinando as mensagens em uma única string
-        const errorMessages = Object.values(error.details).join("\n");
-        mostrarErro("Erro", errorMessages);
-        setErrors(error.details);
-      } else {
-        mostrarErro("Erro", error.message);
+      const submissionData = new FormData();
+      for (const key in formData) {
+        submissionData.append(key, formData[key]);
       }
-    }
-  };
+      submissionData.append("executado_por", user.id);
 
-  const handleReset = () => {
-    setFormData({
-      ficha: "",
-      nome: "",
-      cpf: "",
-      nascimento: "",
-      genero: "",
-      celular: "",
-      email: "",
-      cep: "",
-      endereco: "",
-      numero: "",
-      bairro: "",
-      cidade: "",
-      estado: "",
-      complemento: "",
-      de_menor: "nao",
-      assistido_id: "",
-      parentesco: "",
-      cesta_basica: "nao",
-      data_assistente_social: "",
-      anamnese: "",
-      anexo_id: null,
-      anexo2_id: null,
-      anexo3_id: null,
-    });
-    setErrors({});
-    setSuccessMessage("");
-    setCurrentStep(1);
+      const response = await fetch("http://localhost:5000/api/assistidos", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        body: submissionData,
+      });
+
+      if (response.ok) {
+        mostrarSucesso("Sucesso", "Assistido cadastrado com sucesso!");
+        setTimeout(() => navigate("/listarassistido"), 1500);
+      } else {
+        mostrarErro("Erro", "Erro ao cadastrar assistido.");
+      }
+    } catch (error) {
+      mostrarErro("Erro", "Erro ao cadastrar assistido. Tente novamente mais tarde.");
+    }
   };
 
   return (
     <div className="cadastro-container">
-      <div className="title-container">
-        <button className="back-button" onClick={() => navigate(-1)}>
-          ⬅ Voltar
-        </button>
-        <h1>Cadastro de Assistidos</h1>
-      </div>
-
+      <h1>Cadastro de Assistido</h1>
+      <button className="back-button" onClick={() => navigate(-1)}>⬅ Sair</button>
       <form onSubmit={handleSubmit}>
-        {/* Etapa 1: Informações Pessoais */}
-        {currentStep === 1 && (
+          {/* Etapa 1: Informações Pessoais */}
+          {currentStep === 1 && (
           <fieldset>
             <legend>Informações Pessoais</legend>
             <div className="form-grid">
+              <div className="form-group">
+                <label>Ficha</label>
+                <input
+                  type="number"
+                  name="ficha"
+                  value={formData.ficha}
+                  onChange={handleChange}
+                />
+              </div>
               <div className="form-group">
                 <label>Nome Completo</label>
                 <input
@@ -234,6 +179,27 @@ function CadastroAssistidos() {
                   onChange={handleChange}
                 />
               </div>
+              <div className="form-group">
+              <label>De Menor?</label>
+              <select name="de_menor" value={formData.de_menor} onChange={handleChange}>
+                <option value="nao">Não</option>
+                <option value="sim">Sim</option>
+              </select>
+            </div>
+        
+               {/* 🔹 Mostrar assistido_id apenas se "de_menor" for "sim" */}
+               {formData.de_menor === "sim" && (
+              <>
+                <div className="form-group">
+                  <label>Assistido Responsável (ID)</label>
+                  <input type="number" name="assistido_id" value={formData.assistido_id} onChange={handleChange} />
+                </div>
+                <div className="form-group">
+                  <label>Parentesco</label>
+                  <input type="text" name="parentesco" value={formData.parentesco} onChange={handleChange} />
+                </div>
+              </>
+            )}
             </div>
           </fieldset>
         )}
@@ -241,7 +207,9 @@ function CadastroAssistidos() {
         {/* Etapa 2: Endereço */}
         {currentStep === 2 && (
           <fieldset>
+           
             <legend>Endereço</legend>
+            <div className="form-grid">
             <div className="form-group">
               <label>CEP</label>
               <input
@@ -314,6 +282,7 @@ function CadastroAssistidos() {
                 onChange={handleChange}
               />
             </div>
+            </div>
           </fieldset>
         )}
 
@@ -322,16 +291,21 @@ function CadastroAssistidos() {
           <fieldset>
             <legend>Situação Social</legend>
             <div className="form-group">
-              <label>Recebe cesta básica?</label>
-              <select
-                name="cesta_basica"
-                value={formData.cesta_basica}
-                onChange={handleChange}
-              >
-                <option value="nao">Não</option>
-                <option value="sim">Sim</option>
-              </select>
-            </div>
+                <label>Recebe cesta básica?</label>
+                <select name="cesta_basica" value={formData.cesta_basica} onChange={handleChange}>
+                  <option value="nao">Não</option>
+                  <option value="sim">Sim</option>
+                </select>
+                <div className="form-group">
+                  <label>Data da Consulta com Assistente Social</label>
+                  <input type="date" name="data_assistente_social" value={formData.data_assistente_social} onChange={handleChange} />
+                </div>
+
+                <div className="form-group">
+                  <label>Data da Anamnese</label>
+                  <input type="date" name="anamnese" value={formData.anamnese} onChange={handleChange} />
+                </div>
+              </div>
           </fieldset>
         )}
 
@@ -344,26 +318,47 @@ function CadastroAssistidos() {
               <input type="file" name="anexo_id" onChange={handleFileChange} />
               {errors.anexo_id && <span className="error">{errors.anexo_id}</span>}
             </div>
+            <div className="form-group">
+              <label>Comprovante de Residência</label>
+              <input type="file" name="anexo2_id" onChange={handleFileChange} />
+              {errors.anexo_endereco && <span className="error">{errors.anexo2_id}</span>}
+            </div>
+            <div className="form-group">
+              <label>Comprovante de Renda</label>
+              <input type="file" name="anexo3_id" onChange={handleFileChange} />
+              {errors.anexo3_id && <span className="error">{errors.anexo3_id}</span>}
+            </div>
           </fieldset>
         )}
-
-        {/* Botões de Navegação */}
-        <div className="buttons">
+ <div className="buttons">
           {currentStep > 1 && (
             <button type="button" className="prev" onClick={handlePrev}>
               Voltar
             </button>
           )}
+
           {currentStep < totalSteps ? (
-            <button type="button" className="next" onClick={handleNext}>
+            <button 
+              type="button" 
+              className="next" 
+              onClick={() => {
+                console.log("Step atual:", currentStep); // Debugging
+                if (currentStep < totalSteps) {
+                  handleNext(); 
+                }
+              }}
+            >
               Próximo
             </button>
-          ) : (
+          ) : null}
+
+          {currentStep === totalSteps && (
             <button type="submit" className="submit">
               Cadastrar
             </button>
           )}
         </div>
+
       </form>
     </div>
   );

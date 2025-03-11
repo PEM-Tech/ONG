@@ -24,7 +24,7 @@ exports.createAssistido = async (req, res) => {
 
   try {
     const {
-      ficha, nome, cpf, celular, cep, numero, bairro, cidade, estado, nascimento,
+      ficha, nome, cpf, celular, cep, rua, numero, bairro, cidade, estado, nascimento,
       genero, email, de_menor, assistido_id, cesta_basica, data_assistente_social, anamnese
     } = req.body;
 
@@ -55,12 +55,12 @@ exports.createAssistido = async (req, res) => {
     // Query de inserção
     const query = `
       INSERT INTO assistidos 
-      (ficha, nome, cpf, celular, cep, numero, bairro, cidade, estado, nascimento, genero, email, 
+      (ficha, nome, cpf, celular, cep, rua, numero, bairro, cidade, estado, nascimento, genero, email, 
        de_menor, assistido_id, cesta_basica, data_assistente_social, anamnese, anexo_id, anexo2_id, anexo3_id)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
     const values = [
-      tratarValor(ficha), tratarValor(nome), tratarValor(cpf), tratarValor(celular), tratarValor(cep),
+      tratarValor(ficha), tratarValor(nome), tratarValor(cpf), tratarValor(celular), tratarValor(cep), tratarValor(rua),
       tratarValor(numero), tratarValor(bairro), tratarValor(cidade), tratarValor(estado), tratarValor(nascimento),
       tratarValor(genero), tratarValor(email), tratarValor(de_menor), tratarValor(assistido_id),
       tratarValor(cesta_basica), tratarValor(data_assistente_social), tratarValor(anamnese),
@@ -80,7 +80,7 @@ exports.updateAssistido = async (req, res) => {
   try {
     const ficha = req.params.ficha;
     const {
-      nome, cpf, celular, cep, numero, bairro, cidade, estado, nascimento, genero, email,
+      nome, cpf, celular, cep, rua, numero, bairro, cidade, estado, nascimento, genero, email,
       de_menor, assistido_id, cesta_basica, data_assistente_social, anamnese
     } = req.body;
 
@@ -93,14 +93,14 @@ exports.updateAssistido = async (req, res) => {
     // Query de atualização
     const query = `
       UPDATE assistidos SET 
-        nome = ?, cpf = ?, celular = ?, cep = ?, numero = ?, bairro = ?, cidade = ?, estado = ?, 
+        nome = ?, cpf = ?, celular = ?, cep = ?, rua = ?, numero = ?, bairro = ?, cidade = ?, estado = ?, 
         nascimento = ?, genero = ?, email = ?, de_menor = ?, assistido_id = ?, cesta_basica = ?, 
         data_assistente_social = ?, anamnese = ?, anexo_id = COALESCE(?, anexo_id), 
         anexo2_id = COALESCE(?, anexo2_id), anexo3_id = COALESCE(?, anexo3_id)
       WHERE ficha = ?
     `;
     const values = [
-      tratarValor(nome), tratarValor(cpf), tratarValor(celular), tratarValor(cep), tratarValor(numero),
+      tratarValor(nome), tratarValor(cpf), tratarValor(celular), tratarValor(cep), tratarValor(numero), tratarValor(rua),
       tratarValor(bairro), tratarValor(cidade), tratarValor(estado), tratarValor(nascimento),
       tratarValor(genero), tratarValor(email), tratarValor(de_menor), tratarValor(assistido_id),
       tratarValor(cesta_basica), tratarValor(data_assistente_social), tratarValor(anamnese),

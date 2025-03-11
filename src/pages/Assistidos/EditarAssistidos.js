@@ -379,7 +379,7 @@ function EditarAssistido() {
       
           )}
 
-<div className="buttons">
+        <div className="buttons">
           {currentStep > 1 && (
             <button type="button" className="prev" onClick={handlePrev}>
               Voltar
@@ -393,7 +393,7 @@ function EditarAssistido() {
               onClick={() => {
                 console.log("Step atual:", currentStep); // Debugging
                 if (currentStep < totalSteps) {
-                  handleNext();
+                  handleNext(); 
                 }
               }}
             >

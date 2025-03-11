@@ -13,6 +13,7 @@ const anexoRoutes = require("../routes/anexoRoutes");
 const assistidosRoutes = require("../routes/assistidosRoutes");
 const voluntarioRoutes = require("../routes/voluntarioRoutes");
 const anamneseRoutes = require("../routes/anamneseRoutes"); // Rota de anamnese
+const categoriaRoutes = require("../routes/categoriaRoutes");
 
 const app = express();
 
@@ -61,6 +62,8 @@ app.use("/anexos", anexoRoutes);
 app.use("/api/assistidos", assistidosRoutes);
 app.use("/api/voluntarios", voluntarioRoutes);
 app.use("/api/anamnese", anamneseRoutes); // Monta a rota de anamnese
+app.use("/api/categorias", categoriaRoutes);
+
 
 // Iniciar o servidor
 const PORT = process.env.PORT || 5000;

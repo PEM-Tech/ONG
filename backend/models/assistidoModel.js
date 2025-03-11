@@ -1,17 +1,18 @@
 const connection = require("../config/database");
+const Audit = require("../models/auditModel");
 
 const Assistido = {
   // Criar um novo assistido com auditoria
   async create(data, executadoPor) {
     const query = `
       INSERT INTO assistidos 
-      (ficha, nome, cpf, celular, cep, numero, bairro, cidade, estado, nascimento, genero, email, 
+      (ficha, nome, cpf, celular, cep, rua, numero, bairro, cidade, estado, nascimento, genero, email, 
        de_menor, assistido_id, cesta_basica, data_assistente_social, anamnese, anexo_id, anexo2_id, anexo3_id) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
     
     const values = [
-      data.ficha, data.nome, data.cpf, data.celular, data.cep, data.numero, 
+      data.ficha, data.nome, data.cpf, data.celular, data.cep, data.rua, data.numero, 
       data.bairro, data.cidade, data.estado, data.nascimento, data.genero, 
       data.email, data.de_menor, data.assistido_id, data.cesta_basica, 
       data.data_assistente_social, data.anamnese, data.anexo_id, 
@@ -19,9 +20,7 @@ const Assistido = {
     ];
 
     const [result] = await connection.promise().execute(query, values);
-
-    // Adiciona auditoria
-    await this.addAudit("insert", data.ficha || result.insertId, null, data, executadoPor);
+    await Audit.log(executadoPor, "CREATE", `Assistido criado: ${data.nome}`);
 
     return data.ficha || result.insertId;
   },
@@ -42,13 +41,12 @@ const Assistido = {
 
   // Atualizar um assistido com auditoria
   async update(ficha, data, executadoPor) {
-    // Captura os dados antes da alteração
     const antigo = await this.findByFicha(ficha);
-    if (!antigo) return false; // Se não existe, retorna falso
+    if (!antigo) return false;
 
     const query = `
       UPDATE assistidos SET 
-        nome = ?, cpf = ?, celular = ?, cep = ?, numero = ?, bairro = ?, 
+        nome = ?, cpf = ?, celular = ?, cep = ?, rua = ?, numero = ?, bairro = ?, 
         cidade = ?, estado = ?, nascimento = ?, genero = ?, email = ?, 
         de_menor = ?, assistido_id = ?, cesta_basica = ?, 
         data_assistente_social = ?, anamnese = ?, 
@@ -59,7 +57,7 @@ const Assistido = {
     `;
     
     const values = [
-      data.nome, data.cpf, data.celular, data.cep, data.numero, 
+      data.nome, data.cpf, data.celular, data.cep, data.rua, data.numero, 
       data.bairro, data.cidade, data.estado, data.nascimento, 
       data.genero, data.email, data.de_menor, data.assistido_id, 
       data.cesta_basica, data.data_assistente_social, data.anamnese, 
@@ -67,29 +65,22 @@ const Assistido = {
     ];
 
     const [result] = await connection.promise().execute(query, values);
-
     if (result.affectedRows > 0) {
-      // Adiciona auditoria
-      await this.addAudit("update", ficha, antigo, data, executadoPor);
+      await Audit.log(executadoPor, "UPDATE", `Assistido atualizado: ${data.nome}`);
     }
-
     return result.affectedRows > 0;
   },
 
   // Excluir um assistido com auditoria
   async delete(ficha, executadoPor) {
-    // Captura os dados antes da exclusão
     const antigo = await this.findByFicha(ficha);
     if (!antigo) return false;
 
     const query = "DELETE FROM assistidos WHERE ficha = ?";
     const [result] = await connection.promise().execute(query, [ficha]);
-
     if (result.affectedRows > 0) {
-      // Adiciona auditoria
-      await this.addAudit("delete", ficha, antigo, null, executadoPor);
+      await Audit.log(executadoPor, "DELETE", `Assistido ID ${ficha} excluído`);
     }
-
     return result.affectedRows > 0;
   },
 
@@ -98,27 +89,6 @@ const Assistido = {
     const query = "SELECT ficha FROM assistidos WHERE cpf = ?";
     const [rows] = await connection.promise().query(query, [cpf]);
     return rows.length > 0;
-  },
-
-  // Adicionar auditoria
-  async addAudit(acao, id_registro, dadosAnteriores, dadosNovos, executadoPor) {
-    const query = `
-      INSERT INTO audit (tabela, id_registro, acao, dados_anteriores, dados_novos, executado_por, data_hora)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
-    `;
-    const dataHora = new Date().toISOString().slice(0, 19).replace("T", " ");
-
-    const values = [
-      "assistidos",
-      id_registro,
-      acao,
-      dadosAnteriores ? JSON.stringify(dadosAnteriores) : null,
-      dadosNovos ? JSON.stringify(dadosNovos) : null,
-      executadoPor,
-      dataHora
-    ];
-
-    await connection.promise().execute(query, values);
   }
 };
 

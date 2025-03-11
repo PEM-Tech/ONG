@@ -4,6 +4,20 @@ import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import "../../assets/css/ListarVoluntarios.css";
 import { confirmarAcao, mostrarErro, mostrarSucesso } from "../../components/SweetAlert";
 
+
+const formatarCPF = (cpf) => {
+  if (!cpf) return "";
+  return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, "$1.$2.$3-$4");
+};
+  
+    //  Função para formatar a data de nascimento (YYYY-MM-DD → DD/MM/YYYY)
+const formatarData = (data) => {
+    if (!data) return "";
+    return new Date(data).toLocaleDateString("pt-BR", {
+      timeZone: "UTC",
+    });
+
+  };
 function ListVoluntarios() {
   const navigate = useNavigate();
   const [voluntarios, setVoluntarios] = useState([]);
@@ -24,6 +38,8 @@ function ListVoluntarios() {
       setLoading(false);
       return;
     }
+
+    //funcao para formatar o cpf
 
     try {
       const res = await fetch("http://localhost:5000/api/voluntarios/buscar", {
@@ -132,8 +148,8 @@ function ListVoluntarios() {
           {voluntariosFiltrados.map((item) => (
             <tr key={item.id}>
               <td>{item.nome}</td>
-              <td>{item.cpf}</td>
-              <td>{item.nascimento}</td>
+              <td>{formatarCPF(item.cpf)}</td>
+              <td>{formatarData(item.nascimento)}</td>
               <td>{item.email}</td>
               <td>
                 <button onClick={(e) => handleEdit(e, item.id)} title="Editar" className="action-btn edit">

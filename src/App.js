@@ -21,7 +21,7 @@ import ListVoluntarios from "./pages/Voluntarios/ListarVoluntarios";
 import Anamnese from "./pages/Assistidos/anamnese";
 import CadastroVoluntarios from "./pages/Voluntarios/CadastroVoluntarios";
 import { mostrarErro } from "./components/SweetAlert";
-
+import Categorias from "./pages/Categorias/HomeCategorias";
 import  EditVoluntarios from "./pages/Voluntarios/AlterarVoluntarios"
 
 // 🔹 Função para proteger rotas privadas
@@ -136,6 +136,16 @@ function App() {
             }
           />
 
+          <Route
+            path="/categorias"
+            element={
+              <ProtectedRoute>
+                <ProtectedLayout>
+                  <Categorias />
+                </ProtectedLayout>
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/homeassistidos"
             element={
