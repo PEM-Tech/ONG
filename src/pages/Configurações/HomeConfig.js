@@ -25,6 +25,11 @@ function HomeConfiguracoes() {
                     <h2>Categorias</h2>
                     <p>Gerencie as categorias dos voluntários.</p>
                 </div>
+                <div className="card" onClick={handleGerenciarCategorias}>
+                    <i className="icon">📌</i>
+                    <h2>Tipos de Consulta</h2>
+                    <p>Gerencie os Tipos de Consulta.</p>
+                </div>
                 <div className="card" onClick={handleManipularUsuarios}>
                     <i className="icon">👤</i>
                     <h2>Usuários</h2>

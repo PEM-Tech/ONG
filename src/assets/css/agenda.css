@@ -1,0 +1,61 @@
+/* Estilos para o React Big Calendar */
+.rbc-calendar {
+    font-family: Arial, sans-serif;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+.rbc-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #007bff;
+    color: white;
+    padding: 10px;
+    border-radius: 6px;
+}
+
+.rbc-toolbar button {
+    background: white;
+    color: #007bff;
+    border: none;
+    padding: 8px 12px;
+    margin: 5px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.rbc-toolbar button:hover {
+    background: #0056b3;
+    color: white;
+}
+
+.rbc-event {
+    background-color: #28a745 !important;
+    border-radius: 4px;
+    padding: 5px;
+    color: white;
+    font-weight: bold;
+}
+
+.rbc-today {
+    background: rgba(0, 123, 255, 0.1) !important;
+}
+
+.rbc-day-slot .rbc-event-content {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.rbc-time-slot {
+    border-color: #ddd;
+}
+
+.rbc-month-view {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}

@@ -23,6 +23,7 @@ import CadastroVoluntarios from "./pages/Voluntarios/CadastroVoluntarios";
 import { mostrarErro } from "./components/SweetAlert";
 import Categorias from "./pages/Categorias/HomeCategorias";
 import  EditVoluntarios from "./pages/Voluntarios/AlterarVoluntarios"
+import Agenda from "./pages/Consultas/HomeConsultas"
 
 // 🔹 Função para proteger rotas privadas
 function ProtectedRoute({ children }) {
@@ -86,6 +87,17 @@ function App() {
               <ProtectedRoute>
                 <ProtectedLayout>
                   <CadastroAssistidos />
+                </ProtectedLayout>
+              </ProtectedRoute>
+            }
+          />
+
+<Route
+            path="/agenda"
+            element={
+              <ProtectedRoute>
+                <ProtectedLayout>
+                  <Agenda />
                 </ProtectedLayout>
               </ProtectedRoute>
             }

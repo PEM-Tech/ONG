@@ -12,7 +12,7 @@ function Pacientes() {
    
     const handleMarcarConsulta = () => {
         console.log("Marcar consulta");
-        // Lógica para marcar consulta
+        navigate("/agenda");
     };
 
     const handleRegistrarPresenca = () => {
