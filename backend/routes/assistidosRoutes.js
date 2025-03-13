@@ -7,6 +7,9 @@ const assistidosController = require("../controllers/assistidosController");
 const verificarToken = require("../middlewares/authMiddleware");
 const path = require("path");
 
+console.log("🛠 Métodos disponíveis no assistidosController:", Object.keys(assistidosController));
+
+
 // Configuração do Multer (exemplo)
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {

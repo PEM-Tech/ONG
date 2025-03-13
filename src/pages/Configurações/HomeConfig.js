@@ -11,9 +11,19 @@ function HomeConfiguracoes() {
         navigate("/categorias")
     };
 
+    const handleGerenciarTiposConsulta = () => {
+        console.log("Gerenciar Tipos de Consulta");
+        navigate("/tipoconsulta")
+    };
+
     const handleManipularUsuarios = () => {
         console.log("Manipular Usuários");
          navigate("/home-usuarios")
+    };
+
+    const handleAudit = () => {
+        console.log("Manipular Usuários");
+         navigate("/logs")
     };
 
     return (
@@ -25,7 +35,7 @@ function HomeConfiguracoes() {
                     <h2>Categorias</h2>
                     <p>Gerencie as categorias dos voluntários.</p>
                 </div>
-                <div className="card" onClick={handleGerenciarCategorias}>
+                <div className="card" onClick={handleGerenciarTiposConsulta}>
                     <i className="icon">📌</i>
                     <h2>Tipos de Consulta</h2>
                     <p>Gerencie os Tipos de Consulta.</p>
@@ -35,7 +45,7 @@ function HomeConfiguracoes() {
                     <h2>Usuários</h2>
                     <p>Adicione, edite ou exclua usuários do sistema.</p>
                 </div>
-                <div className="card" onClick={handleManipularUsuarios}>
+                <div className="card" onClick={handleAudit}>
                     <i className="icon">📑</i>
                     <h2>Logs(Auditoria)</h2>
                     <p>Monitore as atividades realizadas no sistema.</p>

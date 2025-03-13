@@ -26,22 +26,29 @@ const Assistido = {
   },
 
   // Buscar todos os assistidos
-  async findAll() {
+  async findAll(usuario) {
     const query = "SELECT * FROM assistidos";
     const [rows] = await connection.promise().query(query);
+    await Audit.log(usuario, "READ", "Listagem de todos os assistidos");
     return rows;
   },
 
   // Buscar um assistido por ficha
-  async findByFicha(ficha) {
+  async findByFicha(ficha, usuario) {
     const query = "SELECT * FROM assistidos WHERE ficha = ?";
     const [rows] = await connection.promise().query(query, [ficha]);
-    return rows.length > 0 ? rows[0] : null;
+
+    if (rows.length === 0) {
+      throw new Error("Assistido não encontrado.");
+    }
+
+    await Audit.log(usuario, "READ", `Consulta do assistido Ficha ${ficha}`);
+    return rows[0];
   },
 
   // Atualizar um assistido com auditoria
   async update(ficha, data, executadoPor) {
-    const antigo = await this.findByFicha(ficha);
+    const antigo = await this.findByFicha(ficha, executadoPor);
     if (!antigo) return false;
 
     const query = `
@@ -73,13 +80,13 @@ const Assistido = {
 
   // Excluir um assistido com auditoria
   async delete(ficha, executadoPor) {
-    const antigo = await this.findByFicha(ficha);
+    const antigo = await this.findByFicha(ficha, executadoPor);
     if (!antigo) return false;
 
     const query = "DELETE FROM assistidos WHERE ficha = ?";
     const [result] = await connection.promise().execute(query, [ficha]);
     if (result.affectedRows > 0) {
-      await Audit.log(executadoPor, "DELETE", `Assistido ID ${ficha} excluído`);
+      await Audit.log(executadoPor, "DELETE", `Assistido Ficha ${ficha} excluído`);
     }
     return result.affectedRows > 0;
   },

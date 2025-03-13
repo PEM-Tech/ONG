@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "../../assets/css/modalTipoConsulta.css"; // Estilo do modal
+import "../../assets/css/ModalTipoConsulta.css"; // Estilo do modal
 import tipoConsultaService from "../../services/TipoConsultaService";
 
 function ModalCadastroTipoConsulta({ isOpen, onClose, onSubmit, tipoConsultaEditada }) {

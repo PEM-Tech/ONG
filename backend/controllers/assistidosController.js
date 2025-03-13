@@ -1,5 +1,6 @@
 const { validationResult } = require("express-validator");
 const connection = require("../config/database");
+const Audit = require("../models/auditModel");
 
 // Função auxiliar para tratar valores antes de inserir no banco
 function tratarValor(value) {
@@ -23,6 +24,8 @@ exports.createAssistido = async (req, res) => {
   }
 
   try {
+    const usuarioLogado = req.user?.nome || req.user?.email || "Desconhecido";
+
     const {
       ficha, nome, cpf, celular, cep, rua, numero, bairro, cidade, estado, nascimento,
       genero, email, de_menor, assistido_id, cesta_basica, data_assistente_social, anamnese
@@ -34,15 +37,6 @@ exports.createAssistido = async (req, res) => {
       const [cpfRows] = await connection.promise().execute(checkCpfQuery, [cpf]);
       if (cpfRows.length > 0) {
         return res.status(400).json({ error: "CPF já cadastrado" });
-      }
-    }
-
-    // Validação: verifica se o assistido_id é válido (se existir)
-    if (assistido_id) {
-      const checkAssistidoQuery = "SELECT ficha FROM assistidos WHERE ficha = ?";
-      const [assistidoRows] = await connection.promise().execute(checkAssistidoQuery, [assistido_id]);
-      if (assistidoRows.length === 0) {
-        return res.status(400).json({ error: "Assistido pai não encontrado" });
       }
     }
 
@@ -68,9 +62,13 @@ exports.createAssistido = async (req, res) => {
     ];
 
     await connection.promise().execute(query, values);
+
+    // Registrar na auditoria
+    await Audit.log(usuarioLogado, "CREATE", `Assistido criado: ${nome}`);
+
     res.status(201).json({ message: "Assistido cadastrado com sucesso!" });
   } catch (error) {
-    console.error("Erro ao cadastrar assistido:", error);
+    console.error("❌ Erro ao cadastrar assistido:", error);
     res.status(500).json({ error: "Erro ao cadastrar assistido. Tente novamente mais tarde." });
   }
 };
@@ -79,6 +77,8 @@ exports.createAssistido = async (req, res) => {
 exports.updateAssistido = async (req, res) => {
   try {
     const ficha = req.params.ficha;
+    const usuarioLogado = req.user?.nome || req.user?.email || "Desconhecido";
+
     const {
       nome, cpf, celular, cep, rua, numero, bairro, cidade, estado, nascimento, genero, email,
       de_menor, assistido_id, cesta_basica, data_assistente_social, anamnese
@@ -100,7 +100,7 @@ exports.updateAssistido = async (req, res) => {
       WHERE ficha = ?
     `;
     const values = [
-      tratarValor(nome), tratarValor(cpf), tratarValor(celular), tratarValor(cep), tratarValor(numero), tratarValor(rua),
+      tratarValor(nome), tratarValor(cpf), tratarValor(celular), tratarValor(cep), tratarValor(rua), tratarValor(numero),
       tratarValor(bairro), tratarValor(cidade), tratarValor(estado), tratarValor(nascimento),
       tratarValor(genero), tratarValor(email), tratarValor(de_menor), tratarValor(assistido_id),
       tratarValor(cesta_basica), tratarValor(data_assistente_social), tratarValor(anamnese),
@@ -108,38 +108,14 @@ exports.updateAssistido = async (req, res) => {
     ];
 
     await connection.promise().execute(query, values);
+
+    // Registrar na auditoria
+    await Audit.log(usuarioLogado, "UPDATE", `Assistido atualizado: ${nome}`);
+
     res.status(200).json({ message: "Assistido atualizado com sucesso!" });
   } catch (error) {
-    console.error("Erro ao atualizar assistido:", error);
+    console.error("❌ Erro ao atualizar assistido:", error);
     res.status(500).json({ error: "Erro ao atualizar assistido. Tente novamente mais tarde." });
-  }
-};
-
-// Listar todos os assistidos
-exports.listAssistidos = async (req, res) => {
-  try {
-    const [rows] = await connection.promise().query("SELECT * FROM assistidos");
-    res.status(200).json(rows);
-  } catch (error) {
-    console.error("Erro ao listar assistidos:", error);
-    res.status(500).json({ error: "Erro ao buscar assistidos." });
-  }
-};
-
-// Buscar um assistido pelo ID (ficha)
-exports.getAssistido = async (req, res) => {
-  try {
-    const ficha = req.params.ficha;
-    const [rows] = await connection.promise().query("SELECT * FROM assistidos WHERE ficha = ?", [ficha]);
-
-    if (rows.length === 0) {
-      return res.status(404).json({ error: "Assistido não encontrado" });
-    }
-
-    res.status(200).json(rows[0]);
-  } catch (error) {
-    console.error("Erro ao buscar assistido:", error);
-    res.status(500).json({ error: "Erro ao buscar assistido. Tente novamente mais tarde." });
   }
 };
 
@@ -147,10 +123,43 @@ exports.getAssistido = async (req, res) => {
 exports.deleteAssistido = async (req, res) => {
   try {
     const ficha = req.params.ficha;
+    const usuarioLogado = req.user?.nome || req.user?.email || "Desconhecido";
+
     await connection.promise().query("DELETE FROM assistidos WHERE ficha = ?", [ficha]);
+
+    // Registrar na auditoria
+    await Audit.log(usuarioLogado, "DELETE", `Assistido ID ${ficha} excluído`);
+
     res.status(200).json({ message: "Assistido excluído com sucesso!" });
   } catch (error) {
-    console.error("Erro ao excluir assistido:", error);
+    console.error("❌ Erro ao excluir assistido:", error);
     res.status(500).json({ error: "Erro ao excluir assistido. Tente novamente mais tarde." });
+  }
+};
+// Listar todos os assistidos
+exports.listAssistidos = async (req, res) => {
+  try {
+      const [rows] = await connection.promise().query("SELECT * FROM assistidos");
+      res.status(200).json(rows);
+  } catch (error) {
+      console.error("❌ Erro ao listar assistidos:", error);
+      res.status(500).json({ error: "Erro ao listar assistidos." });
+  }
+};
+
+// Buscar um assistido específico
+exports.getAssistido = async (req, res) => {
+  try {
+      const { ficha } = req.params;
+      const [rows] = await connection.promise().query("SELECT * FROM assistidos WHERE ficha = ?", [ficha]);
+
+      if (rows.length === 0) {
+          return res.status(404).json({ error: "Assistido não encontrado." });
+      }
+
+      res.status(200).json(rows[0]);
+  } catch (error) {
+      console.error("❌ Erro ao buscar assistido:", error);
+      res.status(500).json({ error: "Erro ao buscar assistido." });
   }
 };

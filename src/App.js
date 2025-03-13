@@ -24,6 +24,8 @@ import { mostrarErro } from "./components/SweetAlert";
 import Categorias from "./pages/Categorias/HomeCategorias";
 import  EditVoluntarios from "./pages/Voluntarios/AlterarVoluntarios"
 import Agenda from "./pages/Consultas/HomeConsultas"
+import TipoConsulta from "./pages/TipoConsulta/HomeTipoConsultas"
+import Audit from "./pages/audit/audit"
 
 // 🔹 Função para proteger rotas privadas
 function ProtectedRoute({ children }) {
@@ -92,7 +94,7 @@ function App() {
             }
           />
 
-<Route
+          <Route
             path="/agenda"
             element={
               <ProtectedRoute>
@@ -154,6 +156,26 @@ function App() {
               <ProtectedRoute>
                 <ProtectedLayout>
                   <Categorias />
+                </ProtectedLayout>
+              </ProtectedRoute>
+            }
+          />
+           <Route
+            path="/tipoconsulta"
+            element={
+              <ProtectedRoute>
+                <ProtectedLayout>
+                  <TipoConsulta />
+                </ProtectedLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/logs"
+            element={
+              <ProtectedRoute>
+                <ProtectedLayout>
+                  <Audit />
                 </ProtectedLayout>
               </ProtectedRoute>
             }

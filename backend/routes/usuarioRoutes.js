@@ -1,20 +1,46 @@
 const express = require("express");
 const UsuarioController = require("../controllers/usuarioController");
-const verificarToken = require("../middlewares/authMiddleware"); // Importa o middleware
+const verificarToken = require("../middlewares/authMiddleware");
+
+console.log("🛠 Métodos disponíveis no UsuarioController:", Object.keys(UsuarioController)); // Depuração
 
 const router = express.Router();
 
-router.post("/login", UsuarioController.loginUsuario); // Login não precisa de autenticação
+// 🔥 Teste se cada função existe antes de usá-la
+if (UsuarioController.loginUsuario) {
+    router.post("/login", UsuarioController.loginUsuario);
+} else {
+    console.error("❌ ERRO: loginUsuario não foi encontrado no UsuarioController!");
+}
 
-// 🔹 Nova rota para restaurar a sessão do usuário com base no token
-router.get("/me", UsuarioController.getUsuarioByToken);
+if (UsuarioController.getAllUsuarios) {
+    router.get("/buscar", verificarToken, UsuarioController.getAllUsuarios);
+} else {
+    console.error("❌ ERRO: getAllUsuarios não foi encontrado no UsuarioController!");
+}
 
-// 🛡 Rotas protegidas pelo token
-router.get('/usuario/by-token', UsuarioController.getUsuarioByToken);
-router.get("/buscar", UsuarioController.getAllUsuarios);
-router.get("/buscar/:id", UsuarioController.getUsuarioById);
-router.post("/criar", UsuarioController.createUsuario);
-router.put("/atualizar/:id", UsuarioController.updateUsuario);
-router.delete("/deletar/:id", UsuarioController.deleteUsuario);
+if (UsuarioController.getUsuarioById) {
+    router.get("/buscar/:id", verificarToken, UsuarioController.getUsuarioById);
+} else {
+    console.error("❌ ERRO: getUsuarioById não foi encontrado no UsuarioController!");
+}
+
+if (UsuarioController.createUsuario) {
+    router.post("/criar", verificarToken, UsuarioController.createUsuario);
+} else {
+    console.error("❌ ERRO: createUsuario não foi encontrado no UsuarioController!");
+}
+
+if (UsuarioController.updateUsuario) {
+    router.put("/atualizar/:id", verificarToken, UsuarioController.updateUsuario);
+} else {
+    console.error("❌ ERRO: updateUsuario não foi encontrado no UsuarioController!");
+}
+
+if (UsuarioController.deleteUsuario) {
+    router.delete("/deletar/:id", verificarToken, UsuarioController.deleteUsuario);
+} else {
+    console.error("❌ ERRO: deleteUsuario não foi encontrado no UsuarioController!");
+}
 
 module.exports = router;

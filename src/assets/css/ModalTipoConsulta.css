@@ -1,0 +1,206 @@
+/* Overlay do modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Modal */
+.modal {
+    background: #fff;
+    border-radius: 10px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    padding: 25px;
+    font-family: 'Arial', sans-serif;
+    position: relative;
+    animation: slideDown 0.3s ease-in-out;
+}
+
+/* Título */
+.modal h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+    color: #333;
+    text-align: center;
+    font-weight: bold;
+}
+
+/* Formulário */
+.form-modal {
+    display: grid;
+    grid-template-columns: 1fr 1fr; /* Duas colunas */
+    gap: 30px; /* Espaço maior entre as colunas */
+}
+
+label {
+    font-weight: bold;
+    font-size: 0.9rem;
+    color: #444;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+/* Inputs e selects específicos do modal */
+.modal-input,
+.modal-select {
+    padding: 15px; /* Aumenta o tamanho dos inputs */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1.1rem; /* Aumenta o tamanho da fonte */
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.modal-input:focus,
+.modal-select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+
+/* Mensagens de erro e sucesso */
+.error-message {
+    color: red;
+    font-size: 0.9rem;
+    text-align: center;
+    margin-top: 5px;
+    grid-column: span 2; /* Ocupa toda a largura no grid */
+}
+
+.success-message {
+    color: green;
+    font-size: 0.9rem;
+    text-align: center;
+    margin-top: 5px;
+    grid-column: span 2; /* Ocupa toda a largura no grid */
+}
+
+.password-message {
+    grid-column: span 2; /* Ocupa toda a largura no grid */
+    margin-top: -15px;
+    margin-bottom: 10px;
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+/* Botões */
+.botoes {
+    grid-column: span 2; /* Os botões ocupam toda a largura */
+    display: flex;
+    justify-content: flex-end;
+    gap: 15px;
+}
+
+.botao-salvar {
+    background-color: #007bff;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.botao-salvar:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+
+.botao-cancelar {
+    background-color: #dc3545;
+    color: white;
+    padding: 12px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.botao-cancelar:hover {
+    background-color: #c82333;
+    transform: scale(1.05);
+}
+
+/* Icone de mostrar senha */
+.input-password {
+    position: relative;
+}
+
+.input-password input {
+    padding-right: 35px; /* Espaço para o ícone */
+}
+
+.input-password span {
+    position: absolute;
+    right: 10px;
+    top: 42%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    font-size: 1.2rem;
+    color: #666;
+    transition: color 0.3s ease;
+}
+
+.input-password span:hover {
+    color: #007bff;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .modal {
+        width: 95%;
+        margin: 10px;
+    }
+
+    .form-modal {
+        grid-template-columns: 1fr; /* Uma coluna em telas menores */
+    }
+
+    .botoes {
+        flex-direction: column;
+        gap: 10px;
+        align-items: center;
+    }
+
+    .botao-salvar,
+    .botao-cancelar {
+        width: 100%;
+    }
+}
+
+/* Animações */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideDown {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

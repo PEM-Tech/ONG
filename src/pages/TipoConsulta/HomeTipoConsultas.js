@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import tipoConsultaService from "../../services/TipoConsultaService"; // Service para comunicação com o backend
-import ModalCadastroTipoConsulta from "./CadastroTiposConsulta.js"; // Import do modal
+import ModalCadastroTipoConsulta from "./CadastroTipoConsultas.js"; // Import do modal
 import "../../assets/css/modalUsuario.css"; // Estilo da tabela
 import { confirmarAcao, mostrarSucesso, mostrarErro } from "../../components/SweetAlert";
 

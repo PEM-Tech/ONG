@@ -14,6 +14,8 @@ const assistidosRoutes = require("../routes/assistidosRoutes");
 const voluntarioRoutes = require("../routes/voluntarioRoutes");
 const anamneseRoutes = require("../routes/anamneseRoutes"); // Rota de anamnese
 const categoriaRoutes = require("../routes/categoriaRoutes");
+const tipoConsultaRoutes = require("../routes/tipoConsultaRoutes");
+const auditRoutes = require("../routes/auditRoutes");
 
 const app = express();
 
@@ -61,9 +63,10 @@ app.use("/usuarios", usuarioRoutes);
 app.use("/anexos", anexoRoutes);
 app.use("/api/assistidos", assistidosRoutes);
 app.use("/api/voluntarios", voluntarioRoutes);
-app.use("/api/anamnese", anamneseRoutes); // Monta a rota de anamnese
+app.use("/api/anamnese", anamneseRoutes); 
 app.use("/api/categorias", categoriaRoutes);
-
+app.use("/api/tipos-consulta", tipoConsultaRoutes);
+app.use("/api/audits", auditRoutes);
 
 // Iniciar o servidor
 const PORT = process.env.PORT || 5000;

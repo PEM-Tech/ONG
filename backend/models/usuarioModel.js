@@ -3,9 +3,10 @@ const Audit = require("../models/auditModel");
 
 class Usuario {
     // Buscar todos os usuários
-    static async getAll() {
+    static async getAll(usuario) {
         try {
             const [results] = await connection.promise().query('SELECT * FROM usuarios');
+            await Audit.log(usuario, "READ", "Listagem de todos os usuários");
             return results;
         } catch (err) {
             throw err;
@@ -13,10 +14,14 @@ class Usuario {
     }
 
     // Buscar usuário por ID
-    static async getById(id) {
+    static async getById(id, usuario) {
         try {
             const [results] = await connection.promise().query('SELECT * FROM usuarios WHERE id = ?', [id]);
-            return results.length > 0 ? results[0] : null;
+            if (results.length === 0) {
+                throw new Error("Usuário não encontrado.");
+            }
+            await Audit.log(usuario, "READ", `Usuário consultado: ID ${id}`);
+            return results[0];
         } catch (err) {
             throw err;
         }
