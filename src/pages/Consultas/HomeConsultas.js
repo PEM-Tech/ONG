@@ -4,22 +4,22 @@ import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "moment/locale/pt-br";
 import "../../assets/css/agenda.css";
-import ModalAdicionarConsulta from "./CadastroConsulta"; // Importando o modal separado
-import { AuthContext } from "../../context/AuthContext"; // Importando contexto de autenticação
+import ModalAdicionarConsulta from "./CadastroConsulta"; // Modal para criar consulta
+import ModalEditarConsulta from "./EditarConsulta"; // Novo Modal para editar consulta
+import { AuthContext } from "../../context/AuthContext";
 
 moment.locale("pt-br");
 const localizer = momentLocalizer(moment);
 
 function AgendaAssistidos() {
-  const { token } = useContext(AuthContext); // 🔐 Obtendo o token do usuário autenticado
+  const { token } = useContext(AuthContext);
   const [events, setEvents] = useState([]);
-  const [showModal, setShowModal] = useState(false);
-  const [showAddModal, setShowAddModal] = useState(false); // Estado para abrir o modal de adicionar consulta
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(null);
 
-  // 🚀 **Buscar consultas do backend**
   useEffect(() => {
-    if (!token) return; // Se não houver token, não faz a requisição
+    if (!token) return;
 
     const fetchEvents = async () => {
       try {
@@ -27,7 +27,7 @@ function AgendaAssistidos() {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // 🔥 Adicionando o token de autenticação
+            Authorization: `Bearer ${token}`,
           },
         });
 
@@ -36,12 +36,10 @@ function AgendaAssistidos() {
         }
 
         const data = await response.json();
-
         if (!Array.isArray(data)) {
           throw new Error("Formato de resposta inválido! Esperado um array.");
         }
 
-        // Formatar os dados para o formato do `react-big-calendar`
         const formattedEvents = data.map((event) => ({
           id: event.id,
           title: `${event.ficha_assistido} - ${event.tipo_consulta}`,
@@ -56,12 +54,12 @@ function AgendaAssistidos() {
     };
 
     fetchEvents();
-  }, [token]); // 🔹 Dependência do token para evitar chamadas sem autenticação
+  }, [token]);
 
-  // 📌 Abrir modal ao clicar em um evento
+  // 📌 Abrir modal de edição ao clicar em um evento
   const handleSelectEvent = (event) => {
     setSelectedEvent(event);
-    setShowModal(true);
+    setShowEditModal(true);
   };
 
   return (
@@ -83,18 +81,15 @@ function AgendaAssistidos() {
         onSelectEvent={handleSelectEvent} // 📌 Abrir modal ao clicar em um evento
       />
 
-      {/* Modal para visualizar detalhes do evento */}
-      {showModal && selectedEvent && (
-        <ModalAdicionarConsulta title="Detalhes da Consulta" onClose={() => setShowModal(false)}>
-          <p><strong>Paciente:</strong> {selectedEvent.title}</p>
-          <p><strong>Data e Hora:</strong> {moment(selectedEvent.start).format("DD/MM/YYYY HH:mm")}</p>
-          <p><strong>Término:</strong> {moment(selectedEvent.end).format("DD/MM/YYYY HH:mm")}</p>
-        </ModalAdicionarConsulta>
-      )}
-
       {/* Modal para adicionar nova consulta */}
-      {showAddModal && (
-        <ModalAdicionarConsulta onClose={() => setShowAddModal(false)} />
+      {showAddModal && <ModalAdicionarConsulta onClose={() => setShowAddModal(false)} />}
+
+      {/* Modal para editar consulta */}
+      {showEditModal && selectedEvent && (
+        <ModalEditarConsulta
+          event={selectedEvent}
+          onClose={() => setShowEditModal(false)}
+        />
       )}
     </div>
   );

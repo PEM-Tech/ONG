@@ -4,7 +4,7 @@ import "../../assets/css/audit.css";
 const AuditTable = () => {
   const [auditData, setAuditData] = useState([]); // 🔹 Armazena todos os registros
   const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 10; // 🔹 Defina quantos registros por página
+  const recordsPerPage = 10; // 🔹 Quantos registros por página
 
   useEffect(() => {
     const fetchData = async () => {
@@ -30,8 +30,10 @@ const AuditTable = () => {
   const totalPages = Math.ceil(auditData.length / recordsPerPage);
 
   // 🔹 Funções de navegação
-  const nextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  const goToFirstPage = () => setCurrentPage(1);
   const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
+  const nextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  const goToLastPage = () => setCurrentPage(totalPages);
 
   return (
     <div className="container">
@@ -65,12 +67,18 @@ const AuditTable = () => {
 
       {/* Controles de Paginação */}
       <div className="pagination">
+        <button onClick={goToFirstPage} disabled={currentPage === 1}>
+          ⏮ Primeira
+        </button>
         <button onClick={prevPage} disabled={currentPage === 1}>
           ⬅ Anterior
         </button>
         <span>Página {currentPage} de {totalPages}</span>
         <button onClick={nextPage} disabled={currentPage === totalPages}>
           Próxima ➡
+        </button>
+        <button onClick={goToLastPage} disabled={currentPage === totalPages}>
+          Última ⏭
         </button>
       </div>
     </div>

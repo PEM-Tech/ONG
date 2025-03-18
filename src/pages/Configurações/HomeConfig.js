@@ -50,6 +50,7 @@ function HomeConfiguracoes() {
                     <h2>Logs(Auditoria)</h2>
                     <p>Monitore as atividades realizadas no sistema.</p>
                 </div>
+                
             </div>
         </div>
     );
