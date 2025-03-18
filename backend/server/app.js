@@ -16,6 +16,7 @@ const anamneseRoutes = require("../routes/anamneseRoutes"); // Rota de anamnese
 const categoriaRoutes = require("../routes/categoriaRoutes");
 const tipoConsultaRoutes = require("../routes/tipoConsultaRoutes");
 const auditRoutes = require("../routes/auditRoutes");
+const agendaRoutes = require("../routes/agendaRoutes");
 
 const app = express();
 
@@ -67,6 +68,7 @@ app.use("/api/anamnese", anamneseRoutes);
 app.use("/api/categorias", categoriaRoutes);
 app.use("/api/tipos-consulta", tipoConsultaRoutes);
 app.use("/api/audits", auditRoutes);
+app.use("/api/agendas", agendaRoutes);
 
 // Iniciar o servidor
 const PORT = process.env.PORT || 5000;
