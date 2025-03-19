@@ -2,10 +2,7 @@ const connection = require("../config/database");
 const Audit = require("../models/auditModel");
 
 const Voluntario = {
-  // Criar um novo voluntário
   async create(data, usuario) {
-    const anexoIdValue = data.anexo_id ?? null;
-  
     const query = `
       INSERT INTO voluntarios 
       (nome, cpf, celular, cep, rua, numero, bairro, cidade, estado, nascimento, genero, email, anexo_id) 
@@ -13,15 +10,28 @@ const Voluntario = {
     `;
   
     const values = [
-      data.nome, data.cpf, data.celular, data.cep, data.rua, data.numero,
-      data.bairro, data.cidade, data.estado, data.nascimento,
-      data.genero, data.email, anexoIdValue
+      data.nome,
+      data.cpf,
+      data.celular,
+      data.cep,
+      data.rua || "Não informado",
+      data.numero || "N/A",
+      data.bairro || "Não informado",
+      data.cidade || "Não informado",
+      data.estado || "Não informado",
+      data.nascimento || null,
+      data.genero || "Não especificado",
+      data.email || null,
+      data.anexo_id ?? null,
     ];
   
     const [result] = await connection.promise().execute(query, values);
     await Audit.log(usuario, "CREATE", `Voluntário criado: ${data.nome}`);
     return result.insertId;
   },
+  
+
+
   
   // Buscar todos os voluntários
   async findAll() {

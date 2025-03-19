@@ -11,6 +11,13 @@ function EditVoluntarios() {
   const { token, user } = useContext(AuthContext);
   const totalSteps = 3;
   const [currentStep, setCurrentStep] = useState(1);
+  const [loading, setLoading] = useState(true);
+
+  // Estado para armazenar as URLs dos anexos existentes
+  const [filePreviews, setFilePreviews] = useState({
+    anexo_id_url: "",
+  });
+
   const [formData, setFormData] = useState({
     nome: "",
     cpf: "",
@@ -24,12 +31,13 @@ function EditVoluntarios() {
     bairro: "",
     cidade: "",
     estado: "",
+    complemento: "", // 🚨 Adicionado complemento que estava faltando!
     anexo_id: null,
   });
 
   const [errors, setErrors] = useState({});
 
-  // Carrega os dados atuais do voluntário
+  // 🚀 Carregar os dados atuais do voluntário ao abrir a página
   useEffect(() => {
     const fetchVoluntario = async () => {
       try {
@@ -38,34 +46,48 @@ function EditVoluntarios() {
             Authorization: `Bearer ${token}`,
           },
         });
-        if (response.ok) {
-          const data = await response.json();
-          setFormData({
-            nome: data.nome || "",
-            cpf: data.cpf || "",
-            nascimento: data.nascimento || "",
-            genero: data.genero || "",
-            celular: data.celular || "",
-            email: data.email || "",
-            cep: data.cep || "",
-            rua: data.rua || "",
-            numero: data.numero || "",
-            bairro: data.bairro || "",
-            cidade: data.cidade || "",
-            estado: data.estado || "",
-            anexo_id: data.anexo_id || null,
-          });
-        } else {
-          mostrarErro("Erro", "Não foi possível carregar os dados do voluntário.");
+
+        if (!response.ok) {
+          throw new Error(`Erro HTTP: ${response.status}`);
         }
+
+        const data = await response.json();
+        console.log("Dados recebidos do voluntário:", data);
+
+        setFormData({
+          nome: data.nome || "",
+          cpf: data.cpf || "",
+          nascimento: data.nascimento ? data.nascimento.split("T")[0] : "",
+          genero: data.genero || "",
+          celular: data.celular || "",
+          email: data.email || "",
+          cep: data.cep || "",
+          rua: data.rua || "",
+          numero: data.numero || "",
+          bairro: data.bairro || "",
+          cidade: data.cidade || "",
+          estado: data.estado || "",
+          complemento: data.complemento || "", // ✅ Adicionando o complemento ao carregar os dados
+          anexo_id: null, // Apenas substitui se for enviado um novo arquivo
+        });
+
+        // Armazenar a URL do anexo se existir
+        setFilePreviews({
+          anexo_id_url: data.anexo_id ? `http://localhost:5000/anexos/${data.anexo_id}` : "",
+        });
+
+        setLoading(false);
       } catch (error) {
-        mostrarErro("Erro", "Erro ao carregar os dados do voluntário.");
+        console.error("Erro ao buscar voluntário:", error);
+        mostrarErro("Erro", "Não foi possível carregar os dados do voluntário.");
+        setLoading(false);
       }
     };
 
     fetchVoluntario();
   }, [id, token]);
 
+  // Função para atualização de campos
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -78,7 +100,7 @@ function EditVoluntarios() {
   const handlePrev = () => {
     setCurrentStep((prev) => prev - 1);
   };
-
+  // Função para atualizar anexos
   const handleFileChange = (e) => {
     const { name, files } = e.target;
     if (files.length > 0) {
@@ -86,12 +108,12 @@ function EditVoluntarios() {
     }
   };
 
-  // Função para remover caracteres especiais da máscara (CPF, celular e CEP)
+  // 🔹 Remover máscara dos campos (CPF, celular e CEP)
   const removeMask = (value) => {
-    return value.replace(/\D/g, ""); // Remove tudo que não for número
+    return value.replace(/\D/g, "");
   };
 
-  // Buscar CEP automaticamente
+  // 🔹 Buscar CEP automaticamente
   const fetchCEP = async () => {
     const cepLimpo = removeMask(formData.cep);
     if (cepLimpo.length === 8) {
@@ -115,7 +137,7 @@ function EditVoluntarios() {
     }
   };
 
-  // Enviar os dados atualizados
+  // 🔹 Enviar dados atualizados
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -123,7 +145,7 @@ function EditVoluntarios() {
       for (const key in formData) {
         submissionData.append(key, formData[key]);
       }
-      // Remover a máscara
+
       submissionData.set("cpf", removeMask(formData.cpf));
       submissionData.set("celular", removeMask(formData.celular));
       submissionData.set("cep", removeMask(formData.cep));
@@ -131,17 +153,13 @@ function EditVoluntarios() {
 
       const response = await fetch(`http://localhost:5000/api/voluntarios/atualizar/${id}`, {
         method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers: { Authorization: `Bearer ${token}` },
         body: submissionData,
       });
 
       if (response.ok) {
         mostrarSucesso("Sucesso", "Voluntário atualizado com sucesso!");
-        setTimeout(() => {
-          navigate("/home");
-        }, 1500);
+        setTimeout(() => navigate("/home"), 1500);
       } else {
         mostrarErro("Erro", "Erro ao atualizar cadastro.");
       }
@@ -149,6 +167,10 @@ function EditVoluntarios() {
       mostrarErro("Erro", "Erro ao atualizar cadastro.");
     }
   };
+
+  if (loading) {
+    return <div className="loading">Carregando dados do voluntário...</div>;
+  }
 
   return (
     <div className="cadastro-container">
@@ -158,6 +180,7 @@ function EditVoluntarios() {
       </div>
 
       <form onSubmit={handleSubmit}>
+        {/* 🔹 Etapa 1: Dados Pessoais */}
         {currentStep === 1 && (
           <fieldset>
             <legend>Dados do Voluntário</legend>
@@ -249,17 +272,20 @@ function EditVoluntarios() {
           </fieldset>
         )}
 
+
+        {/* 🔹 Etapa 3: Anexos */}
         {currentStep === 3 && (
           <fieldset>
             <legend>Anexos</legend>
             <div className="form-group">
               <label>Documento de Identidade</label>
+              {filePreviews.anexo_id_url && <a href={filePreviews.anexo_id_url} target="_blank" rel="noopener noreferrer">📄 Visualizar</a>}
               <input type="file" name="anexo_id" onChange={handleFileChange} />
             </div>
           </fieldset>
         )}
 
-        <div className="buttons">
+<div className="buttons">
           {currentStep > 1 && (
             <button type="button" className="prev" onClick={handlePrev}>
               Voltar

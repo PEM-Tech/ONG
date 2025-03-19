@@ -13,7 +13,9 @@ class Agenda {
                 JOIN voluntarios v ON a.voluntario_id = v.id
                 ORDER BY a.data_hora DESC
             `);
-            await Audit.log(usuario, "READ", "Listagem de todos os agendamentos");
+
+            // 🔹 Evita erro caso `usuario` seja `undefined`
+            await Audit.log(usuario ?? "Sistema", "READ", "Listagem de todos os agendamentos");
             return results;
         } catch (err) {
             throw err;
@@ -36,7 +38,7 @@ class Agenda {
                 throw new Error("Agendamento não encontrado.");
             }
 
-            await Audit.log(usuario, "READ", `Consulta de agendamento ID ${id}`);
+            await Audit.log(usuario ?? "Sistema", "READ", `Consulta de agendamento ID ${id}`);
             return results[0];
         } catch (err) {
             throw err;
@@ -59,7 +61,7 @@ class Agenda {
                 data.voluntario_id
             ]);
 
-            await Audit.log(usuario, "CREATE", `Agendamento criado: ${data.title} em ${data.data_hora}`);
+            await Audit.log(usuario ?? "Sistema", "CREATE", `Agendamento criado: ${data.title} em ${data.data_hora}`);
             return { id: result.insertId, ...data };
         } catch (err) {
             throw err;
@@ -90,7 +92,7 @@ class Agenda {
                 id
             ]);
 
-            await Audit.log(usuario, "UPDATE", `Agendamento atualizado: ${data.title} para ${data.data_hora}`);
+            await Audit.log(usuario ?? "Sistema", "UPDATE", `Agendamento atualizado: ${data.title} para ${data.data_hora}`);
             return { id, ...data };
         } catch (err) {
             throw err;
@@ -107,7 +109,7 @@ class Agenda {
             }
 
             await connection.promise().query("DELETE FROM agenda WHERE id = ?", [id]);
-            await Audit.log(usuario, "DELETE", `Agendamento ID ${id} excluído`);
+            await Audit.log(usuario ?? "Sistema", "DELETE", `Agendamento ID ${id} excluído`);
             return { message: "Agendamento deletado com sucesso." };
         } catch (err) {
             throw err;
