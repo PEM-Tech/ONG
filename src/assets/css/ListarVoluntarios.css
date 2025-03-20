@@ -25,8 +25,8 @@
   /* Título */
   h1 {
     margin-bottom: 20px;
-    font-size: 1.5rem;
-    text-align: center;
+    font-size: 1.5rem; /* Ajuste de tamanho */
+    text-align: center; /* Centralizar em telas menores */
     color: #007bff;
   }
   
@@ -73,7 +73,57 @@
     background-color: #003f8a;
     transform: scale(0.98);
   }
+
+  .title-homevoluntarios{
+    display: block ;
+    align-items: center;
+    justify-content: flex-start; 
+    gap: 15px; 
+  } 
   
+  .back-button-voluntarios {
+    position: absolute;
+    left: 270px;
+    padding: 8px 12px;
+    background-color: #5b8df6;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 20px;
+    margin-bottom: 20px;
+  }
+  
+  @media (max-width: 1024px) {
+    .back-button-voluntarios {
+      left: 20px; /* Ajusta para telas menores */
+      margin-left: 0;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .back-button-voluntarios {
+      position: relative;
+      left: auto;
+      display: block;
+      width: fit-content;
+      margin: 10px auto;
+    }
+  }
+  
+  
+  .back-button-voluntarios:hover {
+    background-color: #3b6edc;
+  }
+
+ 
+  
+  @media (max-width: 480px) {
+    .back-button-voluntarios {
+      font-size: 14px;
+      padding: 6px 10px;
+    }
+  }
   /* Tabela */
   .voluntarios-table {
     width: 100%;

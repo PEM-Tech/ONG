@@ -131,8 +131,10 @@ const goToLastPage = () => setCurrentPage(totalPages);
     
   return (
     <div className="tabela-container">
-      <h1>Gerenciamento de Voluntários</h1>
-
+      <div className="title-homevoluntarios">
+         <button className="back-button-voluntarios" onClick={() => navigate(-1)}>⬅ Voltar</button>
+         <h1>Gerenciamento de Voluntários</h1>
+      </div>
       <div className="filtros">
         <input
           type="text"
