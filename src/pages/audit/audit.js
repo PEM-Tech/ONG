@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "../../assets/css/audit.css";
+import { useNavigate } from "react-router-dom";
 
 const AuditTable = () => {
+  const navigate = useNavigate();
   const [auditData, setAuditData] = useState([]); // 🔹 Armazena todos os registros
   const [currentPage, setCurrentPage] = useState(1);
   const recordsPerPage = 10; // 🔹 Quantos registros por página
@@ -37,7 +39,10 @@ const AuditTable = () => {
 
   return (
     <div className="container">
+      <div className="title-audit">
+      <button className="back-button-tipoconsulta" onClick={() => navigate(-1)}>⬅ Voltar</button>    
       <h2>Registro de Auditoria</h2>
+      </div>
       <table>
         <thead>
           <tr>

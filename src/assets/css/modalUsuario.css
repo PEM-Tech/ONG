@@ -25,7 +25,36 @@
     position: relative;
     animation: slideDown 0.3s ease-in-out;
 }
-
+.back-button-tipoconsulta {
+    position: absolute;
+    left: 270px;
+    padding: 8px 12px;
+    background-color: #5b8df6;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 20px;
+    margin-bottom: 20px;
+  }
+  
+  @media (max-width: 1024px) {
+    .back-button-voluntarios {
+      left: 20px; /* Ajusta para telas menores */
+      margin-left: 0;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .back-button-voluntarios {
+      position: relative;
+      left: auto;
+      display: block;
+      width: fit-content;
+      margin: 10px auto;
+    }
+  }
+  
 /* Título */
 .modal h2 {
     font-size: 1.8rem;

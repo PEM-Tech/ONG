@@ -3,8 +3,10 @@ import usuarioService from "../../services/usuarioService"; // Service para comu
 import ModalCadastroUsuario from "./CadastroUsuarios"; // Import do modal
 import "../../assets/css/usuarios.css"; // Estilo da tabela
 import { confirmarAcao, mostrarSucesso, mostrarErro } from "../../components/SweetAlert";
+import { useNavigate } from "react-router-dom";
 
 function TabelaUsuarios() {
+    const navigate = useNavigate();
     const [usuarios, setUsuarios] = useState([]);
     const [search, setSearch] = useState("");
     const [ordenar, setOrdenar] = useState("nome"); // Campo de ordenação
@@ -100,8 +102,10 @@ function TabelaUsuarios() {
 
     return (
         <div className="tabela-container">
+            <div className="title-homeusuarios">
+            <button className="back-button-tipoconsulta" onClick={() => navigate(-1)}>⬅ Voltar</button>    
             <h1>Gerenciamento de Usuários</h1>
-
+            </div>
             <div className="filtros">
                 <input
                     type="text"

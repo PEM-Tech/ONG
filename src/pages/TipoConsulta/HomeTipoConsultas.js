@@ -3,8 +3,10 @@ import tipoConsultaService from "../../services/TipoConsultaService"; // Service
 import ModalCadastroTipoConsulta from "./CadastroTipoConsultas.js"; // Import do modal
 import "../../assets/css/modalUsuario.css"; // Estilo da tabela
 import { confirmarAcao, mostrarSucesso, mostrarErro } from "../../components/SweetAlert";
+import { useNavigate } from "react-router-dom";
 
 function TabelaTiposConsulta() {
+    const navigate = useNavigate();
     const [tiposConsulta, setTiposConsulta] = useState([]);
     const [search, setSearch] = useState("");
     const [ordenar, setOrdenar] = useState("nome"); // Campo de ordenação
@@ -92,8 +94,10 @@ function TabelaTiposConsulta() {
 
     return (
         <div className="tabela-container">
+            <div className="title-tipoconsulta"> 
+            <button className="back-button-tipoconsulta" onClick={() => navigate(-1)}>⬅ Voltar</button>
             <h1>Gerenciamento de Tipos de Consulta</h1>
-
+            </div>
             <div className="filtros">
                 <input
                     type="text"
