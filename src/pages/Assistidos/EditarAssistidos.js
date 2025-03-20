@@ -35,7 +35,6 @@ function EditarAssistido() {
     bairro: "",
     cidade: "",
     estado: "",
-    complemento: "",
     de_menor: "nao",
     assistido_id: "",
     parentesco: "",
@@ -80,7 +79,6 @@ function EditarAssistido() {
           bairro: data.bairro || "",
           cidade: data.cidade || "",
           estado: data.estado || "",
-          complemento: data.complemento || "",
           de_menor: data.de_menor || "nao",
           assistido_id: data.assistido_id || "",
           parentesco: data.parentesco || "",
@@ -298,10 +296,6 @@ function EditarAssistido() {
             <div className="form-group">
               <label>Estado</label>
               <input type="text" name="estado" value={formData.estado} readOnly />
-            </div>
-            <div className="form-group">
-              <label>Complemento</label>
-              <input type="text" name="complemento" value={formData.complemento} onChange={handleChange} />
             </div>
             </div>
         </fieldset>

@@ -8,7 +8,8 @@ function TabelaCategorias() {
     const [categorias, setCategorias] = useState([]);
     const [search, setSearch] = useState("");
     const [ordenar, setOrdenar] = useState("nome"); // Campo de ordenação
-    const [exibir, setExibir] = useState(10); // Número de linhas exibidas por vez
+    const [recordsPerPage, setRecordsPerPage] = useState(10); // Número de categorias por página
+    const [currentPage, setCurrentPage] = useState(1);
     const [isModalOpen, setIsModalOpen] = useState(false); // Estado do modal
     const [categoriaSelecionada, setCategoriaSelecionada] = useState(null); // Armazena a categoria para edição
 
@@ -31,9 +32,9 @@ function TabelaCategorias() {
             categoriaSelecionada ? "Confirmar atualização?" : "Confirmar cadastro?",
             categoriaSelecionada ? "Deseja realmente atualizar os dados desta categoria?" : "Deseja realmente cadastrar esta categoria?"
         );
-    
+
         if (!confirmacao) return;
-    
+
         try {
             if (categoriaSelecionada) {
                 await categoriaService.atualizarCategoria(categoriaSelecionada.id, categoria);
@@ -42,7 +43,7 @@ function TabelaCategorias() {
                 await categoriaService.criarCategoria(categoria);
                 mostrarSucesso("Categoria cadastrada!", "A categoria foi adicionada com sucesso.");
             }
-    
+
             setIsModalOpen(false);
             setCategoriaSelecionada(null);
             carregarCategorias();
@@ -50,60 +51,74 @@ function TabelaCategorias() {
             mostrarErro("Erro ao salvar", "Houve um problema ao salvar a categoria.");
         }
     };
-    
+
     const handleExcluir = async (id) => {
         const confirmado = await confirmarAcao("Tem certeza?", "Essa ação não pode ser desfeita!");
-    
+
         if (confirmado) {
             try {
                 await categoriaService.deletarCategoria(id);
                 setCategorias((prev) => prev.filter((cat) => cat.id !== id)); // Atualiza a lista após excluir
                 mostrarSucesso("Categoria Excluída", "A categoria foi removida com sucesso!");
             } catch (error) {
-                console.error("Erro ao excluir categoria:", error);
                 mostrarErro("Erro ao Excluir", "Ocorreu um erro ao excluir a categoria.");
             }
         }
     };
+
     const handleEditar = (categoria) => {
         setCategoriaSelecionada(categoria);
         setIsModalOpen(true);
     };
-    
+
+    // 🔹 Filtrando e ordenando categorias
+    const categoriasFiltradas = categorias
+        .filter((categoria) => categoria.nome.toLowerCase().includes(search.toLowerCase()))
+        .sort((a, b) => (a[ordenar] > b[ordenar] ? 1 : -1));
+
+    // 🔹 Paginação: cálculo dos registros na página atual
+    const indexOfLastRecord = currentPage * recordsPerPage;
+    const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+    const currentRecords = categoriasFiltradas.slice(indexOfFirstRecord, indexOfLastRecord);
+
+    // 🔹 Cálculo do total de páginas
+    const totalPages = Math.ceil(categoriasFiltradas.length / recordsPerPage);
+
+    // 🔹 Funções de navegação
+    const goToFirstPage = () => setCurrentPage(1);
+    const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
+    const nextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+    const goToLastPage = () => setCurrentPage(totalPages);
+
     return (
         <div className="tabela-container">
             <h1>Gerenciamento de Categorias</h1>
+
             <div className="filtros">
-                <input
-                    type="text"
-                    placeholder="Pesquisar por nome"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                />
-                <select
-                    value={ordenar}
-                    onChange={(e) => setOrdenar(e.target.value)}
-                >
+                <input type="text" placeholder="Pesquisar por nome" value={search} onChange={(e) => setSearch(e.target.value)} />
+
+                <select value={ordenar} onChange={(e) => setOrdenar(e.target.value)}>
                     <option value="nome">Ordenar por Nome</option>
                 </select>
-                <select
-                    value={exibir}
-                    onChange={(e) => setExibir(Number(e.target.value))}
-                >
+
+                <select value={recordsPerPage} onChange={(e) => setRecordsPerPage(Number(e.target.value))}>
                     <option value={5}>Exibir 5</option>
                     <option value={10}>Exibir 10</option>
                     <option value={20}>Exibir 20</option>
                 </select>
+
                 <button
                     className="botao-adicionar"
                     onClick={() => {
-                        setCategoriaSelecionada(null); // Garante que é um novo cadastro
+                        setCategoriaSelecionada(null);
                         setIsModalOpen(true);
-                    }} 
+                    }}
                 >
                     Adicionar Categoria
                 </button>
             </div>
+
+            {/* Tabela de categorias */}
             <table>
                 <thead>
                     <tr>
@@ -112,7 +127,7 @@ function TabelaCategorias() {
                     </tr>
                 </thead>
                 <tbody>
-                    {categorias.map((categoria) => (
+                    {currentRecords.map((categoria) => (
                         <tr key={categoria.id}>
                             <td>{categoria.nome}</td>
                             <td>
@@ -124,15 +139,32 @@ function TabelaCategorias() {
                 </tbody>
             </table>
 
+            {/* Controles de Paginação */}
+            <div className="pagination">
+                <button onClick={goToFirstPage} disabled={currentPage === 1}>
+                    ⏮ Primeira
+                </button>
+                <button onClick={prevPage} disabled={currentPage === 1}>
+                    ⬅ Anterior
+                </button>
+                <span>Página {currentPage} de {totalPages}</span>
+                <button onClick={nextPage} disabled={currentPage === totalPages}>
+                    Próxima ➡
+                </button>
+                <button onClick={goToLastPage} disabled={currentPage === totalPages}>
+                    Última ⏭
+                </button>
+            </div>
+
             {/* Modal de Cadastro/Edição */}
             <ModalCadastroCategoria
                 isOpen={isModalOpen}
                 onClose={() => {
                     setIsModalOpen(false);
                     setCategoriaSelecionada(null);
-                }} 
-                categoriaEditada={categoriaSelecionada} // Passa os dados para edição
-                onSubmit={handleAddCategoria} // Salva nova categoria ou atualiza
+                }}
+                categoriaEditada={categoriaSelecionada}
+                onSubmit={handleAddCategoria}
             />
         </div>
     );

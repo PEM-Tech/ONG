@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaEdit, FaTrashAlt, FaFileAlt,  FaSearch   } from "react-icons/fa";
+import { FaEdit, FaTrashAlt, FaFileAlt, FaSearch } from "react-icons/fa";
 import "../../assets/css/listarAssistidos.css";
 import { confirmarAcao, mostrarErro, mostrarSucesso } from "../../components/SweetAlert";
 
@@ -9,9 +9,10 @@ function ListAssistidos() {
   const [assistidos, setAssistidos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [search, setSearch] = useState(""); // Campo de pesquisa
-  const [ordenar, setOrdenar] = useState("nome"); // Critério de ordenação
-  const [exibir, setExibir] = useState(10); // Número de assistidos por página
+  const [search, setSearch] = useState("");
+  const [ordenar, setOrdenar] = useState("nome");
+  const [recordsPerPage, setRecordsPerPage] = useState(10);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     carregarAssistidos();
@@ -44,17 +45,16 @@ function ListAssistidos() {
     }
   };
 
-  const handleanamnese = (e, ficha) => {
+  const handleAnamnese = (e, ficha) => {
     e.stopPropagation();
-    // Navega para /anamnese/<valor-da-ficha>
     navigate(`/anamnese/${ficha}`);
   };
 
   const handleVisualizar = (e, ficha) => {
     e.stopPropagation();
+    navigate(`/visualizarassistido/${ficha}`);
+  };
 
-  }
- 
   const handleEdit = (e, ficha) => {
     e.stopPropagation();
     navigate(`/editarassistido/${ficha}`);
@@ -62,24 +62,18 @@ function ListAssistidos() {
 
   const handleDelete = async (e, ficha) => {
     e.stopPropagation();
-    const confirmado = await confirmarAcao(
-      "Confirmar Exclusão",
-      "Deseja realmente excluir este assistido?"
-    );
+    const confirmado = await confirmarAcao("Confirmar Exclusão", "Deseja realmente excluir este assistido?");
 
     if (confirmado) {
       const token = localStorage.getItem("authToken");
       try {
-        const response = await fetch(
-          `http://localhost:5000/api/assistidos/${ficha}`,
-          {
-            method: "DELETE",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await fetch(`http://localhost:5000/api/assistidos/${ficha}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
         if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
 
@@ -91,51 +85,56 @@ function ListAssistidos() {
     }
   };
 
-
-//funcao para formatar o cpf
-const formatarCPF = (cpf) => {
-  if (!cpf) return "";
-  return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, "$1.$2.$3-$4");
-};
-  
-    //  Função para formatar a data de nascimento (YYYY-MM-DD → DD/MM/YYYY)
-  const formatarData = (data) => {
-    if (!data) return "";
-    return new Date(data).toLocaleDateString("pt-BR", {
-      timeZone: "UTC",
-    });
+  // Função para formatar CPF
+  const formatarCPF = (cpf) => {
+    if (!cpf) return "";
+    return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/g, "$1.$2.$3-$4");
   };
 
-  //  Filtrando os assistidos com base na pesquisa e ordenação
+  // Função para formatar data
+  const formatarData = (data) => {
+    if (!data) return "";
+    return new Date(data).toLocaleDateString("pt-BR", { timeZone: "UTC" });
+  };
+
+  // Filtrando os assistidos com base na pesquisa e ordenação
   const assistidosFiltrados = assistidos
-    .filter((item) =>
-      item.nome.toLowerCase().includes(search.toLowerCase())
-    )
-    .sort((a, b) => (a[ordenar] > b[ordenar] ? 1 : -1))
-    .slice(0, exibir);
+    .filter((item) => item.nome.toLowerCase().includes(search.toLowerCase()))
+    .sort((a, b) => (a[ordenar] > b[ordenar] ? 1 : -1));
+
+  // Cálculo dos registros para exibir na página atual
+  const indexOfLastRecord = currentPage * recordsPerPage;
+  const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+  const currentRecords = assistidosFiltrados.slice(indexOfFirstRecord, indexOfLastRecord);
+
+  // Calcular o total de páginas
+  const totalPages = Math.ceil(assistidosFiltrados.length / recordsPerPage);
+
+  // Funções de navegação
+  const goToFirstPage = () => setCurrentPage(1);
+  const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
+  const nextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  const goToLastPage = () => setCurrentPage(totalPages);
 
   if (loading) return <div className="loading">Carregando assistidos...</div>;
   if (error) return <div className="error">{error}</div>;
 
   return (
     <div className="tabela-container">
-      <h1>Gerenciamento de Assistidos</h1>
-
-      {/*  Filtros */}
+      <div className="title-listassistidos">
+      <button className="back-button-assistidos" onClick={() => navigate(-1)}>⬅ Voltar</button>
+      <h1 className="title-listassistidos"> Gerenciamento de Assistidos</h1>
+      </div>
+      {/* Filtros */}
       <div className="filtros">
-        <input
-          type="text"
-          placeholder="Pesquisar por nome"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
+        <input type="text" placeholder="Pesquisar por nome" value={search} onChange={(e) => setSearch(e.target.value)} />
 
         <select value={ordenar} onChange={(e) => setOrdenar(e.target.value)}>
           <option value="nome">Ordenar por Nome</option>
           <option value="nascimento">Ordenar por Nascimento</option>
         </select>
 
-        <select value={exibir} onChange={(e) => setExibir(Number(e.target.value))}>
+        <select value={recordsPerPage} onChange={(e) => setRecordsPerPage(Number(e.target.value))}>
           <option value={5}>Exibir 5</option>
           <option value={10}>Exibir 10</option>
           <option value={20}>Exibir 20</option>
@@ -159,7 +158,7 @@ const formatarCPF = (cpf) => {
           </tr>
         </thead>
         <tbody>
-          {assistidosFiltrados.map((item) => (
+          {currentRecords.map((item) => (
             <tr key={item.ficha}>
               <td>{item.ficha}</td>
               <td>{item.nome}</td>
@@ -173,17 +172,34 @@ const formatarCPF = (cpf) => {
                 <button onClick={(e) => handleDelete(e, item.ficha)} title="Excluir" className="action-btn delete">
                   <FaTrashAlt />
                 </button>
-                <button onClick={(e) => handleanamnese(e, item.ficha) } title="Anamnese" className="action-btn anamnese">
-                <FaFileAlt />
+                <button onClick={(e) => handleAnamnese(e, item.ficha)} title="Anamnese" className="action-btn anamnese">
+                  <FaFileAlt />
                 </button>
-                <button onClick={(e) => handleVisualizar(e, item.ficha) } title="Visualizar Assistido" className="action-btn Visualizar">
-                <FaSearch />
+                <button onClick={(e) => handleVisualizar(e, item.ficha)} title="Visualizar Assistido" className="action-btn visualizar">
+                  <FaSearch />
                 </button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      {/* Controles de Paginação */}
+      <div className="pagination">
+        <button onClick={goToFirstPage} disabled={currentPage === 1}>
+          ⏮ Primeira
+        </button>
+        <button onClick={prevPage} disabled={currentPage === 1}>
+          ⬅ Anterior
+        </button>
+        <span>Página {currentPage} de {totalPages}</span>
+        <button onClick={nextPage} disabled={currentPage === totalPages}>
+          Próxima ➡
+        </button>
+        <button onClick={goToLastPage} disabled={currentPage === totalPages}>
+          Última ⏭
+        </button>
+      </div>
     </div>
   );
 }

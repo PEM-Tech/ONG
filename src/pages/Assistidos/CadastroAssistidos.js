@@ -273,15 +273,6 @@ function CadastroAssistidos() {
                 readOnly
               />
             </div>
-            <div className="form-group">
-              <label>Complemento</label>
-              <input
-                type="text"
-                name="complemento"
-                value={formData.complemento}
-                onChange={handleChange}
-              />
-            </div>
             </div>
           </fieldset>
         )}

@@ -9,9 +9,7 @@ function Pacientes() {
         navigate("/listarassistido");
     };
 
-   
     const handleMarcarConsulta = () => {
-        console.log("Marcar consulta");
         navigate("/agenda");
     };
 
@@ -22,7 +20,9 @@ function Pacientes() {
 
     return (
         <div className="pacientes-container">
-            <h1 className="title">Gerenciamento de Assistidos</h1>
+            <div className="title-homeassistidos">
+            <h1 className="title">Gerenciamento de Assistidos</h1>  
+            </div>
             <div className="cards">
                 <div className="card" onClick={handleListar}>
                     <i className="icon">📄</i>

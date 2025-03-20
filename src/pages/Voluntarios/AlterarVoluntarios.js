@@ -159,7 +159,7 @@ function EditVoluntarios() {
 
       if (response.ok) {
         mostrarSucesso("Sucesso", "Voluntário atualizado com sucesso!");
-        setTimeout(() => navigate("/home"), 1500);
+        setTimeout(() => navigate("/listarVoluntarios"), 1500);
       } else {
         mostrarErro("Erro", "Erro ao atualizar cadastro.");
       }

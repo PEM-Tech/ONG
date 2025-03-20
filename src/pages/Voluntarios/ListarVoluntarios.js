@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaEdit, FaTrashAlt } from "react-icons/fa";
+import { FaEdit, FaTrashAlt, FaSearch } from "react-icons/fa";
 import "../../assets/css/ListarVoluntarios.css";
 import { confirmarAcao, mostrarErro, mostrarSucesso } from "../../components/SweetAlert";
 
@@ -21,12 +21,14 @@ const formatarData = (data) => {
 function ListVoluntarios() {
   const navigate = useNavigate();
   const [voluntarios, setVoluntarios] = useState([]);
+   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [search, setSearch] = useState("");
   const [ordenar, setOrdenar] = useState("nome");
   const [exibir, setExibir] = useState(10);
-
+  const recordsPerPage = 10; // 🔹 Quantos registros por página
+  
   useEffect(() => {
     carregarVoluntarios();
   }, []);
@@ -64,6 +66,11 @@ function ListVoluntarios() {
     e.stopPropagation();
     navigate(`/editarvoluntario/${id}`);
   };
+  
+  const handleVisualizar = (e, id) => {
+    e.stopPropagation();
+    navigate(`/visualizarvoluntario/${id}`);
+  }
 
   const handleDelete = async (e, id) => {
     e.stopPropagation();
@@ -106,6 +113,22 @@ function ListVoluntarios() {
   if (loading) return <div className="loading">Carregando voluntários...</div>;
   if (error) return <div className="error">{error}</div>;
 
+// 🔹 Cálculo dos registros para exibir na página atual
+const indexOfLastRecord = currentPage * recordsPerPage;
+const indexOfFirstRecord = indexOfLastRecord - recordsPerPage;
+const currentRecords = voluntarios.slice(indexOfFirstRecord, indexOfLastRecord);
+
+// 🔹 Calcular o total de páginas
+const totalPages = Math.ceil(voluntarios.length / recordsPerPage);
+
+// 🔹 Funções de navegação
+const goToFirstPage = () => setCurrentPage(1);
+const prevPage = () => setCurrentPage((prev) => Math.max(prev - 1, 1));
+const nextPage = () => setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+const goToLastPage = () => setCurrentPage(totalPages);
+
+
+    
   return (
     <div className="tabela-container">
       <h1>Gerenciamento de Voluntários</h1>
@@ -158,11 +181,32 @@ function ListVoluntarios() {
                 <button onClick={(e) => handleDelete(e, item.id)} title="Excluir" className="action-btn delete">
                   <FaTrashAlt />
                 </button>
+                <button onClick={(e) => handleVisualizar(e, item.id) } title="Visualizar Voluntário" className="action-btn Visualizar">
+                <FaSearch />
+                 </button>
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+          
+          
+         {/* Controles de Paginação */}
+         <div className="pagination">
+        <button onClick={goToFirstPage} disabled={currentPage === 1}>
+          ⏮ Primeira
+        </button>
+        <button onClick={prevPage} disabled={currentPage === 1}>
+          ⬅ Anterior
+        </button>
+        <span>Página {currentPage} de {totalPages}</span>
+        <button onClick={nextPage} disabled={currentPage === totalPages}>
+          Próxima ➡
+        </button>
+        <button onClick={goToLastPage} disabled={currentPage === totalPages}>
+          Última ⏭
+        </button>
+      </div>
     </div>
   );
 }

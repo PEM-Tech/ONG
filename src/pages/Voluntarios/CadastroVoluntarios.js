@@ -91,7 +91,7 @@ function CadastroVoluntarios() {
 
       if (response.ok) {
         mostrarSucesso("Sucesso", "Voluntário cadastrado com sucesso!");
-        setTimeout(() => navigate("/home"), 1500);
+        setTimeout(() => navigate("/listarVoluntarios"), 1500);
       } else {
         mostrarErro("Erro", "Erro ao salvar cadastro.");
       }

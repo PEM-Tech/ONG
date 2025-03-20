@@ -21,7 +21,8 @@ html, body {
     font-size: 2rem;
     margin-bottom: 20px;
     color: #007bff;
-
+    margin: 0 auto; /* Faz o título ficar centralizado */
+    text-align: center;
 }
 
 h1.title{

@@ -26,6 +26,8 @@ import  EditVoluntarios from "./pages/Voluntarios/AlterarVoluntarios"
 import Agenda from "./pages/Consultas/HomeConsultas"
 import TipoConsulta from "./pages/TipoConsulta/HomeTipoConsultas"
 import Audit from "./pages/audit/audit"
+import VisualizarAssistido from "./pages/Assistidos/VisualizarAssistidos";
+import VisualizarVoluntario from "./pages/Voluntarios/VisualizarVoluntarios";
 
 // 🔹 Função para proteger rotas privadas
 function ProtectedRoute({ children }) {
@@ -89,6 +91,28 @@ function App() {
               <ProtectedRoute>
                 <ProtectedLayout>
                   <CadastroAssistidos />
+                </ProtectedLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/visualizarassistido/:id"
+            element={
+              <ProtectedRoute>
+                <ProtectedLayout>
+                  <VisualizarAssistido />
+                </ProtectedLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/visualizarvoluntario/:id"
+            element={
+              <ProtectedRoute>
+                <ProtectedLayout>
+                  <VisualizarVoluntario />
                 </ProtectedLayout>
               </ProtectedRoute>
             }
