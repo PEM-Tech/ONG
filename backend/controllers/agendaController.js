@@ -5,7 +5,7 @@ exports.createAgenda = async (req, res) => {
   try {
     const { title, data_hora, tipo_consulta_id, ficha_assistido, voluntario_id } = req.body;
 
-    if (!title || !data_hora || !tipo_consulta_id || !ficha_assistido || !voluntario_id) {
+    if ( !data_hora || !tipo_consulta_id || !ficha_assistido || !voluntario_id) {
       return res.status(400).json({ error: "Todos os campos são obrigatórios." });
     }
 
@@ -49,7 +49,7 @@ exports.updateAgenda = async (req, res) => {
     const { id } = req.params;
     const { title, data_hora, tipo_consulta_id, ficha_assistido, voluntario_id } = req.body;
 
-    if (!title || !data_hora || !tipo_consulta_id || !ficha_assistido || !voluntario_id) {
+    if ( !data_hora || !tipo_consulta_id || !ficha_assistido || !voluntario_id) {
       return res.status(400).json({ error: "Todos os campos são obrigatórios." });
     }
 
