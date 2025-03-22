@@ -62,10 +62,17 @@ exports.updateAgenda = async (req, res) => {
 };
 
 // 🔹 Deletar um agendamento
+// 🔹 Deletar um agendamento
 exports.deleteAgenda = async (req, res) => {
   try {
     const { id } = req.params;
-    const result = await Agenda.delete(id);
+
+    // ✅ Pega o ID do usuário autenticado (definido no authMiddleware)
+    const usuario = req.user?.id || "Sistema";
+
+    // ✅ Chama o método do model passando o ID e o usuário
+    const result = await Agenda.delete(id, usuario);
+
     res.json(result);
   } catch (error) {
     console.error("❌ Erro ao deletar agendamento:", error);

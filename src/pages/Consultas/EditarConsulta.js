@@ -3,6 +3,7 @@ import moment from "moment";
 import "moment/locale/pt-br";
 import "../../assets/css/EditarConsulta.css";
 import { AuthContext } from "../../context/AuthContext";
+import Swal from "sweetalert2";
 
 moment.locale("pt-br");
 
@@ -64,6 +65,51 @@ const ModalEditarConsulta = ({ event, onClose }) => {
 
     fetchData();
   }, [token, event]); // 🔄 Atualiza se `event` mudar
+
+
+  const deletarConsulta = async (id, token, onSuccess) => {
+    const confirmacao = await Swal.fire({
+      title: "Tem certeza que deseja excluir esta consulta?",
+      text: "Essa ação é irreversível.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Sim, excluir",
+      cancelButtonText: "Cancelar"
+    });
+  
+    if (confirmacao.isConfirmed) {
+      try {
+        const response = await fetch(`http://localhost:5000/api/agendas/${id}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+  
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.message || "Erro ao deletar a consulta.");
+        }
+  
+        await Swal.fire("Excluído!", "A consulta foi removida com sucesso.", "success");
+  
+        if (typeof onSuccess === "function") onSuccess(); // callback se precisar atualizar a lista
+        onClose(); // fecha o modal
+  
+      } catch (error) {
+        console.error("Erro ao excluir consulta:", error);
+        Swal.fire("Erro!", error.message || "Erro ao excluir consulta.", "error");
+      }
+    } else {
+      // Usuário cancelou a exclusão — não faz nada.
+      console.log("Exclusão cancelada pelo usuário.");
+    }
+  };
+  
+
 
   // 📌 Atualizar consulta no backend
   const handleUpdate = async () => {
@@ -160,6 +206,8 @@ const ModalEditarConsulta = ({ event, onClose }) => {
 
         <button className="save-button" onClick={handleUpdate}>Salvar Alterações</button>
         <button className="close-button" onClick={onClose}>Cancelar</button>
+        <button onClick={() => deletarConsulta(event.id, token)}> Excluir</button>
+
       </div>
     </div>
   );
