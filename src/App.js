@@ -18,7 +18,7 @@ import HomeVoluntarios from "./pages/Voluntarios/HomeVoluntarios";
 import HomeConfig from "./pages/Configurações/HomeConfig";
 import HomeUsuarios from "./pages/Usuarios/HomeUsuarios";
 import ListVoluntarios from "./pages/Voluntarios/ListarVoluntarios";
-import Anamnese from "./pages/Assistidos/anamnese";
+import Anamnese from "./pages/Anamnese/Anamnese";
 import CadastroVoluntarios from "./pages/Voluntarios/CadastroVoluntarios";
 import { mostrarErro } from "./components/SweetAlert";
 import Categorias from "./pages/Categorias/HomeCategorias";

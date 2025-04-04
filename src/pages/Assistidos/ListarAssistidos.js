@@ -128,7 +128,7 @@ function ListAssistidos() {
       {/* Filtros */}
       <div className="filtros">
         <input type="text" placeholder="Pesquisar por nome" value={search} onChange={(e) => setSearch(e.target.value)} />
-
+        <button className="botao-adicionar" onClick={() => navigate("/cadastrar-assistido")}>Gerenciar anamneses</button>
         <select value={ordenar} onChange={(e) => setOrdenar(e.target.value)}>
           <option value="nome">Ordenar por Nome</option>
           <option value="nascimento">Ordenar por Nascimento</option>
@@ -166,16 +166,16 @@ function ListAssistidos() {
               <td>{formatarData(item.nascimento)}</td>
               <td>{item.email}</td>
               <td>
-                <button onClick={(e) => handleEdit(e, item.ficha)} title="Editar" className="action-btn edit">
+                <button onClick={(e) => handleEdit(e, item.ficha)} title="Editar Ficha do Assistido" className="action-btn edit">
                   <FaEdit />
                 </button>
-                <button onClick={(e) => handleDelete(e, item.ficha)} title="Excluir" className="action-btn delete">
+                <button onClick={(e) => handleDelete(e, item.ficha)} title="Excluir Ficha do Assistido" className="action-btn delete">
                   <FaTrashAlt />
                 </button>
-                <button onClick={(e) => handleAnamnese(e, item.ficha)} title="Anamnese" className="action-btn anamnese">
+                <button onClick={(e) => handleAnamnese(e, item.ficha)} title="Cadastrar Anamnese" className="action-btn anamnese">
                   <FaFileAlt />
                 </button>
-                <button onClick={(e) => handleVisualizar(e, item.ficha)} title="Visualizar Assistido" className="action-btn visualizar">
+                <button onClick={(e) => handleVisualizar(e, item.ficha)} title="Visualizar Ficha do Assistido" className="action-btn view">
                   <FaSearch />
                 </button>
               </td>

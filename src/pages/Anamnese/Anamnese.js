@@ -139,9 +139,9 @@ function Anamnese() {
     setFormData((prev) => ({
       ...prev,
       [name]: value,
-      // Se "de_menor" for alterado para "nao", limpar assistido_id e parentesco (se aplicável)
-      assistido_id: name === "de_menor" && value === "nao" ? "" : prev.assistido_id,
-      parentesco: name === "de_menor" && value === "nao" ? "" : prev.parentesco,
+      // Remova essas linhas abaixo!
+      // assistido_id: name === "de_menor" && value === "nao" ? "" : prev.assistido_id,
+      // parentesco: name === "de_menor" && value === "nao" ? "" : prev.parentesco,
     }));
   };
 
@@ -159,75 +159,57 @@ function Anamnese() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
     try {
-      const submissionData = new FormData();
-      for (const key in formData) {
-        submissionData.append(key, formData[key]);
-      }
-      // Removendo máscaras antes de enviar
-      if (formData.cpf) {
-        submissionData.set("cpf", removeMask(formData.cpf));
-      }
-      if (formData.celular) {
-        submissionData.set("celular", removeMask(formData.celular));
-      }
-      if (formData.cep) {
-        submissionData.set("cep", removeMask(formData.cep));
-      }
-      submissionData.append("executado_por", user.id);
-
+      const dataToSend = {
+        ...formData,
+        executado_por: user.id,
+      };
+  
       const response = await fetch("http://localhost:5000/api/anamnese", {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
-        body: submissionData,
+        body: JSON.stringify(dataToSend),
       });
-
+  
       if (response.ok) {
-        mostrarSucesso("Sucesso", "Assistido cadastrado com sucesso!");
-        setTimeout(() => {
-          navigate("/home");
-        }, 1500);
+        mostrarSucesso("Sucesso", "Anamnese cadastrada com sucesso!");
+        setTimeout(() => navigate("/home"), 1500);
       } else {
         const errorData = await response.json();
         mostrarErro("Erro", errorData.message || "Erro ao salvar cadastro.");
       }
     } catch (error) {
-      console.error("Error in handleSubmit:", error);
+      console.error("Erro em handleSubmit:", error);
       mostrarErro("Erro", "Erro ao salvar cadastro.");
     }
   };
+  
+  
 
   // Fetch dos dados do assistido para preencher a ficha, se aplicável
   useEffect(() => {
     const fetchAssistido = async () => {
-      try {
-        const response = await fetch(`http://localhost:5000/api/assistidos/${ficha}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        if (response.ok) {
-          const data = await response.json();
-          setFormData((prev) => ({
-            ...prev,
-            ...data,
-          }));
-        } else {
-          const errorData = await response.json();
-          mostrarErro("Erro", errorData.message || "Erro ao carregar assistido.");
-        }
-      } catch (error) {
-        console.error("Error in fetchAssistido:", error);
-        mostrarErro("Erro", "Erro ao carregar assistido.");
-      }
+      const response = await fetch(`http://localhost:5000/api/assistidos/${ficha}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const data = await response.json();
+  
+      setFormData((prev) => ({
+        ...prev,
+        assistido_id: ficha,
+        nome: data.nome,
+        nascimento: data.nascimento,
+        // apenas os que fazem parte da tabela anamnese
+      }));
     };
-
-    if (ficha) {
-      fetchAssistido();
-    }
+  
+    if (ficha) fetchAssistido();
   }, [ficha, token]);
+  
 
   // Função para calcular idade em anos e meses
   const calculateAge = (birthDateString) => {
@@ -297,6 +279,16 @@ function Anamnese() {
                   type="text"
                   name="nome"
                   value={formData.nome}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Ficha</label>
+                <input
+                  type="number"
+                  name="assistido_id"
+                  value={formData.assistido_id}
                   onChange={handleChange}
                   required
                 />

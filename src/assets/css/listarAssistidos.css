@@ -24,7 +24,6 @@
 
 /* Título */
 h1 {
-  margin-bottom: 20px;
   font-size: 1.5rem; /* Ajuste de tamanho */
   text-align: center; /* Centralizar em telas menores */
   color: #007bff;
@@ -157,6 +156,9 @@ tbody tr:hover {
 
 .action-btn.view:hover {
   color: #27ae60;
+}
+.action-btn.anamnese:hover {
+  color: #e100ff;
 }
 
 /* Responsividade */
