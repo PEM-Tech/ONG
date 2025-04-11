@@ -1,10 +1,10 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "../../assets/css/cadastroVoluntarios.css";
 import { mostrarSucesso, mostrarErro } from "../../components/SweetAlert";
 import { AuthContext } from "../../context/AuthContext";
 import InputMask from "react-input-mask";
-import { fetchAddressByCep } from "../../services/cepService"; // 🔹 Buscar endereço pelo CEP
+import { fetchAddressByCep } from "../../services/cepService";
 import { removeMask } from "../../services/utils";
 
 function CadastroVoluntarios() {
@@ -13,6 +13,8 @@ function CadastroVoluntarios() {
   const totalSteps = 3;
 
   const [currentStep, setCurrentStep] = useState(1);
+  const [categorias, setCategorias] = useState([]);
+
   const [formData, setFormData] = useState({
     nome: "",
     cpf: "",
@@ -26,32 +28,42 @@ function CadastroVoluntarios() {
     bairro: "",
     cidade: "",
     estado: "",
+    categoria_id: "",
     anexo_id: null,
   });
 
   const [errors, setErrors] = useState({});
+
+  useEffect(() => {
+    const carregarCategorias = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/categorias", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await res.json();
+        setCategorias(data);
+      } catch (error) {
+        console.error("Erro ao carregar categorias", error);
+      }
+    };
+    carregarCategorias();
+  }, [token]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleNext = () => {
-    setCurrentStep((prev) => prev + 1);
-  };
-
-  const handlePrev = () => {
-    setCurrentStep((prev) => prev - 1);
-  };
+  const handleNext = () => setCurrentStep((prev) => prev + 1);
+  const handlePrev = () => setCurrentStep((prev) => prev - 1);
 
   const handleFileChange = (e) => {
     const { name, files } = e.target;
     if (files.length > 0) {
-      setFormData((prev) => ({ ...prev, [name]: files[0] })); // ✅ Salva anexo corretamente
+      setFormData((prev) => ({ ...prev, [name]: files[0] }));
     }
   };
 
-  // 🔹 **Buscar CEP automaticamente usando fetchAddressByCep**
   const handleCEP = async () => {
     try {
       const addressData = await fetchAddressByCep(formData.cep);
@@ -68,7 +80,6 @@ function CadastroVoluntarios() {
     }
   };
 
-  // 🔹 **Enviar os dados do formulário**
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -77,7 +88,6 @@ function CadastroVoluntarios() {
         submissionData.append(key, formData[key]);
       }
 
-      // 🛠 **Removendo a máscara antes de enviar**
       submissionData.set("cpf", removeMask(formData.cpf));
       submissionData.set("celular", removeMask(formData.celular));
       submissionData.set("cep", removeMask(formData.cep));
@@ -86,7 +96,7 @@ function CadastroVoluntarios() {
       const response = await fetch("http://localhost:5000/api/voluntarios/criar", {
         method: "POST",
         headers: { Authorization: `Bearer ${token}` },
-        body: submissionData, // ✅ Envio correto via FormData
+        body: submissionData,
       });
 
       if (response.ok) {
@@ -108,7 +118,6 @@ function CadastroVoluntarios() {
       </div>
 
       <form onSubmit={handleSubmit}>
-        {/* 🔹 Etapa 1: Dados do Voluntário */}
         {currentStep === 1 && (
           <fieldset>
             <legend>Dados do Voluntário</legend>
@@ -119,14 +128,7 @@ function CadastroVoluntarios() {
               </div>
               <div className="form-group">
                 <label>CPF</label>
-                <InputMask
-                  mask="999.999.999-99"
-                  type="text"
-                  name="cpf"
-                  value={formData.cpf}
-                  onChange={handleChange}
-                  required
-                />
+                <InputMask mask="999.999.999-99" name="cpf" value={formData.cpf} onChange={handleChange} required />
               </div>
               <div className="form-group">
                 <label>Data de Nascimento</label>
@@ -142,15 +144,17 @@ function CadastroVoluntarios() {
                 </select>
               </div>
               <div className="form-group">
+                <label>Categoria</label>
+                <select name="categoria_id" value={formData.categoria_id} onChange={handleChange} required>
+                  <option value="">Selecione</option>
+                  {categorias.map((categoria) => (
+                    <option key={categoria.id} value={categoria.id}>{categoria.nome}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
                 <label>Celular</label>
-                <InputMask
-                  mask="(99) 99999-9999"
-                  type="text"
-                  name="celular"
-                  value={formData.celular}
-                  onChange={handleChange}
-                  required
-                />
+                <InputMask mask="(99) 99999-9999" name="celular" value={formData.celular} onChange={handleChange} required />
               </div>
               <div className="form-group">
                 <label>E-mail</label>
@@ -160,22 +164,13 @@ function CadastroVoluntarios() {
           </fieldset>
         )}
 
-        {/* 🔹 Etapa 2: Endereço */}
         {currentStep === 2 && (
           <fieldset>
             <legend>Endereço</legend>
             <div className="form-grid">
               <div className="form-group">
                 <label>CEP</label>
-                <InputMask
-                  mask="99999-999"
-                  type="text"
-                  name="cep"
-                  value={formData.cep}
-                  onChange={handleChange}
-                  onBlur={handleCEP}
-                  required
-                />
+                <InputMask mask="99999-999" name="cep" value={formData.cep} onChange={handleChange} onBlur={handleCEP} required />
               </div>
               <div className="form-group">
                 <label>Rua</label>
@@ -201,7 +196,6 @@ function CadastroVoluntarios() {
           </fieldset>
         )}
 
-        {/* 🔹 Etapa 3: Anexos */}
         {currentStep === 3 && (
           <fieldset>
             <legend>Anexos</legend>
@@ -212,33 +206,15 @@ function CadastroVoluntarios() {
           </fieldset>
         )}
 
-          {/* 🔹 Botões de Navegação */}
-          <div className="buttons">
+        <div className="buttons">
           {currentStep > 1 && (
-            <button type="button" className="prev" onClick={handlePrev}>
-              Voltar
-            </button>
+            <button type="button" className="prev" onClick={handlePrev}>Voltar</button>
           )}
 
           {currentStep < totalSteps ? (
-            <button 
-              type="button" 
-              className="next" 
-              onClick={() => {
-                console.log("Step atual:", currentStep); // Debugging
-                if (currentStep < totalSteps) {
-                  handleNext();
-                }
-              }}
-            >
-              Próximo
-            </button>
-          ) : null}
-
-          {currentStep === totalSteps && (
-            <button type="submit" className="submit">
-              Cadastrar
-            </button>
+            <button type="button" className="next" onClick={handleNext}>Próximo</button>
+          ) : (
+            <button type="submit" className="submit">Cadastrar</button>
           )}
         </div>
       </form>

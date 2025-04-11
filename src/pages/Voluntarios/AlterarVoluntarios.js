@@ -12,11 +12,9 @@ function EditVoluntarios() {
   const totalSteps = 3;
   const [currentStep, setCurrentStep] = useState(1);
   const [loading, setLoading] = useState(true);
+  const [categorias, setCategorias] = useState([]);
 
-  // Estado para armazenar as URLs dos anexos existentes
-  const [filePreviews, setFilePreviews] = useState({
-    anexo_id_url: "",
-  });
+  const [filePreviews, setFilePreviews] = useState({ anexo_id_url: "" });
 
   const [formData, setFormData] = useState({
     nome: "",
@@ -31,30 +29,25 @@ function EditVoluntarios() {
     bairro: "",
     cidade: "",
     estado: "",
-    complemento: "", // 🚨 Adicionado complemento que estava faltando!
+    complemento: "",
+    categoria_id: "",
     anexo_id: null,
   });
 
   const [errors, setErrors] = useState({});
 
-  // 🚀 Carregar os dados atuais do voluntário ao abrir a página
   useEffect(() => {
     const fetchVoluntario = async () => {
       try {
         const response = await fetch(`http://localhost:5000/api/voluntarios/buscar/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
 
-        if (!response.ok) {
-          throw new Error(`Erro HTTP: ${response.status}`);
-        }
-
+        if (!response.ok) throw new Error(`Erro HTTP: ${response.status}`);
         const data = await response.json();
-        console.log("Dados recebidos do voluntário:", data);
 
-        setFormData({
+        setFormData((prev) => ({
+          ...prev,
           nome: data.nome || "",
           cpf: data.cpf || "",
           nascimento: data.nascimento ? data.nascimento.split("T")[0] : "",
@@ -67,40 +60,45 @@ function EditVoluntarios() {
           bairro: data.bairro || "",
           cidade: data.cidade || "",
           estado: data.estado || "",
-          complemento: data.complemento || "", // ✅ Adicionando o complemento ao carregar os dados
-          anexo_id: null, // Apenas substitui se for enviado um novo arquivo
-        });
+          complemento: data.complemento || "",
+          categoria_id: data.categoria_id || "",
+        }));
 
-        // Armazenar a URL do anexo se existir
         setFilePreviews({
           anexo_id_url: data.anexo_id ? `http://localhost:5000/anexos/${data.anexo_id}` : "",
         });
 
         setLoading(false);
       } catch (error) {
-        console.error("Erro ao buscar voluntário:", error);
         mostrarErro("Erro", "Não foi possível carregar os dados do voluntário.");
         setLoading(false);
       }
     };
 
+    const fetchCategorias = async () => {
+      try {
+        const response = await fetch("http://localhost:5000/api/categorias", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await response.json();
+        setCategorias(data);
+      } catch (error) {
+        console.error("Erro ao carregar categorias", error);
+      }
+    };
+
     fetchVoluntario();
+    fetchCategorias();
   }, [id, token]);
 
-  // Função para atualização de campos
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleNext = () => {
-    setCurrentStep((prev) => prev + 1);
-  };
+  const handleNext = () => setCurrentStep((prev) => prev + 1);
+  const handlePrev = () => setCurrentStep((prev) => prev - 1);
 
-  const handlePrev = () => {
-    setCurrentStep((prev) => prev - 1);
-  };
-  // Função para atualizar anexos
   const handleFileChange = (e) => {
     const { name, files } = e.target;
     if (files.length > 0) {
@@ -108,12 +106,8 @@ function EditVoluntarios() {
     }
   };
 
-  // 🔹 Remover máscara dos campos (CPF, celular e CEP)
-  const removeMask = (value) => {
-    return value.replace(/\D/g, "");
-  };
+  const removeMask = (value) => value.replace(/\D/g, "");
 
-  // 🔹 Buscar CEP automaticamente
   const fetchCEP = async () => {
     const cepLimpo = removeMask(formData.cep);
     if (cepLimpo.length === 8) {
@@ -137,7 +131,6 @@ function EditVoluntarios() {
     }
   };
 
-  // 🔹 Enviar dados atualizados
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -168,9 +161,7 @@ function EditVoluntarios() {
     }
   };
 
-  if (loading) {
-    return <div className="loading">Carregando dados do voluntário...</div>;
-  }
+  if (loading) return <div className="loading">Carregando dados do voluntário...</div>;
 
   return (
     <div className="cadastro-container">
@@ -180,7 +171,6 @@ function EditVoluntarios() {
       </div>
 
       <form onSubmit={handleSubmit}>
-        {/* 🔹 Etapa 1: Dados Pessoais */}
         {currentStep === 1 && (
           <fieldset>
             <legend>Dados do Voluntário</legend>
@@ -191,14 +181,7 @@ function EditVoluntarios() {
               </div>
               <div className="form-group">
                 <label>CPF</label>
-                <InputMask
-                  mask="999.999.999-99"
-                  type="text"
-                  name="cpf"
-                  value={formData.cpf}
-                  onChange={handleChange}
-                  required
-                />
+                <InputMask mask="999.999.999-99" type="text" name="cpf" value={formData.cpf} onChange={handleChange} required />
               </div>
               <div className="form-group">
                 <label>Data de Nascimento</label>
@@ -214,15 +197,17 @@ function EditVoluntarios() {
                 </select>
               </div>
               <div className="form-group">
+                <label>Categoria</label>
+                <select name="categoria_id" value={formData.categoria_id} onChange={handleChange} required>
+                  <option value="">Selecione</option>
+                  {categorias.map((cat) => (
+                    <option key={cat.id} value={cat.id}>{cat.nome}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
                 <label>Celular</label>
-                <InputMask
-                  mask="(99) 99999-9999"
-                  type="text"
-                  name="celular"
-                  value={formData.celular}
-                  onChange={handleChange}
-                  required
-                />
+                <InputMask mask="(99) 99999-9999" type="text" name="celular" value={formData.celular} onChange={handleChange} required />
               </div>
               <div className="form-group">
                 <label>E-mail</label>
@@ -238,15 +223,7 @@ function EditVoluntarios() {
             <div className="form-grid">
               <div className="form-group">
                 <label>CEP</label>
-                <InputMask
-                  mask="99999-999"
-                  type="text"
-                  name="cep"
-                  value={formData.cep}
-                  onChange={handleChange}
-                  onBlur={fetchCEP}
-                  required
-                />
+                <InputMask mask="99999-999" type="text" name="cep" value={formData.cep} onChange={handleChange} onBlur={fetchCEP} required />
               </div>
               <div className="form-group">
                 <label>Rua</label>
@@ -272,43 +249,23 @@ function EditVoluntarios() {
           </fieldset>
         )}
 
-
-        {/* 🔹 Etapa 3: Anexos */}
         {currentStep === 3 && (
           <fieldset>
             <legend>Anexos</legend>
             <div className="form-group">
               <label>Documento de Identidade</label>
-              {filePreviews.anexo_id_url && <a href={filePreviews.anexo_id_url} target="_blank" rel="noopener noreferrer">📄 Visualizar</a>}
+              {filePreviews.anexo_id_url && (
+                <a href={filePreviews.anexo_id_url} target="_blank" rel="noopener noreferrer">📄 Visualizar</a>
+              )}
               <input type="file" name="anexo_id" onChange={handleFileChange} />
             </div>
           </fieldset>
         )}
 
-<div className="buttons">
-          {currentStep > 1 && (
-            <button type="button" className="prev" onClick={handlePrev}>
-              Voltar
-            </button>
-          )}
-          {currentStep < totalSteps ? (
-            <button
-              type="button"
-              className="next"
-              onClick={() => {
-                if (currentStep < totalSteps) {
-                  handleNext();
-                }
-              }}
-            >
-              Próximo
-            </button>
-          ) : null}
-          {currentStep === totalSteps && (
-            <button type="submit" className="submit">
-              Atualizar
-            </button>
-          )}
+        <div className="buttons">
+          {currentStep > 1 && <button type="button" className="prev" onClick={handlePrev}>Voltar</button>}
+          {currentStep < totalSteps && <button type="button" className="next" onClick={handleNext}>Próximo</button>}
+          {currentStep === totalSteps && <button type="submit" className="submit">Atualizar</button>}
         </div>
       </form>
     </div>

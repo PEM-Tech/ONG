@@ -5,10 +5,10 @@ const Voluntario = {
   async create(data, usuario) {
     const query = `
       INSERT INTO voluntarios 
-      (nome, cpf, celular, cep, rua, numero, bairro, cidade, estado, nascimento, genero, email, anexo_id) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      (nome, cpf, celular, cep, rua, numero, bairro, cidade, estado, nascimento, genero, email, anexo_id, anexo2_id, anexo3_id, categoria_id) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
-  
+
     const values = [
       data.nome,
       data.cpf,
@@ -23,57 +23,65 @@ const Voluntario = {
       data.genero || "Não especificado",
       data.email || null,
       data.anexo_id ?? null,
+      data.anexo2_id ?? null,
+      data.anexo3_id ?? null,
+      data.categoria_id ?? null
     ];
-  
+
     const [result] = await connection.promise().execute(query, values);
     await Audit.log(usuario, "CREATE", `Voluntário criado: ${data.nome}`);
     return result.insertId;
   },
-  
 
-
-  
-  // Buscar todos os voluntários
   async findAll() {
     const query = "SELECT * FROM voluntarios";
     const [rows] = await connection.promise().query(query);
     return rows;
   },
 
-  // Buscar um voluntário por ID
   async findById(id) {
     const query = "SELECT * FROM voluntarios WHERE id = ?";
     const [rows] = await connection.promise().query(query, [id]);
     return rows.length > 0 ? rows[0] : null;
   },
 
-  // Atualizar um voluntário
   async update(id, data, usuario) {
-    const anexoIdValue = data.anexo_id ?? null;
-
     const query = `
       UPDATE voluntarios SET 
         nome = ?, cpf = ?, celular = ?, cep = ?, rua = ?, numero = ?, bairro = ?, 
         cidade = ?, estado = ?, nascimento = ?, genero = ?, email = ?, 
-        anexo_id = COALESCE(?, anexo_id) 
+        anexo_id = COALESCE(?, anexo_id),
+        anexo2_id = COALESCE(?, anexo2_id),
+        anexo3_id = COALESCE(?, anexo3_id),
+        categoria_id = ?
       WHERE id = ?
     `;
 
     const values = [
-      data.nome, data.cpf, data.celular, data.cep, data.rua, data.numero,
-      data.bairro, data.cidade, data.estado, data.nascimento,
-      data.genero, data.email, anexoIdValue, id
+      data.nome,
+      data.cpf,
+      data.celular,
+      data.cep,
+      data.rua,
+      data.numero,
+      data.bairro,
+      data.cidade,
+      data.estado,
+      data.nascimento,
+      data.genero,
+      data.email,
+      data.anexo_id ?? null,
+      data.anexo2_id ?? null,
+      data.anexo3_id ?? null,
+      data.categoria_id ?? null,
+      id
     ];
-
-    console.log("Query de atualização:", query);
-    console.log("Valores passados:", values);
 
     const [result] = await connection.promise().execute(query, values);
     await Audit.log(usuario, "UPDATE", `Voluntário atualizado: ${data.nome}`);
     return result.affectedRows > 0;
   },
 
-  // Excluir um voluntário
   async delete(id, usuario) {
     const query = "DELETE FROM voluntarios WHERE id = ?";
     const [result] = await connection.promise().execute(query, [id]);
@@ -83,7 +91,6 @@ const Voluntario = {
     return result.affectedRows > 0;
   },
 
-  // Verificar se um CPF já existe
   async existsByCpf(cpf) {
     const query = "SELECT id FROM voluntarios WHERE cpf = ?";
     const [rows] = await connection.promise().query(query, [cpf]);

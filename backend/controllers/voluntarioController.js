@@ -37,6 +37,7 @@ exports.createVoluntario = async (req, res) => {
       nascimento: req.body.nascimento ?? null,
       genero: req.body.genero ?? null,
       email: req.body.email ?? null,
+      categoria_id: req.body.categoria_id ?? null,
       anexo_id,
       anexo2_id,
       anexo3_id,
@@ -81,6 +82,7 @@ exports.updateVoluntario = async (req, res) => {
       nascimento: req.body.nascimento ?? null,
       genero: req.body.genero ?? null,
       email: req.body.email ?? null,
+      categoria_id: req.body.categoria_id ?? voluntarioExistente.categoria_id,
       anexo_id: anexo_id ?? voluntarioExistente.anexo_id,
       anexo2_id: anexo2_id ?? voluntarioExistente.anexo2_id,
       anexo3_id: anexo3_id ?? voluntarioExistente.anexo3_id,
@@ -99,8 +101,7 @@ exports.updateVoluntario = async (req, res) => {
   }
 };
 
-
-// Excluir um voluntário
+// 📌 Excluir um voluntário
 exports.deleteVoluntario = async (req, res) => {
   try {
     const id = req.params.id;
@@ -118,7 +119,7 @@ exports.deleteVoluntario = async (req, res) => {
   }
 };
 
-// Buscar todos os voluntários
+// 📌 Buscar todos os voluntários
 exports.getAllVoluntarios = async (req, res) => {
   try {
     const usuario = req.user?.nome || req.user?.email || "Desconhecido";
@@ -134,7 +135,7 @@ exports.getAllVoluntarios = async (req, res) => {
   }
 };
 
-// Buscar um voluntário específico
+// 📌 Buscar um voluntário específico
 exports.getVoluntarioById = async (req, res) => {
   try {
     const id = req.params.id;

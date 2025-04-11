@@ -28,6 +28,10 @@ import TipoConsulta from "./pages/TipoConsulta/HomeTipoConsultas"
 import Audit from "./pages/audit/audit"
 import VisualizarAssistido from "./pages/Assistidos/VisualizarAssistidos";
 import VisualizarVoluntario from "./pages/Voluntarios/VisualizarVoluntarios";
+import ListarAnamnese from "./pages/Anamnese/ListarAnamneses";
+import EditarAnamnese from "./pages/Anamnese/EditarAnamneses";
+import VisualizarAnamnese from "./pages/Anamnese/VisualizarAnamneses";
+
 
 // 🔹 Função para proteger rotas privadas
 function ProtectedRoute({ children }) {
@@ -232,6 +236,37 @@ function App() {
               <ProtectedRoute>
                 <ProtectedLayout>
                   <Anamnese />
+                </ProtectedLayout>
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/anamneselista"
+            element={
+              <ProtectedRoute>
+                <ProtectedLayout>
+                  <ListarAnamnese />
+                </ProtectedLayout>
+              </ProtectedRoute>
+            }
+          />
+            <Route
+            path="/editaanamnese/:id"
+            element={
+              <ProtectedRoute>
+                <ProtectedLayout>
+                  <EditarAnamnese />
+                </ProtectedLayout>
+              </ProtectedRoute>
+            }
+          />
+              <Route
+            path="/visualizaanamnese/:id"
+            element={
+              <ProtectedRoute>
+                <ProtectedLayout>
+                  <VisualizarAnamnese />
                 </ProtectedLayout>
               </ProtectedRoute>
             }

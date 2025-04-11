@@ -5,11 +5,13 @@ import { mostrarSucesso, mostrarErro } from "../../components/SweetAlert";
 import { AuthContext } from "../../context/AuthContext";
 import InputMask from "react-input-mask";
 
+
 // Objeto com os campos iniciais do formulário
 const initialFormData = {
-  assistido_id: "", // novo campo para identificação do assistido (obrigatório)
+  assistido_id: "",
   nome: "",
   nascimento: "",
+  idade: "", // calculado automaticamente
   cpf: "",
   celular: "",
   cep: "",
@@ -19,12 +21,12 @@ const initialFormData = {
   idade_responsavel1: "",
   profissao_responsavel1: "",
   endereco_residencia1: "",
-  contato1: "",
+  contato_responsavel1: "",
   religiao1: "",
   responsavel2: "",
   idade_responsavel2: "",
   endereco_residencia2: "",
-  contato2: "",
+  contato_responsavel2: "",
   religiao2: "",
   guarda: "",
   historico: "",
@@ -75,7 +77,7 @@ const initialFormData = {
   manias: "Nao",
   quais_manias: "",
   mudanca_rotina: "",
-  lida_frustracoes: "",
+  lida_frustracoes_familiares: "",
   curiosidade_sexual: "Nao",
   atitudes_sexuais: "",
   familia_sexualidade: "",
@@ -100,219 +102,207 @@ const initialFormData = {
   luto_familia: "",
   conflitos_familiares: "Nao",
   quais_conflitos: "",
-  historico_dinamica_familiar: "",
+  comportamento: "",
   crises_birras: "",
   com_quem_fica: "",
   comportamento_fuga_agressividade: "",
   ajuda_tarefas: "Nao",
   quais_tarefas: "",
   serie_atual: "",
-  reprovacao: "",
+  lida_frustracoes_escolar: "",
   area_dificuldade: "",
   local_professor: "Nao",
-  suporte_escolar: "",
-  comportamento_escolar: "",
+  suporte_tarefas: "",
+  comportamento: "",
   habitos_lazer: "",
   rede_apoio: "",
-  observacoes: ""
+  obs: ""
 };
 
+
 function Anamnese() {
-  const navigate = useNavigate();
-  const { ficha } = useParams(); // Valor da URL
-  const { token, user } = useContext(AuthContext);
-  const totalSteps = 17;
-  const [currentStep, setCurrentStep] = useState(1);
-  const [formData, setFormData] = useState(initialFormData);
-  const [errors, setErrors] = useState({});
-  const [successMessage, setSuccessMessage] = useState("");
-
-  // Sempre que houver o parâmetro "ficha", atribuir a assistido_id (se não estiver definido)
-  useEffect(() => {
-    if (ficha && !formData.assistido_id) {
-      setFormData((prev) => ({ ...prev, assistido_id: ficha }));
-    }
-  }, [ficha]);
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-      // Remova essas linhas abaixo!
-      // assistido_id: name === "de_menor" && value === "nao" ? "" : prev.assistido_id,
-      // parentesco: name === "de_menor" && value === "nao" ? "" : prev.parentesco,
-    }));
-  };
-
-  const removeMask = (value) => {
-    return value.replace(/\D/g, "");
-  };
-
-  const handleNext = () => {
-    setCurrentStep((prev) => prev + 1);
-  };
-
-  const handlePrev = () => {
-    setCurrentStep((prev) => prev - 1);
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+    const navigate = useNavigate();
+    const { ficha } = useParams(); // Pega ID da URL
+    const { token, user } = useContext(AuthContext);
   
-    try {
-      const dataToSend = {
-        ...formData,
-        executado_por: user.id,
-      };
+    const totalSteps = 17;
+    const [currentStep, setCurrentStep] = useState(1);
+    const [formData, setFormData] = useState(initialFormData);
+    const [errors, setErrors] = useState({});
+    const [successMessage, setSuccessMessage] = useState("");
   
-      const response = await fetch("http://localhost:5000/api/anamnese", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(dataToSend),
-      });
-  
-      if (response.ok) {
-        mostrarSucesso("Sucesso", "Anamnese cadastrada com sucesso!");
-        setTimeout(() => navigate("/home"), 1500);
-      } else {
-        const errorData = await response.json();
-        mostrarErro("Erro", errorData.message || "Erro ao salvar cadastro.");
+    // Seta o assistido_id no form se for passado via URL
+    useEffect(() => {
+      if (ficha && !formData.assistido_id) {
+        setFormData((prev) => ({ ...prev, assistido_id: ficha }));
       }
-    } catch (error) {
-      console.error("Erro em handleSubmit:", error);
-      mostrarErro("Erro", "Erro ao salvar cadastro.");
-    }
-  };
-  
-  
+    }, [ficha]);
+    // Definição para a Etapa 17: Marcos do Desenvolvimento
+const marcos = [
+  "Canta uma música inteira",
+  "Canta partes de uma música",
+  "Dança acompanhando as batidas da música",
+  "Dança acompanhando alguém",
+  "Percebe a localização do seu corpo no ambiente",
+  "Percebe a localização de outros corpos em relação ao seu",
+  "Identifica roteiros a ser seguidos assinalando entradas, saídas e alguns pontos de referência",
+];
 
-  // Fetch dos dados do assistido para preencher a ficha, se aplicável
-  useEffect(() => {
-    const fetchAssistido = async () => {
-      const response = await fetch(`http://localhost:5000/api/assistidos/${ficha}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      const data = await response.json();
+const [marcosDesenvolvimento, setMarcosDesenvolvimento] = useState(
+  Array(marcos.length).fill(null)
+);
+
+const handleMarcosSelection = (index, value) => {
+  const newMarcos = [...marcosDesenvolvimento];
+  newMarcos[index] = value;
+  setMarcosDesenvolvimento(newMarcos);
+};
+
   
+    const handleChange = (e) => {
+      const { name, value } = e.target;
       setFormData((prev) => ({
         ...prev,
-        assistido_id: ficha,
-        nome: data.nome,
-        nascimento: data.nascimento,
-        // apenas os que fazem parte da tabela anamnese
+        [name]: value
       }));
     };
   
-    if (ficha) fetchAssistido();
-  }, [ficha, token]);
+    const removeMask = (value) => {
+      return value.replace(/\D/g, "");
+    };
   
-
-  // Função para calcular idade em anos e meses
-  const calculateAge = (birthDateString) => {
-    const birthDate = new Date(birthDateString);
-    const today = new Date();
-    let years = today.getFullYear() - birthDate.getFullYear();
-    let months = today.getMonth() - birthDate.getMonth();
-
-    if (today.getDate() < birthDate.getDate()) {
-      months--;
-    }
-    if (months < 0) {
-      years--;
-      months += 12;
-    }
-    return { years, months };
-  };
-
-  // Atualiza o campo "idade" sempre que "nascimento" mudar
-  useEffect(() => {
-    if (formData.nascimento) {
-      const { years, months } = calculateAge(formData.nascimento);
-      setFormData((prev) => ({
-        ...prev,
-        idade: `${years} anos e ${months} meses`,
-      }));
-    }
-  }, [formData.nascimento]);
-
-  // Definição para a Etapa 17: Marcos do Desenvolvimento
-  const marcos = [
-    "Canta uma música inteira",
-    "Canta partes de uma música",
-    "Dança acompanhando as batidas da música",
-    "Dança acompanhando alguém",
-    "Percebe a localização do seu corpo no ambiente",
-    "Percebe a localização de outros corpos em relação ao seu",
-    "Identifica roteiros a ser seguidos assinalando entradas, saídas e alguns pontos de referência",
-  ];
-  const [marcosDesenvolvimento, setMarcosDesenvolvimento] = useState(
-    Array(marcos.length).fill(null)
-  );
-  const handleMarcosSelection = (index, value) => {
-    const newMarcos = [...marcosDesenvolvimento];
-    newMarcos[index] = value;
-    setMarcosDesenvolvimento(newMarcos);
-  };
-
-  return (
-    <div className="cadastro-container">
-      <div className="title-container">
-        <button className="back-button" onClick={() => navigate(-1)}>
-          ⬅ Sair
-        </button>
-        <h1>Anamnese</h1>
-      </div>
-
-      <form onSubmit={handleSubmit}>
-        {/* Etapa 1: Dados de Identificação */}
-        {currentStep === 1 && (
-          <fieldset>
-            <legend>Dados de Identificação</legend>
-            <div className="form-grid2">
-              <div className="form-group">
-                <label>Nome Completo</label>
-                <input
-                  type="text"
-                  name="nome"
-                  value={formData.nome}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Ficha</label>
-                <input
-                  type="number"
-                  name="assistido_id"
-                  value={formData.assistido_id}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Data de Nascimento</label>
-                <input
-                  type="date"
-                  name="nascimento"
-                  value={formData.nascimento}
-                  onChange={handleChange}
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label>Idade</label>
-                <input
-                  type="text"
-                  name="idade"
-                  value={formData.idade || ""}
-                  readOnly
-                />
-              </div>
-              <div className="form-group">
+    const handleNext = () => setCurrentStep((prev) => prev + 1);
+    const handlePrev = () => setCurrentStep((prev) => prev - 1);
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+    
+        try {
+          const dataToSend = {
+            ...formData,
+            executado_por: user.id,
+          };
+    
+          const response = await fetch("http://localhost:5000/api/anamnese", {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(dataToSend),
+          });
+    
+          if (response.ok) {
+            mostrarSucesso("Sucesso", "Anamnese cadastrada com sucesso!");
+            setTimeout(() => navigate("/home"), 1500);
+          } else {
+            const errorData = await response.json();
+            mostrarErro("Erro", errorData.message || "Erro ao salvar cadastro.");
+          }
+        } catch (error) {
+          console.error("Erro em handleSubmit:", error);
+          mostrarErro("Erro", "Erro ao salvar cadastro.");
+        }
+      };
+    
+      // Busca dados do assistido se tiver ficha na URL
+      useEffect(() => {
+        const fetchAssistido = async () => {
+          const response = await fetch(`http://localhost:5000/api/assistidos/${ficha}`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          const data = await response.json();
+    
+          setFormData((prev) => ({
+            ...prev,
+            assistido_id: ficha,
+            nome: data.nome,
+            nascimento: data.nascimento ? data.nascimento.split("T")[0] : "",
+          }));
+        };
+    
+        if (ficha) fetchAssistido();
+      }, [ficha, token]);
+    
+      // Cálculo automático da idade baseado no nascimento
+      const calculateAge = (birthDateString) => {
+        const birthDate = new Date(birthDateString);
+        const today = new Date();
+        let years = today.getFullYear() - birthDate.getFullYear();
+        let months = today.getMonth() - birthDate.getMonth();
+    
+        if (today.getDate() < birthDate.getDate()) months--;
+        if (months < 0) {
+          years--;
+          months += 12;
+        }
+    
+        return { years, months };
+      };
+    
+      useEffect(() => {
+        if (formData.nascimento) {
+          const { years, months } = calculateAge(formData.nascimento);
+          setFormData((prev) => ({
+            ...prev,
+            idade: `${years} anos e ${months} meses`,
+          }));
+        }
+      }, [formData.nascimento]);
+      return (
+        <div className="cadastro-container">
+          <div className="title-container">
+            <button className="back-button" onClick={() => navigate(-1)}>
+              ⬅ Sair
+            </button>
+            <h1>Anamnese</h1>
+          </div>
+    
+          <form onSubmit={handleSubmit}>
+            {/* Etapa 1: Dados de Identificação */}
+            {currentStep === 1 && (
+              <fieldset>
+                <legend>Dados de Identificação</legend>
+                <div className="form-grid2">
+                  <div className="form-group">
+                    <label>Nome Completo</label>
+                    <input
+                      type="text"
+                      name="nome"
+                      value={formData.nome}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Ficha</label>
+                    <input
+                      type="number"
+                      name="assistido_id"
+                      value={formData.assistido_id}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Data de Nascimento</label>
+                    <input
+                      type="date"
+                      name="nascimento"
+                      value={formData.nascimento}
+                      onChange={handleChange}
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Idade</label>
+                    <input
+                      type="text"
+                      name="idade"
+                      value={formData.idade || ""}
+                      readOnly
+                    />
+                  </div>
+                  <div className="form-group">
                 <label>Série</label>
                 <input
                   type="text"
@@ -371,8 +361,8 @@ function Anamnese() {
                 <InputMask
                   mask="(99) 99999-9999"
                   type="text"
-                  name="contato1"
-                  value={formData.contato1 || ""}
+                  name="contato_responsavel1"
+                  value={formData.contato_responsavel1 || ""}
                   onChange={handleChange}
                 />
               </div>
@@ -417,8 +407,8 @@ function Anamnese() {
                 <InputMask
                   mask="(99) 99999-9999"
                   type="text"
-                  name="contato2"
-                  value={formData.contato2 || ""}
+                  name="contato_responsavel2"
+                  value={formData.contato_responsavel2 || ""}
                   onChange={handleChange}
                 />
               </div>
@@ -443,7 +433,6 @@ function Anamnese() {
             </div>
           </fieldset>
         )}
-
         {/* Etapa 2: Queixa Principal */}
         {currentStep === 2 && (
           <fieldset>
@@ -464,7 +453,7 @@ function Anamnese() {
                 value={formData.medicamentos || "Nao"}
                 onChange={handleChange}
               >
-                <option value="Nao">Nao</option>
+                <option value="Nao">Não</option>
                 <option value="Sim">Sim</option>
               </select>
               {formData.medicamentos === "Sim" && (
@@ -499,7 +488,6 @@ function Anamnese() {
             </div>
           </fieldset>
         )}
-
         {/* Etapa 3: Gestação e Nascimento */}
         {currentStep === 3 && (
           <fieldset>
@@ -534,18 +522,18 @@ function Anamnese() {
                 onChange={handleChange}
               >
                 <option value="sim">Sim</option>
-                <option value="nao">Nao</option>
+                <option value="nao">Não</option>
               </select>
             </div>
             <div className="form-group">
-              <label>Drogas ou Alcool na Gestação</label>
+              <label>Drogas ou Álcool na Gestação</label>
               <select
                 name="post_natal"
                 value={formData.post_natal || "nao"}
                 onChange={handleChange}
               >
                 <option value="sim">Sim</option>
-                <option value="nao">Nao</option>
+                <option value="nao">Não</option>
               </select>
             </div>
             <div className="form-group">
@@ -555,7 +543,7 @@ function Anamnese() {
                 value={formData.medicamentos_gestacao || "nao"}
                 onChange={handleChange}
               >
-                <option value="nao">Nao</option>
+                <option value="nao">Não</option>
                 <option value="sim">Sim</option>
               </select>
               {formData.medicamentos_gestacao === "sim" && (
@@ -608,7 +596,6 @@ function Anamnese() {
             </div>
           </fieldset>
         )}
-
         {/* Etapa 4: Desenvolvimento Psicomotor */}
         {currentStep === 4 && (
           <fieldset>
@@ -650,7 +637,7 @@ function Anamnese() {
               />
             </div>
             <div className="form-group">
-              <label>Desfraulde?</label>
+              <label>Desfralde?</label>
               <input
                 type="text"
                 name="desfraulde"
@@ -666,12 +653,11 @@ function Anamnese() {
                 onChange={handleChange}
               >
                 <option value="sim">Sim</option>
-                <option value="nao">Nao</option>
+                <option value="nao">Não</option>
               </select>
             </div>
           </fieldset>
         )}
-
         {/* Etapa 5: Linguagem */}
         {currentStep === 5 && (
           <fieldset>
@@ -692,7 +678,7 @@ function Anamnese() {
                 value={formData.dificuldade || "Nao"}
                 onChange={handleChange}
               >
-                <option value="Nao">Nao</option>
+                <option value="Nao">Não</option>
                 <option value="Sim">Sim</option>
               </select>
               {formData.dificuldade === "Sim" && (
@@ -715,18 +701,18 @@ function Anamnese() {
                 onChange={handleChange}
               >
                 <option value="sim">Sim</option>
-                <option value="nao">Nao</option>
+                <option value="nao">Não</option>
               </select>
             </div>
             <div className="form-group">
-              <label>Comunica-se de forma verbal ou não verbal?</label>
+              <label>Comunica-se de forma verbal?</label>
               <select
                 name="comunica_verbal"
                 value={formData.comunica_verbal || "sim"}
                 onChange={handleChange}
               >
                 <option value="sim">Sim</option>
-                <option value="nao">Nao</option>
+                <option value="nao">Não</option>
               </select>
             </div>
             <div className="form-group">
@@ -749,7 +735,6 @@ function Anamnese() {
             </div>
           </fieldset>
         )}
-
         {/* Etapa 6: Hábitos Alimentares */}
         {currentStep === 6 && (
           <fieldset>
@@ -774,7 +759,6 @@ function Anamnese() {
             </div>
           </fieldset>
         )}
-
         {/* Etapa 7: Dados sobre o Sono */}
         {currentStep === 7 && (
           <fieldset>
@@ -817,7 +801,6 @@ function Anamnese() {
             </div>
           </fieldset>
         )}
-
         {/* Etapa 8: Dados sobre a Saúde */}
         {currentStep === 8 && (
           <fieldset>
@@ -896,7 +879,6 @@ function Anamnese() {
             </div>
           </fieldset>
         )}
-
         {/* Etapa 9: Manipulação e Hábitos */}
         {currentStep === 9 && (
           <fieldset>
@@ -987,7 +969,6 @@ function Anamnese() {
             </div>
           </fieldset>
         )}
-
         {/* Etapa 10: Sexualidade */}
         {currentStep === 10 && (
           <fieldset>
@@ -1023,7 +1004,6 @@ function Anamnese() {
             </div>
           </fieldset>
         )}
-
         {/* Etapa 11: Dados sobre Sociabilidade */}
         {currentStep === 11 && (
           <fieldset>
@@ -1101,8 +1081,7 @@ function Anamnese() {
             </div>
           </fieldset>
         )}
-
-        {/* Etapa 12: Vestuario/Higiene/Organizacao */}
+        {/* Etapa 12: Vestuário/Higiene/Organização */}
         {currentStep === 12 && (
           <fieldset>
             <legend>Vestuário/Higiene/Organização</legend>
@@ -1174,7 +1153,6 @@ function Anamnese() {
             </div>
           </fieldset>
         )}
-
         {/* Etapa 13: Antecedentes Familiares */}
         {currentStep === 13 && (
           <fieldset>
@@ -1235,7 +1213,6 @@ function Anamnese() {
             </div>
           </fieldset>
         )}
-
         {/* Etapa 14: Relacionamento Familiar */}
         {currentStep === 14 && (
           <fieldset>
@@ -1322,7 +1299,6 @@ function Anamnese() {
             </div>
           </fieldset>
         )}
-
         {/* Etapa 15: Escolaridade */}
         {currentStep === 15 && (
           <fieldset>
@@ -1385,7 +1361,6 @@ function Anamnese() {
             </div>
           </fieldset>
         )}
-
         {/* Etapa 16: Histórico Social */}
         {currentStep === 16 && (
           <fieldset>
@@ -1419,7 +1394,6 @@ function Anamnese() {
             </div>
           </fieldset>
         )}
-
         {/* Etapa 17: Marcos do Desenvolvimento */}
         {currentStep === 17 && (
           <fieldset>
@@ -1470,7 +1444,6 @@ function Anamnese() {
             </table>
           </fieldset>
         )}
-
         {/* Botões de Navegação */}
         <div className="buttons">
           {currentStep > 1 && (

@@ -11,6 +11,23 @@ import { AuthContext } from "../../context/AuthContext";
 moment.locale("pt-br");
 const localizer = momentLocalizer(moment);
 
+const messages = {
+  allDay: 'Dia inteiro',
+  previous: 'Anterior',
+  next: 'Próximo',
+  today: 'Hoje',
+  month: 'Mês',
+  week: 'Semana',
+  day: 'Dia',
+  agenda: 'Agenda',
+  date: 'Data',
+  time: 'Hora',
+  event: 'Evento',
+  noEventsInRange: 'Nenhum evento neste período.',
+  showMore: total => `+ Ver mais (${total})`
+};
+
+
 function AgendaAssistidos() {
   const { token } = useContext(AuthContext);
   const [events, setEvents] = useState([]);
@@ -77,6 +94,7 @@ function AgendaAssistidos() {
         startAccessor="start"
         endAccessor="end"
         selectable
+        messages={messages}
         style={{ height: 600, margin: "20px" }}
         onSelectEvent={handleSelectEvent} // 📌 Abrir modal ao clicar em um evento
       />

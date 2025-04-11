@@ -128,7 +128,7 @@ function ListAssistidos() {
       {/* Filtros */}
       <div className="filtros">
         <input type="text" placeholder="Pesquisar por nome" value={search} onChange={(e) => setSearch(e.target.value)} />
-        <button className="botao-adicionar" onClick={() => navigate("/cadastrar-assistido")}>Gerenciar anamneses</button>
+        <button className="botao-adicionar" onClick={() => navigate("/anamneselista")}>Gerenciar anamneses</button>
         <select value={ordenar} onChange={(e) => setOrdenar(e.target.value)}>
           <option value="nome">Ordenar por Nome</option>
           <option value="nascimento">Ordenar por Nascimento</option>
