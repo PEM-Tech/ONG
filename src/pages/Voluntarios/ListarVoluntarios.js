@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaEdit, FaTrashAlt, FaSearch } from "react-icons/fa";
+import { FaEdit, FaTrashAlt, FaEye } from "react-icons/fa";
 import "../../assets/css/ListarVoluntarios.css";
 import { confirmarAcao, mostrarErro, mostrarSucesso } from "../../components/SweetAlert";
-
+import  capitalizarNome from "../../components/UpperCase";
 
 const formatarCPF = (cpf) => {
   if (!cpf) return "";
@@ -172,7 +172,7 @@ const goToLastPage = () => setCurrentPage(totalPages);
         <tbody>
           {voluntariosFiltrados.map((item) => (
             <tr key={item.id}>
-              <td>{item.nome}</td>
+              <td>{capitalizarNome(item.nome)}</td>
               <td>{formatarCPF(item.cpf)}</td>
               <td>{formatarData(item.nascimento)}</td>
               <td>{item.email}</td>
@@ -184,7 +184,7 @@ const goToLastPage = () => setCurrentPage(totalPages);
                   <FaTrashAlt />
                 </button>
                 <button onClick={(e) => handleVisualizar(e, item.id) } title="Visualizar Voluntário" className="action-btn Visualizar">
-                <FaSearch />
+                <FaEye />
                  </button>
               </td>
             </tr>

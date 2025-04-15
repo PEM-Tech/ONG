@@ -50,6 +50,11 @@ function HomeConfiguracoes() {
                     <h2>Logs(Auditoria)</h2>
                     <p>Monitore as atividades realizadas no sistema.</p>
                 </div>
+                <div className="card" onClick={handleAudit}>
+                    <i className="icon">🔐</i>
+                    <h2>Permissões </h2>
+                    <p>Controle os acessos e funções de cada usuário no sistema.</p>
+                </div>
                 
             </div>
         </div>

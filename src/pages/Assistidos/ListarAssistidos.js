@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaEdit, FaTrashAlt, FaFileAlt, FaSearch } from "react-icons/fa";
+import { FaEdit, FaTrashAlt, FaFileAlt, FaEye, FaRegEdit } from "react-icons/fa";
 import "../../assets/css/listarAssistidos.css";
 import { confirmarAcao, mostrarErro, mostrarSucesso } from "../../components/SweetAlert";
+import  capitalizarNome from "../../components/UpperCase";
 
 function ListAssistidos() {
   const navigate = useNavigate();
@@ -128,7 +129,7 @@ function ListAssistidos() {
       {/* Filtros */}
       <div className="filtros">
         <input type="text" placeholder="Pesquisar por nome" value={search} onChange={(e) => setSearch(e.target.value)} />
-        <button className="botao-adicionar" onClick={() => navigate("/anamneselista")}>Gerenciar anamneses</button>
+
         <select value={ordenar} onChange={(e) => setOrdenar(e.target.value)}>
           <option value="nome">Ordenar por Nome</option>
           <option value="nascimento">Ordenar por Nascimento</option>
@@ -161,22 +162,22 @@ function ListAssistidos() {
           {currentRecords.map((item) => (
             <tr key={item.ficha}>
               <td>{item.ficha}</td>
-              <td>{item.nome}</td>
+              <td>{capitalizarNome(item.nome)}</td>
               <td>{formatarCPF(item.cpf)}</td>
               <td>{formatarData(item.nascimento)}</td>
               <td>{item.email}</td>
               <td>
-                <button onClick={(e) => handleEdit(e, item.ficha)} title="Editar Ficha do Assistido" className="action-btn edit">
-                  <FaEdit />
-                </button>
-                <button onClick={(e) => handleDelete(e, item.ficha)} title="Excluir Ficha do Assistido" className="action-btn delete">
-                  <FaTrashAlt />
+              <button onClick={(e) => handleVisualizar(e, item.ficha)} title="Visualizar Ficha do Assistido" className="action-btn view">
+                  <FaEye />
                 </button>
                 <button onClick={(e) => handleAnamnese(e, item.ficha)} title="Cadastrar Anamnese" className="action-btn anamnese">
                   <FaFileAlt />
                 </button>
-                <button onClick={(e) => handleVisualizar(e, item.ficha)} title="Visualizar Ficha do Assistido" className="action-btn view">
-                  <FaSearch />
+                <button onClick={(e) => handleDelete(e, item.ficha)} title="Excluir Ficha do Assistido" className="action-btn delete">
+                  <FaTrashAlt />
+                </button>
+                <button onClick={(e) => handleEdit(e, item.ficha)} title="Editar Ficha do Assistido" className="action-btn edit">
+                  <FaEdit />
                 </button>
               </td>
             </tr>
