@@ -114,7 +114,7 @@ const loginUsuario = async (req, res) => {
 
     try {
         const query = "SELECT * FROM usuarios WHERE email = ?";
-        const [results] = await connection.promise().query(query, [email]);
+        const [results] = await connection.query(query, [email]);
 
         if (results.length === 0) {
             console.log("⚠️ Usuário não encontrado:", email);
@@ -136,7 +136,7 @@ const loginUsuario = async (req, res) => {
             { expiresIn: "8h" }
         );
 
-        await connection.promise().query("UPDATE usuarios SET token = ? WHERE id = ?", [token, usuario.id]);
+        await connection.query("UPDATE usuarios SET token = ? WHERE id = ?", [token, usuario.id]);
         await Audit.log(usuario.nome, "LOGIN_SUCCESS", `Usuário ${usuario.nome} fez login`);
 
         console.log("✅ Login bem-sucedido:", usuario.email);
@@ -147,6 +147,7 @@ const loginUsuario = async (req, res) => {
         res.status(500).json({ error: "Erro ao processar login" });
     }
 };
+
 
 // Exporta todas as funções como um objeto
 module.exports = {
