@@ -12,7 +12,7 @@ async function inserirAnexo(file) {
   if (!file) return null;
   const query = `INSERT INTO anexos (nome, tamanho, path) VALUES (?, ?, ?)`;
   const values = [file.originalname, file.size, file.path];
-  const [result] = await connection.promise().execute(query, values);
+  const [result] = await connection.execute(query, values);
   return result.insertId;
 }
 
@@ -34,7 +34,7 @@ exports.createAssistido = async (req, res) => {
     // Validação: verifica se o CPF já está cadastrado
     if (cpf) {
       const checkCpfQuery = "SELECT ficha FROM assistidos WHERE cpf = ?";
-      const [cpfRows] = await connection.promise().execute(checkCpfQuery, [cpf]);
+      const [cpfRows] = await connection.execute(checkCpfQuery, [cpf]);
       if (cpfRows.length > 0) {
         return res.status(400).json({ error: "CPF já cadastrado" });
       }
@@ -61,7 +61,7 @@ exports.createAssistido = async (req, res) => {
       tratarValor(anexo_id), tratarValor(anexo2_id), tratarValor(anexo3_id)
     ];
 
-    await connection.promise().execute(query, values);
+    await connection.execute(query, values);
 
     // Registrar na auditoria
     await Audit.log(usuarioLogado, "CREATE", `Assistido criado: ${nome}`);
@@ -107,7 +107,7 @@ exports.updateAssistido = async (req, res) => {
       tratarValor(anexo_id), tratarValor(anexo2_id), tratarValor(anexo3_id), ficha
     ];
 
-    await connection.promise().execute(query, values);
+    await connection.execute(query, values);
 
     // Registrar na auditoria
     await Audit.log(usuarioLogado, "UPDATE", `Assistido atualizado: ${nome}`);
@@ -125,7 +125,7 @@ exports.deleteAssistido = async (req, res) => {
     const ficha = req.params.ficha;
     const usuarioLogado = req.user?.nome || req.user?.email || "Desconhecido";
 
-    await connection.promise().query("DELETE FROM assistidos WHERE ficha = ?", [ficha]);
+    await connection.query("DELETE FROM assistidos WHERE ficha = ?", [ficha]);
 
     // Registrar na auditoria
     await Audit.log(usuarioLogado, "DELETE", `Assistido ID ${ficha} excluído`);
@@ -139,7 +139,7 @@ exports.deleteAssistido = async (req, res) => {
 // Listar todos os assistidos
 exports.listAssistidos = async (req, res) => {
   try {
-      const [rows] = await connection.promise().query("SELECT * FROM assistidos");
+      const [rows] = await connection.query("SELECT * FROM assistidos");
       res.status(200).json(rows);
   } catch (error) {
       console.error("❌ Erro ao listar assistidos:", error);
@@ -151,7 +151,7 @@ exports.listAssistidos = async (req, res) => {
 exports.getAssistido = async (req, res) => {
   try {
       const { ficha } = req.params;
-      const [rows] = await connection.promise().query("SELECT * FROM assistidos WHERE ficha = ?", [ficha]);
+      const [rows] = await connection.query("SELECT * FROM assistidos WHERE ficha = ?", [ficha]);
 
       if (rows.length === 0) {
           return res.status(404).json({ error: "Assistido não encontrado." });

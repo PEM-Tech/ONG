@@ -16,7 +16,7 @@ class Anamnese {
         VALUES (${placeholders})
       `;
 
-      const [result] = await connection.promise().query(insertQuery, valores);
+      const [result] = await connection.query(insertQuery, valores);
 
       await Audit.log(usuario ?? "Sistema", "CREATE", `Anamnese criada para o assistido ID ${data.assistido_id}`);
       return { id: result.insertId, ...data };
@@ -27,7 +27,7 @@ class Anamnese {
 
   static async getById(id) {
     try {
-      const [result] = await connection.promise().query("SELECT * FROM anamnese WHERE id = ?", [id]);
+      const [result] = await connection.query("SELECT * FROM anamnese WHERE id = ?", [id]);
       if (result.length === 0) throw new Error("Ficha de anamnese não encontrada.");
       return result[0];
     } catch (error) {
@@ -37,7 +37,7 @@ class Anamnese {
 
   static async getAll() {
     try {
-      const [results] = await connection.promise().query("SELECT * FROM anamnese ORDER BY id DESC");
+      const [results] = await connection.query("SELECT * FROM anamnese ORDER BY id DESC");
       return results;
     } catch (error) {
       throw error;
@@ -52,7 +52,7 @@ static async update(id, data, usuario) {
     const setClause = campos.map(campo => `${campo} = ?`).join(", ");
     const updateQuery = `UPDATE anamnese SET ${setClause} WHERE id = ?`;
 
-    await connection.promise().query(updateQuery, [...valores, id]);
+    await connection.query(updateQuery, [...valores, id]);
 
     await Audit.log(usuario ?? "Sistema", "UPDATE", `Anamnese ID ${id} atualizada`);
     return { id, ...data };
@@ -63,10 +63,10 @@ static async update(id, data, usuario) {
 
 static async delete(id, usuario) {
   try {
-    const [existe] = await connection.promise().query("SELECT id FROM anamnese WHERE id = ?", [id]);
+    const [existe] = await connection.query("SELECT id FROM anamnese WHERE id = ?", [id]);
     if (existe.length === 0) throw new Error("Ficha de anamnese não encontrada.");
 
-    await connection.promise().query("DELETE FROM anamnese WHERE id = ?", [id]);
+    await connection.query("DELETE FROM anamnese WHERE id = ?", [id]);
 
     await Audit.log(usuario ?? "Sistema", "DELETE", `Anamnese ID ${id} excluída`);
     return { message: "Ficha de anamnese excluída com sucesso." };

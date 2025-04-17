@@ -8,7 +8,7 @@ const Audit = {
         throw new Error("Todos os campos (usuario, tipo, mensagem) são obrigatórios.");
       }
 
-      await db.promise().execute(
+      await db.execute(
         "INSERT INTO audit (usuario, tipo, mensagem, data_hora) VALUES (?, ?, ?, NOW())",
         [usuario, tipo, mensagem]
       );
@@ -23,7 +23,7 @@ const Audit = {
   // Buscar todos os logs de auditoria
   async getAll() {
     try {
-      const [rows] = await db.promise().query(
+      const [rows] = await db.query(
         "SELECT usuario, tipo, mensagem, data_hora FROM audit ORDER BY data_hora DESC"
       );
       return rows;

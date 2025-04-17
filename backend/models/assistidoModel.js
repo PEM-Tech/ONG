@@ -19,7 +19,7 @@ const Assistido = {
       data.anexo2_id, data.anexo3_id
     ];
 
-    const [result] = await connection.promise().execute(query, values);
+    const [result] = await connection.execute(query, values);
     await Audit.log(executadoPor, "CREATE", `Assistido criado: ${data.nome}`);
 
     return data.ficha || result.insertId;
@@ -28,7 +28,7 @@ const Assistido = {
   // Buscar todos os assistidos
   async findAll(usuario) {
     const query = "SELECT * FROM assistidos";
-    const [rows] = await connection.promise().query(query);
+    const [rows] = await connection.query(query);
     await Audit.log(usuario, "READ", "Listagem de todos os assistidos");
     return rows;
   },
@@ -36,7 +36,7 @@ const Assistido = {
   // Buscar um assistido por ficha
   async findByFicha(ficha, usuario) {
     const query = "SELECT * FROM assistidos WHERE ficha = ?";
-    const [rows] = await connection.promise().query(query, [ficha]);
+    const [rows] = await connection.query(query, [ficha]);
 
     if (rows.length === 0) {
       throw new Error("Assistido não encontrado.");
@@ -71,7 +71,7 @@ const Assistido = {
       data.anexo_id, data.anexo2_id, data.anexo3_id, ficha
     ];
 
-    const [result] = await connection.promise().execute(query, values);
+    const [result] = await connection.execute(query, values);
     if (result.affectedRows > 0) {
       await Audit.log(executadoPor, "UPDATE", `Assistido atualizado: ${data.nome}`);
     }
@@ -84,7 +84,7 @@ const Assistido = {
     if (!antigo) return false;
 
     const query = "DELETE FROM assistidos WHERE ficha = ?";
-    const [result] = await connection.promise().execute(query, [ficha]);
+    const [result] = await connection.execute(query, [ficha]);
     if (result.affectedRows > 0) {
       await Audit.log(executadoPor, "DELETE", `Assistido Ficha ${ficha} excluído`);
     }
@@ -94,7 +94,7 @@ const Assistido = {
   // Verificar se um CPF já existe
   async existsByCpf(cpf) {
     const query = "SELECT ficha FROM assistidos WHERE cpf = ?";
-    const [rows] = await connection.promise().query(query, [cpf]);
+    const [rows] = await connection.query(query, [cpf]);
     return rows.length > 0;
   }
 };

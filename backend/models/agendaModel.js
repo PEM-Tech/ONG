@@ -5,7 +5,7 @@ class Agenda {
     // 🔹 Buscar todos os agendamentos
     static async getAll(usuario) {
         try {
-            const [results] = await connection.promise().query(`
+            const [results] = await connection.query(`
                 SELECT a.id, a.title, a.data_hora, t.nome AS tipo_consulta, ass.ficha AS ficha_assistido, v.nome AS voluntario
                 FROM agenda a
                 JOIN tipos_consulta t ON a.tipo_consulta_id = t.id
@@ -25,7 +25,7 @@ class Agenda {
     // 🔹 Buscar agendamento por ID
     static async getById(id, usuario) {
         try {
-            const [results] = await connection.promise().query(`
+            const [results] = await connection.query(`
                 SELECT a.id, a.title, a.data_hora, t.nome AS tipo_consulta, ass.ficha AS ficha_assistido, v.nome AS voluntario
                 FROM agenda a
                 JOIN tipos_consulta t ON a.tipo_consulta_id = t.id
@@ -53,7 +53,7 @@ class Agenda {
                 VALUES (?, ?, ?, ?, ?)
             `;
 
-            const [result] = await connection.promise().query(insertQuery, [
+            const [result] = await connection.query(insertQuery, [
                 data.title,
                 data.data_hora,
                 data.tipo_consulta_id,
@@ -72,7 +72,7 @@ class Agenda {
     static async update(id, data, usuario) {
         try {
             // Verifica se o agendamento existe
-            const [agendaExists] = await connection.promise().query("SELECT id FROM agenda WHERE id = ?", [id]);
+            const [agendaExists] = await connection.query("SELECT id FROM agenda WHERE id = ?", [id]);
             if (agendaExists.length === 0) {
                 throw new Error("Agendamento não encontrado.");
             }
@@ -83,7 +83,7 @@ class Agenda {
                 WHERE id = ?
             `;
 
-            await connection.promise().query(updateQuery, [
+            await connection.query(updateQuery, [
                 data.title,
                 data.data_hora,
                 data.tipo_consulta_id,
@@ -103,12 +103,12 @@ class Agenda {
     static async delete(id, usuario) {
         try {
             // Verifica se o agendamento existe antes de deletar
-            const [agendaExists] = await connection.promise().query("SELECT id FROM agenda WHERE id = ?", [id]);
+            const [agendaExists] = await connection.query("SELECT id FROM agenda WHERE id = ?", [id]);
             if (agendaExists.length === 0) {
                 throw new Error("Agendamento não encontrado.");
             }
 
-            await connection.promise().query("DELETE FROM agenda WHERE id = ?", [id]);
+            await connection.query("DELETE FROM agenda WHERE id = ?", [id]);
             await Audit.log(usuario ?? "Sistema", "DELETE", `Agendamento ID ${id} excluído`);
             return { message: "Agendamento deletado com sucesso." };
         } catch (err) {

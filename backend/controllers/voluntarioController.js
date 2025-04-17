@@ -8,7 +8,7 @@ async function inserirAnexo(file) {
   if (!file) return null;
   const query = `INSERT INTO anexos (nome, tamanho, path) VALUES (?, ?, ?)`;
   const values = [file.originalname, file.size, file.path];
-  const [result] = await connection.promise().execute(query, values);
+  const [result] = await connection.execute(query, values);
   return result.insertId;
 }
 
@@ -107,7 +107,7 @@ exports.deleteVoluntario = async (req, res) => {
     const id = req.params.id;
     const usuarioLogado = req.user?.nome || req.user?.email || "Desconhecido";
 
-    await connection.promise().query("DELETE FROM voluntarios WHERE id = ?", [id]);
+    await connection.query("DELETE FROM voluntarios WHERE id = ?", [id]);
 
     // Registrar na auditoria
     await Audit.log(usuarioLogado, "DELETE", `Voluntário ID ${id} excluído`);
@@ -123,7 +123,7 @@ exports.deleteVoluntario = async (req, res) => {
 exports.getAllVoluntarios = async (req, res) => {
   try {
     const usuario = req.user?.nome || req.user?.email || "Desconhecido";
-    const [voluntarios] = await connection.promise().query("SELECT * FROM voluntarios");
+    const [voluntarios] = await connection.query("SELECT * FROM voluntarios");
 
     // Registrar na auditoria
     await Audit.log(usuario, "READ", "Listagem de todos os voluntários");
@@ -141,7 +141,7 @@ exports.getVoluntarioById = async (req, res) => {
     const id = req.params.id;
     const usuario = req.user?.nome || req.user?.email || "Desconhecido";
 
-    const [voluntario] = await connection.promise().query("SELECT * FROM voluntarios WHERE id = ?", [id]);
+    const [voluntario] = await connection.query("SELECT * FROM voluntarios WHERE id = ?", [id]);
 
     if (voluntario.length === 0) {
       return res.status(404).json({ error: "Voluntário não encontrado" });

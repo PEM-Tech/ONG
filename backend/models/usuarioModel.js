@@ -5,7 +5,7 @@ class Usuario {
     // Buscar todos os usuários
     static async getAll(usuario) {
         try {
-            const [results] = await connection.promise().query('SELECT * FROM usuarios');
+            const [results] = await connection.query('SELECT * FROM usuarios');
             await Audit.log(usuario, "READ", "Listagem de todos os usuários");
             return results;
         } catch (err) {
@@ -16,7 +16,7 @@ class Usuario {
     // Buscar usuário por ID
     static async getById(id, usuario) {
         try {
-            const [results] = await connection.promise().query('SELECT * FROM usuarios WHERE id = ?', [id]);
+            const [results] = await connection.query('SELECT * FROM usuarios WHERE id = ?', [id]);
             if (results.length === 0) {
                 throw new Error("Usuário não encontrado.");
             }
@@ -31,7 +31,7 @@ class Usuario {
     static async create(data, usuario) {
         try {
             // Verifica se o email já existe
-            const [emailExiste] = await connection.promise().query("SELECT id FROM usuarios WHERE email = ?", [data.email]);
+            const [emailExiste] = await connection.query("SELECT id FROM usuarios WHERE email = ?", [data.email]);
             if (emailExiste.length > 0) {
                 throw new Error("O email já está cadastrado.");
             }
@@ -41,7 +41,7 @@ class Usuario {
                 INSERT INTO usuarios (nome, email, senha, desabilitado, permissao) 
                 VALUES (?, ?, ?, ?, ?)
             `;
-            const [result] = await connection.promise().query(insertQuery, [
+            const [result] = await connection.query(insertQuery, [
                 data.nome,
                 data.email,
                 data.senha,  // Sem bcrypt (pode ser implementado no futuro)
@@ -60,7 +60,7 @@ class Usuario {
     static async update(id, data, usuario) {
         try {
             // Verifica se o usuário existe
-            const [userExists] = await connection.promise().query("SELECT id FROM usuarios WHERE id = ?", [id]);
+            const [userExists] = await connection.query("SELECT id FROM usuarios WHERE id = ?", [id]);
             if (userExists.length === 0) {
                 throw new Error("Usuário não encontrado.");
             }
@@ -74,7 +74,7 @@ class Usuario {
                 values = [data.nome, data.email, data.senha, data.desabilitado, data.permissao, id];
             }
 
-            await connection.promise().query(query, values);
+            await connection.query(query, values);
             await Audit.log(usuario, "UPDATE", `Usuário atualizado: ${data.nome}`);
             return { id, ...data };
         } catch (err) {
@@ -86,12 +86,12 @@ class Usuario {
     static async delete(id, usuario) {
         try {
             // Verifica se o usuário existe antes de deletar
-            const [userExists] = await connection.promise().query("SELECT id FROM usuarios WHERE id = ?", [id]);
+            const [userExists] = await connection.query("SELECT id FROM usuarios WHERE id = ?", [id]);
             if (userExists.length === 0) {
                 throw new Error("Usuário não encontrado.");
             }
 
-            await connection.promise().query("DELETE FROM usuarios WHERE id = ?", [id]);
+            await connection.query("DELETE FROM usuarios WHERE id = ?", [id]);
             await Audit.log(usuario, "DELETE", `Usuário ID ${id} excluído`);
             return { message: "Usuário deletado com sucesso." };
         } catch (err) {

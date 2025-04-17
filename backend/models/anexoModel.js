@@ -15,7 +15,7 @@ const Anexo = async ({ nome, caminho, tamanho }) => {
 const buscarAnexoPorId = async (id) => {
   try {
     const query = `SELECT * FROM anexos WHERE id = ?`;
-    const [rows] = await db.promise().execute(query, [id]); // Garante retorno correto
+    const [rows] = await db.execute(query, [id]); // Garante retorno correto
 
     if (!rows || rows.length === 0) {
       console.log("Nenhum anexo encontrado para o ID:", id);

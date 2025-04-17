@@ -28,20 +28,20 @@ const Voluntario = {
       data.categoria_id ?? null
     ];
 
-    const [result] = await connection.promise().execute(query, values);
+    const [result] = await connection.execute(query, values);
     await Audit.log(usuario, "CREATE", `Voluntário criado: ${data.nome}`);
     return result.insertId;
   },
 
   async findAll() {
     const query = "SELECT * FROM voluntarios";
-    const [rows] = await connection.promise().query(query);
+    const [rows] = await connection.query(query);
     return rows;
   },
 
   async findById(id) {
     const query = "SELECT * FROM voluntarios WHERE id = ?";
-    const [rows] = await connection.promise().query(query, [id]);
+    const [rows] = await connection.query(query, [id]);
     return rows.length > 0 ? rows[0] : null;
   },
 
@@ -77,14 +77,14 @@ const Voluntario = {
       id
     ];
 
-    const [result] = await connection.promise().execute(query, values);
+    const [result] = await connection.execute(query, values);
     await Audit.log(usuario, "UPDATE", `Voluntário atualizado: ${data.nome}`);
     return result.affectedRows > 0;
   },
 
   async delete(id, usuario) {
     const query = "DELETE FROM voluntarios WHERE id = ?";
-    const [result] = await connection.promise().execute(query, [id]);
+    const [result] = await connection.execute(query, [id]);
     if (result.affectedRows > 0) {
       await Audit.log(usuario, "DELETE", `Voluntário ID ${id} excluído`);
     }
@@ -93,7 +93,7 @@ const Voluntario = {
 
   async existsByCpf(cpf) {
     const query = "SELECT id FROM voluntarios WHERE cpf = ?";
-    const [rows] = await connection.promise().query(query, [cpf]);
+    const [rows] = await connection.query(query, [cpf]);
     return rows.length > 0;
   }
 };
