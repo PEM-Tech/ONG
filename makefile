@@ -61,3 +61,13 @@ docker-restart-backend:
 start-local:
 	$(MAKE) install
 	$(MAKE) dev
+
+# --------- GIT COMMANDS ---------- #
+
+# Enviar alterações para o repositório remoto
+push:
+push:
+	git remote set-url origin https://github.com/PEM-Tech/ONG.git
+	git add .
+	git commit -m "Atualizações via Makefile" || echo "Nada para commitar"
+	git push origin main

@@ -1,33 +1,60 @@
-# Como rodar o projeto
 
-O projeto está com o docker configurado, então basta subir ele com o WSL que todo o ambiente estará preparado 
+# 🚀 Como Rodar o Projeto
 
-# 1. clone o repositorio
+O projeto está com o **Docker** configurado, então basta rodar os comandos abaixo no **WSL** que todo o ambiente será preparado automaticamente.
 
+---
+
+## 📥 1. Clone o Repositório
+
+Escolha uma das opções abaixo:
+
+### 🔗 HTTPS
 ```bash
 git clone https://github.com/PEM-Tech/ONG.git
 ```
-ou via ssh
+
+### 🔐 SSH
 ```bash
 git@github.com:PEM-Tech/ONG.git
 ```
-# 2. Dê o comando de build do docker
+
+---
+
+## 🛠️ 2. Construa os Containers com Docker
+
 ```bash
 docker-compose up --build
 ```
 
-Frontend estará rodando no localhost:3000
-Backend no 5000
-e o phpmyadmin no 8080
+---
 
-## caso n queira usar o docker, criei um makefile pra facilitar processos
+## 🔎 Endpoints Disponíveis
 
-os comandos deles são:
-make install                    # instala deps frontend e backend
-make dev                        # inicia backend (em nova janela) e frontend
-make restart-backend            # reinicia o backend local manualmente
-make docker-up                  # sobe tudo via docker-compose
-make docker-down                # derruba tudo e limpa volumes
-make docker-restart-backend     # reinicia o backend via Docker
-make lint                       # roda eslint em ambos
-make test                       # roda testes 
+| Serviço       | URL                   |
+|---------------|-----------------------|
+| Frontend      | http://localhost:3000 |
+| Backend       | http://localhost:5000 |
+| phpMyAdmin    | http://localhost:8080 |
+
+---
+
+## ⚙️ Alternativa sem Docker (usando Makefile)
+
+Caso prefira rodar o projeto localmente sem Docker, utilize os comandos abaixo:
+
+| Comando `make`                 | Descrição                                               |
+|-------------------------------|---------------------------------------------------------|
+| `make install`                | Instala as dependências do frontend e backend           |
+| `make dev`                    | Inicia o frontend e backend (backend em nova janela)    |
+| `make restart-backend`        | Reinicia o backend local manualmente                    |
+| `make docker-up`              | Sobe todos os containers com Docker Compose             |
+| `make docker-down`            | Derruba todos os containers e remove volumes            |
+| `make docker-restart-backend` | Reinicia apenas o container do backend                  |
+| `make lint`                   | Executa o ESLint no frontend e backend                  |
+| `make test`                   | Executa os testes no frontend e backend                 |
+| `make push`                   | Faz push automático para o repositório do GitHub        |
+
+---
+
+> ✅ **Dica:** Certifique-se de que o WSL está corretamente configurado e que o Docker Desktop está rodando antes de executar qualquer comando acima.
