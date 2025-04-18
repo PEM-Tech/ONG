@@ -64,10 +64,16 @@ start-local:
 
 # --------- GIT COMMANDS ---------- #
 
-# Enviar alterações para o repositório remoto
-push:
-push:
+# Enviar alterações via HTTPS
+push-https:
 	git remote set-url origin https://github.com/PEM-Tech/ONG.git
+	git add .
+	git commit -m "Atualizações via Makefile" || echo "Nada para commitar"
+	git push origin main
+
+# Enviar alterações via SSH
+push-ssh:
+	git remote set-url origin git@github.com:PEM-Tech/ONG.git
 	git add .
 	git commit -m "Atualizações via Makefile" || echo "Nada para commitar"
 	git push origin main
