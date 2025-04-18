@@ -53,8 +53,8 @@ Caso prefira rodar o projeto localmente sem Docker, utilize os comandos abaixo:
 | `make docker-restart-backend` | Reinicia apenas o container do backend                  |
 | `make lint`                   | Executa o ESLint no frontend e backend                  |
 | `make test`                   | Executa os testes no frontend e backend                 |
-| `make push`                   | Faz push automático para o repositório do GitHub        |
-
+| `make push-https`             | Faz push automático para o repositório do GitHub via https  |
+| `make push-ssh`               | Faz push automático para o repositório do GitHub via ssh  |
 ---
 
 > ✅ **Dica:** Certifique-se de que o WSL está corretamente configurado e que o Docker Desktop está rodando antes de executar qualquer comando acima.
