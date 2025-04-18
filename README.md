@@ -16,16 +16,6 @@ git@github.com:PEM-Tech/ONG.git
 docker-compose up --build
 ```
 
-# 3. Importar banco
-
-primeiro dê permissão
-```bash
-chmod +x importar-banco.sh
-```
-
-jogue o arquivo sql na pasta raiz do wsl
-
-execute o comando
-```bash
-./importar-banco.sh
-```
+Frontend estará rodando no localhost:3000
+Backend no 5000
+e o phpmyadmin no 8080
