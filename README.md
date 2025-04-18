@@ -19,3 +19,15 @@ docker-compose up --build
 Frontend estará rodando no localhost:3000
 Backend no 5000
 e o phpmyadmin no 8080
+
+## caso n queira usar o docker, criei um makefile pra facilitar processos
+
+os comandos deles são:
+make install                    # instala deps frontend e backend
+make dev                        # inicia backend (em nova janela) e frontend
+make restart-backend            # reinicia o backend local manualmente
+make docker-up                  # sobe tudo via docker-compose
+make docker-down                # derruba tudo e limpa volumes
+make docker-restart-backend     # reinicia o backend via Docker
+make lint                       # roda eslint em ambos
+make test                       # roda testes 
